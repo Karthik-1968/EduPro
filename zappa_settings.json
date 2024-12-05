@@ -1,0 +1,145 @@
+{
+  "alpha": {
+    "project_name": "edupro",
+    "s3_bucket": "<your deployment bucket>",
+    "memory_size": 1536,
+    "api_name": "edupro",
+    "timeout_seconds": 300,
+    "aws_region": "ap-south-1",
+    "keep_warm": false,
+    "domain": "edupro-alpha.example.com",
+    "certificate_arn": "<your certificate arn>",
+    "django_settings": "edupro.settings.alpha",
+    "cloudwatch_log_level": "INFO",
+    "cloudwatch_data_trace": true,
+    "cloudwatch_metrics_enabled": true,
+    "touch": false,
+    "exception_handler": "ib_sentry_wrapper.utils.zappa_sentry.capture_exceptions",
+    "runtime": "python3.7",
+    "manage_roles": true,
+    "vpc_config": {
+      "SubnetIds": [
+        "subnet-89f666c4",
+        "subnet-69f76724"
+      ],
+      "SecurityGroupIds": [
+        "sg-7071bb18"
+      ]
+    }
+  },
+  "beta": {
+    "project_name": "edupro",
+    "s3_bucket": "<your deployment bucket>",
+    "memory_size": 1536,
+    "api_name": "edupro",
+    "timeout_seconds": 300,
+    "aws_region": "ap-south-1",
+    "keep_warm": false,
+    "domain": "edupro-beta.example.com",
+    "certificate_arn": "<your certificate arn>",
+    "django_settings": "edupro.settings.beta",
+    "cloudwatch_log_level": "INFO",
+    "cloudwatch_data_trace": true,
+    "cloudwatch_metrics_enabled": true,
+    "touch": false,
+    "exception_handler": "ib_sentry_wrapper.utils.zappa_sentry.capture_exceptions",
+    "runtime": "python3.7",
+    "manage_roles": true,
+    "vpc_config": {
+      "SubnetIds": [
+        "subnet-89f666c4",
+        "subnet-69f76724"
+      ],
+      "SecurityGroupIds": [
+        "sg-7071bb18"
+      ]
+    }
+  },
+  "gamma": {
+    "project_name": "edupro",
+    "s3_bucket": "<your deployment bucket>",
+    "memory_size": 1536,
+    "api_name": "edupro",
+    "timeout_seconds": 300,
+    "aws_region": "ap-south-1",
+    "keep_warm": false,
+    "django_settings": "edupro.settings.gamma",
+    "domain": "edupro-gamma.example.com",
+    "certificate_arn": "<your certificate arn>",
+    "log_level": "INFO",
+    "cloudwatch_log_level": "INFO",
+    "cloudwatch_data_trace": true,
+    "cloudwatch_metrics_enabled": true,
+    "touch": false,
+    "exception_handler": "ib_sentry_wrapper.utils.zappa_sentry.capture_exceptions",
+    "runtime": "python3.7",
+    "manage_roles": true,
+    "vpc_config": {
+      "SubnetIds": [
+        "subnet-89f666c4",
+        "subnet-69f76724"
+      ],
+      "SecurityGroupIds": [
+        "sg-7071bb18"
+      ]
+    }
+  },
+  "staging": {
+    "project_name": "edupro",
+    "s3_bucket": "<your deployment bucket>",
+    "memory_size": 1536,
+    "api_name": "edupro",
+    "timeout_seconds": 300,
+    "aws_region": "ap-south-1",
+    "keep_warm": false,
+    "django_settings": "edupro.settings.staging",
+    "domain": "edupro-staging.example.com",
+    "certificate_arn": "<your certificate arn>",
+    "log_level": "INFO",
+    "cloudwatch_log_level": "INFO",
+    "cloudwatch_data_trace": true,
+    "cloudwatch_metrics_enabled": true,
+    "touch": false,
+    "exception_handler": "ib_sentry_wrapper.utils.zappa_sentry.capture_exceptions",
+    "runtime": "python3.7",
+    "manage_roles": true,
+    "vpc_config": {
+      "SubnetIds": [
+        "subnet-89f666c4",
+        "subnet-69f76724"
+      ],
+      "SecurityGroupIds": [
+        "sg-7071bb18"
+      ]
+    }
+  },
+  "prod": {
+    "project_name": "edupro",
+    "s3_bucket": "<your deployment bucket>",
+    "memory_size": 1536,
+    "api_name": "edupro",
+    "timeout_seconds": 300,
+    "aws_region": "ap-south-1",
+    "keep_warm": false,
+    "django_settings": "edupro.settings.prod",
+    "domain": "edupro-prod.example.com",
+    "certificate_arn": "<your certificate arn>",
+    "log_level": "INFO",
+    "cloudwatch_log_level": "INFO",
+    "cloudwatch_data_trace": true,
+    "cloudwatch_metrics_enabled": true,
+    "touch": false,
+    "exception_handler": "ib_sentry_wrapper.utils.zappa_sentry.capture_exceptions",
+    "runtime": "python3.7",
+    "manage_roles": true,
+    "vpc_config": {
+      "SubnetIds": [
+        "subnet-89f666c4",
+        "subnet-69f76724"
+      ],
+      "SecurityGroupIds": [
+        "sg-7071bb18"
+      ]
+    }
+  }
+}
