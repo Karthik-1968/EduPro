@@ -51,10 +51,7 @@ rm get-pip.py
 
 # Create a virtual environment
 echo "Creating a virtual environment..."
-python3 -m venv env
+python3.10 -m venv env
 
-# Activate the virtual environment
-echo "Activating the virtual environment..."
-source env/bin/activate
 
 echo "Python 3.10 and pip installation complete. Virtual environment activated."
