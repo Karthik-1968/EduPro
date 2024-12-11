@@ -17,8 +17,8 @@ def api_wrapper(*args, **kwargs):
                 teacher=Teacher.objects.get(id=id)
             except ObjectDoesNotExist:
                 return JsonResponse({'error': 'teacher does not exist'}, status=404)
-            data={'name':teacher.name,'email':teacher.email,'age':teacher.age}
-            return JsonResponse(data,status=200)
+            data=[{'name':teacher.name,'email':teacher.email,'age':teacher.age}]
+            return JsonResponse(data,safe=False,status=200)
         else:
             try:
                 teachers=Teacher.objects.all()[o:o+l]

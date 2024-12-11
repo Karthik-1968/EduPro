@@ -806,7 +806,18 @@
             "in": "body",
             "description": "Assignment details",
             "schema": {
-              "$ref": "#/definitions/assignment"
+              "type":"object",
+              "properties":{
+                "name":{
+                  "type":"string"
+                },
+                "max_duration_in_minutes":{
+                  "type":"integer"
+                },
+                "assignment_description":{
+                  "type":"string"
+                }
+              }
             }
           }
         ],

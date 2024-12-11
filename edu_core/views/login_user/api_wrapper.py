@@ -10,15 +10,14 @@ from django.core.exceptions import ObjectDoesNotExist
 def api_wrapper(*args, **kwargs):
     try:
         user_email = kwargs['request_data'].get('user_email')
-        email_not_present=not user_email
-        if email_not_present:
-            return JsonResponse({'error': 'User email parameter is missing'}, status=400)
         try:
             user = User.objects.get(email=user_email).user_id
         except ObjectDoesNotExist:
             return JsonResponse({'error': f'User with email {user_email} does not exist'}, status=404)
         data=login(user)
         return JsonResponse(data, status=200)
+    except KeyError as e:
+        return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
 def login(user):
     service_interface = ServiceInterface()
     auth_tokens = service_interface.create_auth_tokens_for_user(user)

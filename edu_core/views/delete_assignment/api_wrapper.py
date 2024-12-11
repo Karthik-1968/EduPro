@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 @validate_decorator(validator_class=ValidatorClass)
 def api_wrapper(*args, **kwargs):
     try:
-        id=kwargs['request_data']['search']
+        id=kwargs['query_params']['search']
         try:
             assignment=Assignment.objects.get(id=id)
         except ObjectDoesNotExist:

@@ -21,11 +21,12 @@ def api_wrapper(*args, **kwargs):
             teacher=Teacher.objects.get(id=teacher_id)
         except ObjectDoesNotExist:
             return JsonResponse({'error': 'Teacher does not exist'}, status=404)
-        assign_teacher_to_course(course,teacher)
+        return assign_teacher_to_course(course,teacher)
     except KeyError as e:
         return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
 def assign_teacher_to_course(course,teacher):
-    if course.teacher:
+    name=teacher.name
+    if course.teacher.filter(name=name).exists():
         return JsonResponse({"error": "Teacher is already assigned to course."}, status=400)
     course.teacher.add(teacher)
     data={'course':course.name,'fee':course.fee,'duration':course.duration,'teacher':teacher.name}

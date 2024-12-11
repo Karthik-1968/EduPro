@@ -7,16 +7,19 @@ from django.core.exceptions import ObjectDoesNotExist
 
 @validate_decorator(validator_class=ValidatorClass)
 def api_wrapper(*args, **kwargs):
+    given_data=kwargs['query_params']
     try:
-        student=kwargs['request_data']['student']
-        assignment=kwargs['request_data']['assignment']
+        id=given_data['search']
         user=kwargs['user']
-        stud=Student.objects.get(name=student)
-        if user.email==stud.email:
-            try:
-                submission=Submission.objects.get(student__name=student,assignment__name=assignment)
-            except ObjectDoesNotExist:
-                return JsonResponse({'error': 'Submission object does not exist'}, status=404)
+        return grade_submission(id,user)
+    except KeyError as e:
+        return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+def grade_submission(id,user):
+    try:
+        submission=Submission.objects.get(id=id)
+        if user.email==submission.student.email:
             if submission.Grade:
                 return JsonResponse({"error":"This submission is already graded"},status=400)
             submission.Grade='A'
@@ -25,7 +28,5 @@ def api_wrapper(*args, **kwargs):
             return JsonResponse({"grade":submission.Grade},status=200)
         else:
             return JsonResponse({"Error":"User is not authorized"},status=403)
-    except KeyError as e:
-        return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+    except ObjectDoesNotExist:
+            return JsonResponse({'error': 'Submission object does not exist'}, status=404)

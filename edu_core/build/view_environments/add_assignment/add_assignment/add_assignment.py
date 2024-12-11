@@ -1,7 +1,7 @@
 from dsu.runtime.security.request_response import request_response
 from dsu.dsu_gen.openapi.constants.config import PARSER_MAPPING
 from dsu.dsu_gen.openapi.constants.config import RENDERER_MAPPING
-from edu_core.build.serializers.definitions.assignment.assignmentSerializer import assignmentSerializer
+from edu_core.build.view_environments.add_assignment.add_assignment.adding_assignment.adding_assignmentSerializer import adding_assignmentSerializer
 from edu_core.build.view_environments.add_assignment.add_assignment.responses.Status_200.Status_200.Status_200Serializer import Status_200Serializer
 
 
@@ -20,7 +20,7 @@ options = {
     'REQUEST_HEADERS_SERIALIZER': None,
     'REQUEST_PATH_PARAMS_SERIALIZER': None,
     'DEFAULT_REQUEST_PATH_PARAMS': {},
-    'REQUEST_SERIALIZER': assignmentSerializer,
+    'REQUEST_SERIALIZER': adding_assignmentSerializer,
     'REQUEST_SERIALIZER_MANY_ITEMS': False,
     'RESPONSE': {
         

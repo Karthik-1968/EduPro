@@ -20,7 +20,7 @@ def api_wrapper(*args, **kwargs):
             assignment=Assignment.objects.get(id=assignment_id)
         except ObjectDoesNotExist:
             return JsonResponse({"Error": "Assignment does not exist."},status=404)
-        add_assignment_course(course,assignment,assignment_id)
+        return add_assignment_course(course,assignment,assignment_id)
     except KeyError as e:
         return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
 def add_assignment_course(course,assignment,assignment_id):

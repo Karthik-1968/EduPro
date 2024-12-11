@@ -12,14 +12,14 @@ def api_wrapper(*args, **kwargs):
     try:
         l=given_data['limit']
         o=given_data['offset']
-        if given_data['search']:
+        if given_data['search']>0:
             id=given_data['search']
             try:
                 course=Course.objects.get(id=id)
             except ObjectDoesNotExist:
                 return JsonResponse({'error': 'course does not exist'}, status=404)
-            data={'name':course.name,'fee':course.fee,'duration':course.duration}
-            return JsonResponse(data,status=200)
+            data=[{'name':course.name,'fee':course.fee,'duration':course.duration}]
+            return JsonResponse(data,safe=False,status=200)
         else:
             try:
                 courses=Course.objects.all()[o:o+l]

@@ -13,7 +13,7 @@ def api_wrapper(*args, **kwargs):
         max_duration_in_minutes=given_data['max_duration_in_minutes']
         assignment_description=given_data['assignment_description']
         current_assignment=given_data['current_assignment']
-        update_assignment(name,max_duration_in_minutes,assignment_description,current_assignment)
+        return update_assignment(name,max_duration_in_minutes,assignment_description,current_assignment)
     except KeyError as e:
         return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
 def update_assignment(name,max_duration_in_minutes,assignment_description,current_assignment):

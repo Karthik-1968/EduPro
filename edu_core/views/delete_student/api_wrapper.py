@@ -10,7 +10,7 @@ def api_wrapper(*args, **kwargs):
     try:
         user=kwargs['user']
         id=kwargs['query_params']['search']
-        delete_student(user,id)
+        return delete_student(user,id)
     except KeyError as e:
         return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
 def delete_student(user,id):

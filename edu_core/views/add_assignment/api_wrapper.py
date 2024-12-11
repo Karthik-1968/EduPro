@@ -1,48 +1,21 @@
 from dsu.dsu_gen.openapi.decorator.interface_decorator import \
     validate_decorator
 from .validator_class import ValidatorClass
-
+from django.http import JsonResponse
+from edu_core.models import Assignment
 
 @validate_decorator(validator_class=ValidatorClass)
 def api_wrapper(*args, **kwargs):
-    # ---------MOCK IMPLEMENTATION---------
-
+    given_data=kwargs['request_data']
     try:
-        from edu_core.views.add_assignment.request_response_mocks \
-            import REQUEST_BODY_JSON
-        body = REQUEST_BODY_JSON
-    except ImportError:
-        body = {}
-
-    test_case = {
-        "path_params": {},
-        "query_params": {},
-        "header_params": {},
-        "body": body,
-        "securities": [{'oauth': ['write']}]
-    }
-
-    from dsu.dsu_gen.openapi.utils.mock_response import mock_response
-
-    try:
-        response = ''
-        status_code = 200
-        if '200' in ['200', '400']:
-            from edu_core.views.add_assignment.request_response_mocks \
-                import RESPONSE_200_JSON
-            response = RESPONSE_200_JSON
-            status_code = 200
-        elif '201' in ['200', '400']:
-            from edu_core.views.add_assignment.request_response_mocks \
-                import RESPONSE_201_JSON
-            response = RESPONSE_201_JSON
-            status_code = 201
-    except ImportError:
-        response = ''
-        status_code = 200
-    response_tuple = mock_response(
-        app_name="edu_core", test_case=test_case,
-        operation_name="add_assignment",
-        kwargs=kwargs, default_response_body=response,
-        group_name="", status_code=status_code)
-    return response_tuple
+        name=given_data['name']
+        duration=given_data['max_duration_in_minutes']
+        description=given_data['assignment_description']
+        return add_assignment(name,description,duration)
+    except KeyError as e:
+        return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
+def add_assignment(name,description,duration):
+    if Assignment.objects.filter(name=name).exists():
+        return JsonResponse({"error":"assignment already present"},status=400)
+    assignment=Assignment.objects.create(name=name,max_duration=duration,assign_description=description)
+    return {"id":assignment.id}

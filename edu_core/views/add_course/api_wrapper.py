@@ -12,13 +12,12 @@ def api_wrapper(*args, **kwargs):
         name=given_data['name']
         fee=given_data['fee']
         duration=given_data['duration']
-        data=add_course(name,fee,duration)
-        return JsonResponse(data,status=200)
+        return add_course(name,fee,duration)
     except KeyError as e:
         return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
 def add_course(name,fee,duration):
-    if Course.name:
+    if Course.objects.filter(name=name).exists():
         return JsonResponse({"error": "Course is already created."}, status=400)
     course=Course.objects.create(name=name,fee=fee,duration=duration)
     data={"id":course.id}
-    return data
+    return JsonResponse(data,status=200)

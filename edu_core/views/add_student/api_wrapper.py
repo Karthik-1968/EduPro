@@ -10,13 +10,13 @@ def api_wrapper(*args, **kwargs):
         name = given_data['name']
         email = given_data['email']
         age = given_data['age']
+        if Student.objects.filter(name=name).exists():
+            return JsonResponse({"error": "Student is already created."}, status=400)
         data=add_student(name,email,age)
         return JsonResponse(data, status=200)
     except KeyError as e:
         return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
 def add_student(name,email,age):
-    if Student.name:
-        return JsonResponse({"error": "Student is already created."}, status=400)
     student=Student.objects.create(name=name, email=email, age=age)
     data={"id":student.id}
     return data

@@ -21,11 +21,12 @@ def api_wrapper(*args, **kwargs):
             student=Student.objects.get(id=student_id)
         except ObjectDoesNotExist:
             return JsonResponse({'error': 'Student does not exist'}, status=404)
-        enroll_student_in_course(course,student)
+        return enroll_student_in_course(course,student)
     except KeyError as e:
         return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
 def enroll_student_in_course(course,student):
-    if course.student:
+    name=student.name
+    if course.student.filter(name=name).exists():
         return JsonResponse({"error": "Student is already enrolled in course."}, status=400)
     course.student.add(student)
     data={'course':course.name,'fee':course.fee,'duration':course.duration,'student':student.name}
