@@ -1,4 +1,10 @@
-__all__ = []
+from .student import Student
+from .user import User
+from .teacher import Teacher
+from .course import Course
+from .assignment import Assignment
+from .submission import Submission
+__all__ = [User,Student,Teacher,Course,Assignment,Submission]
 
 # class DummyModel(AbstractDateTimeModel):
 #     """

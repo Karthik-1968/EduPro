@@ -49,9 +49,8 @@ sudo update-alternatives --config python3
 echo "Cleaning up..."
 rm get-pip.py
 
-# Create a virtual environment
-echo "Creating a virtual environment..."
-python3.10 -m venv env
+echo "installing python3.10-venv"
+sudo apt install python3.10-venv
 
 
 echo "Python 3.10 and pip installation complete. Virtual environment activated."

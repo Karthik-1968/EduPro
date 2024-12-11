@@ -1,325 +1,1076 @@
 {
-        "swagger": "2.0",
-        "host": "127.0.0.1:8000",
-        "basePath": "/api/edu_core/",
-        "info": {
-            "version": "1.0.0",
-            "title": "Simple API",
-            "description": "A simple API to learn how to write OpenAPI Specification"
+  "swagger": "2.0",
+  "host": "127.0.0.1:8000",
+  "basePath": "/api/edu_core",
+  "info": {
+      "version": "1.0.0",
+      "title": "Simple API",
+      "description": "A simple API to learn how to write OpenAPI Specification"
+  },
+  "schemes": [
+      "https",
+      "http"
+  ],
+  "consumes": [
+      "application/json"
+  ],
+  "produces": [
+      "application/json"
+  ],
+  "securityDefinitions": {
+      "oauth": {
+          "tokenUrl": "http://auth.ibtspl.com/oauth2/",
+          "flow": "password",
+          "scopes": {
+              "read": "read users",
+              "write": "create users",
+              "update": "update users",
+              "delete": "delete users"
+          },
+          "type": "oauth2"
+      }
+  },
+  "definitions": {
+    "user":{
+      "type": "object",
+      "properties": {
+        "name":{
+          "type": "string"
         },
-        "schemes": [
-            "http"
-        ],
-        "consumes": [
-            "application/json"
-        ],
-        "produces": [
-            "application/json"
-        ],
-        "securityDefinitions": {
-            "oauth": {
-                "tokenUrl": "http://auth.ibtspl.com/oauth2/",
-                "flow": "password",
-                "scopes": {
-                    "read": "read users",
-                    "write": "create users",
-                    "update": "update users",
-                    "delete": "delete users"
-                },
-                "type": "oauth2"
-            }
+        "email": {
+          "type": "string",
+          "format": "email"
         },
-        "security": [],
-        "definitions": {
-            "DefaultHttpExceptionFields": {
-                "type": "object",
-                "properties": {
-                    "response": {
-                        "type": "string"
-                    },
-                    "http_status_code": {
-                        "type": "integer"
-                    },
-                    "res_status": {
-                        "type": "string",
-                        "enum": [
-                            "DUPLICATE_TO_IDS",
-                            "INVALID_INPUT_TO_IDS"
-                        ]
-                    }
-                },
-                "required": [
-                    "response",
-                    "http_status_code",
-                    "res_status"
-                ]
-            },
-            "TodoId": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    }
-                }
-            },
-            "BasicTodo": {
-                "type": "object",
-                "properties": {
-                    "description": {
-                        "type": "string"
-                    },
-                    "is_completed": {
-                        "type": "boolean"
-                    },
-                    "remind_at": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "description"
-                ]
-            },
-            "Todo": {
-                "allOf": [
-                    {
-                        "$ref": "#/definitions/BasicTodo"
-                    },
-                    {
-                        "$ref": "#/definitions/TodoId"
-                    }
-                ]
-            }
-        },
-        "parameters": {
-            "TodoId": {
-                "description": "todo id",
-                "in": "path",
-                "name": "id",
-                "required": true,
-                "type": "integer"
-            },
-            "BasicTodo": {
-                "description": "Todo Parameter",
-                "in": "body",
-                "name": "todo",
-                "required": true,
-                "schema": {
-                    "$ref": "#/definitions/BasicTodo"
-                }
-            }
-        },
-        "responses": {
-            "SuccessResponse": {
-                "description": "success response"
-            }
-        },
-        "paths": {
-            "/todos/": {
-                "get": {
-                    "summary": "Get all todos",
-                    "description": "Returns a list containing all todos.",
-                    "operationId": "get_todos",
-                    "security": [
-                        {
-                            "oauth": [
-                                "read"
-                            ]
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "A list of todos",
-                            "schema": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/Todo"
-                                }
-                            }
-                        },
-                        "401": {
-                            "description": "Unauthorized",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        },
-                        "403": {
-                            "description": "Forbidden",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        },
-                        "404": {
-                            "description": "Not Found",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        }
-                    }
-                },
-                "post": {
-                    "summary": "create a todo",
-                    "description": "Create a todo",
-                    "operationId": "create_todo",
-                    "security": [
-                        {
-                            "oauth": [
-                                "write"
-                            ]
-                        }
-                    ],
-                    "parameters": [
-                        {
-                            "$ref": "#/parameters/BasicTodo"
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "create a todo",
-                            "schema": {
-                                "$ref": "#/definitions/TodoId"
-                            }
-                        },
-                        "401": {
-                            "description": "Unauthorized",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        },
-                        "403": {
-                            "description": "Forbidden",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        },
-                        "404": {
-                            "description": "Not Found",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        }
-                    }
-                }
-            },
-            "/todos/{id}/": {
-                "parameters": [
-                    {
-                        "$ref": "#/parameters/TodoId"
-                    }
-                ],
-                "get": {
-                    "summary": "Get a todo",
-                    "description": "Returns a todo.",
-                    "operationId": "get_todo",
-                    "security": [
-                        {
-                            "oauth": [
-                                "read"
-                            ]
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "A todo",
-                            "schema": {
-                                "$ref": "#/definitions/Todo"
-                            }
-                        },
-                        "401": {
-                            "description": "Unauthorized",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        },
-                        "403": {
-                            "description": "Forbidden",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        },
-                        "404": {
-                            "description": "Not Found",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        }
-                    }
-                },
-                "put": {
-                    "parameters": [
-                        {
-                            "$ref": "#/parameters/BasicTodo"
-                        }
-                    ],
-                    "summary": "Updates a todo",
-                    "description": "Updates a todo.",
-                    "operationId": "update_todo",
-                    "security": [
-                        {
-                            "oauth": [
-                                "update"
-                            ]
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "$ref": "#/responses/SuccessResponse"
-                        },
-                        "401": {
-                            "description": "Unauthorized",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        },
-                        "403": {
-                            "description": "Forbidden",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        },
-                        "404": {
-                            "description": "Not Found",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        }
-                    }
-                },
-                "delete": {
-                    "summary": "Deletes a todo",
-                    "description": "Deletes a todo.",
-                    "operationId": "delete_todo",
-                    "security": [
-                        {
-                            "oauth": [
-                                "delete"
-                            ]
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "$ref": "#/responses/SuccessResponse"
-                        },
-                        "401": {
-                            "description": "Unauthorized",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        },
-                        "403": {
-                            "description": "Forbidden",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        },
-                        "404": {
-                            "description": "Not Found",
-                            "schema": {
-                                "$ref": "#/definitions/DefaultHttpExceptionFields"
-                            }
-                        }
-                    }
-                }
-            }
+        "age": {
+          "type": "integer"
         }
+      }
+    },
+    "course":{
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "fee": {
+          "type": "number",
+          "format": "float"
+        },
+        "duration": {
+          "type": "string"
+        }
+      }
+    },
+    "assignment":{
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "max_duration_in_minutes": {
+          "type": "number"
+        },
+        "assignment_description": {
+          "type": "string"
+        },
+        "current_assignment": {
+          "type": "integer"
+        }
+      }
     }
-    
+  },
+  "parameters": {
+    "Getlimit": {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "description": "Some description for limit",
+      "type": "integer"
+    },
+    "Getoffset": {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "description": "Some description for offset",
+      "type": "integer"
+    },
+    "ID": {
+      "name": "search",
+      "in": "query",
+      "required": false,
+      "description": "Some description for name",
+      "type": "integer"
+    }
+  },
+  "responses": {},
+  "paths": {
+    "/user/email/": {
+      "post": {
+        "operationId": "Create_email",
+        "summary": "Create new email",
+        "description": "Create new user email",
+        "parameters": [
+          {
+            "name": "user_email",
+            "in": "body",
+            "description": "user's email",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email"
+                }
+              },
+              "required": [
+                "email"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User is successfully created"
+          },
+          "400": {
+            "description": "Bad Request - Data is missing"
+          },
+          "500":{
+            "description":"Internal server error has occured"
+          }
+        }
+      }
+    },
+    "/login/":{
+      "post": {
+        "operationId": "login_user",
+        "summary": "Login User",
+        "description": "Login and get the access token",
+        "parameters": [
+          {
+            "name": "login",
+            "in": "body",
+            "description": "email to create access token",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_email": {
+                  "type": "string",
+                  "format": "email"
+                }
+              },
+              "required": [
+                "user_email"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully logged and token generated",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "access_token": {
+                  "type": "string",
+                  "description": "The access token for authentication."
+                },
+                "expires_in": {
+                  "type": "integer",
+                  "description": "The expiration time of the token in seconds."
+                }
+              },
+              "required": [
+                "access_token"
+              ]
+            }
+          },
+          "400": {
+            "description": "User email parameter is missing."
+          },
+          "404": {
+            "description": "User with this email doesn't exist."
+          },
+          "500":{
+            "description":"Internal server has occured."
+          }
+        }
+      }
+    },
+    "/logout/": {
+      "post": {
+        "operationId": "logout_user",
+        "summary": "Logout User",
+        "description": "This endpoint logs the user out by invalidating their access token.",
+        "security": [
+              {
+                  "oauth": ["write"]
+              }
+          ],
+        "responses": {
+          "200": {
+            "description": "Successfully logged out"
+          },
+          "400":{
+            "description":"user email is invalid"
+          },
+          "500":{
+             "description":"Failed to logout due to internal server error"
+          }
+        }
+      }
+    },
+    "/all/students/": {
+      "get": {
+        "operationId": "list_of_students",
+        "summary": "list of all students",
+        "description": "This endpoint gives us list of all students",
+        "security": [
+              {
+                  "oauth": ["read"]
+              }
+          ],
+        "parameters": [
+          {
+            "$ref":"#/parameters/Getlimit"
+          },
+          {
+            "$ref":"#/parameters/Getoffset"
+          },
+          {
+            "$ref":"#/parameters/ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully listed",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/user"
+              }
+            }
+          },
+          "400":{
+              "description":"Parameter is missing"
+          },
+          "404": {
+            "description": "Student object does not exist"
+          },
+          "500":{
+            "description":"Internal server error occured"
+          }
+        }
+      }
+    },
+    "/all/teachers/": {
+      "get": {
+        "operationId": "list_of_teachers",
+        "summary": "list of all teachers",
+        "description": "This endpoint gives us list of all teachers",
+        "security": [
+              {
+                  "oauth": ["read"]
+              }
+          ],
+        "parameters": [
+          {
+            "$ref":"#/parameters/Getlimit"
+          },
+          {
+            "$ref":"#/parameters/Getoffset"
+          },
+          {
+            "$ref":"#/parameters/ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully listed",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/user"
+              }
+            }
+          },
+          "400":{
+              "description":"Parameter is missing"
+          },
+          "404": {
+            "description": "Teacher object does not exist"
+          },
+          "500":{
+            "description":"Internal server error occured"
+          }
+        }
+      }
+    },
+    "/add/student/": {
+      "post": {
+        "operationId": "add_student",
+        "summary": "adding student",
+        "description": "This endpoint adds student",
+        "security": [
+              {
+                  "oauth": ["write"]
+              }
+          ],
+        "parameters": [
+          {
+            "name":"adding_student",
+            "in":"body",
+            "description":"Adding student details",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully added",
+            "schema":{
+              "type":"object",
+              "properties":{
+                "id":{
+                  "type":"integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing parameter or unique constraint is violeted"
+          },
+          "500":{
+            "description":"Internal server error has occured"
+          }
+        }
+      }
+    },
+    "/add/teacher/": {
+      "post": {
+        "operationId": "add_teacher",
+        "summary": "adding teacher",
+        "description": "This endpoint adds teacher",
+        "security": [
+              {
+                  "oauth": ["write"]
+              }
+          ],
+        "parameters": [
+          {
+            "name":"adding_teacher",
+            "in":"body",
+            "description":"Adding teacher details",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully added",
+            "schema":{
+              "type":"object",
+              "properties":{
+                "id":{
+                  "type":"integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing parameter or unique constraint is violeted"
+          },
+          "500":{
+            "description":"Internal server error has occured"
+          }
+        }
+      }
+    },
+    "/delete/student/": {
+      "delete": {
+        "operationId": "delete_student",
+        "summary": "deleting student",
+        "description": "This endpoint deletes student",
+        "security": [
+              {
+                  "oauth": ["delete"]
+              }
+          ],
+        "parameters": [
+          {
+            "$ref":"#/parameters/ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted"
+          },
+          "400": {
+            "description": "Bad Request - Data is missing"
+          },
+          "403":{
+              "description":"User is not authorized"
+          },
+          "404":{
+            "description":"Student object doesn't exist"
+          },
+          "500":{
+            "description":"Internal server error has occured"
+          }
+        }
+      }
+    },
+    "/delete/teacher/": {
+      "delete": {
+        "operationId": "delete_teacher",
+        "summary": "deleting teacher",
+        "description": "This endpoint deletes teacher",
+        "security": [
+              {
+                  "oauth": ["delete"]
+              }
+          ],
+        "parameters": [
+          {
+            "$ref":"#/parameters/ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted"
+          },
+          "400": {
+            "description": "Bad Request - Data is missing"
+          },
+          "403":{
+              "description":"User is not authorized"
+          },
+          "404":{
+            "description":"Teacher object doesn't exist"
+          },
+          "500":{
+            "description":"Internal server error has occured"
+          }
+        }
+      }
+    },
+    "/all/courses": {
+      "get": {
+        "operationId": "list_all_courses",
+        "summary": "listing all courses",
+        "description": "This endpoint lists all the courses",
+        "security": [
+          {
+            "oauth": ["read"]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref":"#/parameters/Getlimit"
+          },
+          {
+            "$ref":"#/parameters/Getoffset"
+          },
+          {
+            "$ref":"#/parameters/ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully listed",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/course"
+              }
+            }
+          },
+          "400":{
+              "description":"Parameter is missing"
+          },
+          "404": {
+            "description": "Course object does not exist"
+          },
+          "500":{
+            "description":"Internal server error occured"
+          }
+        }
+      }
+    },
+    "/add/course": {
+      "post": {
+        "operationId": "add_course",
+        "summary": "Adding course",
+        "description": "This endpoint adds course",
+        "security": [
+          {
+            "oauth": ["write"]
+          }
+        ],
+        "parameters": [
+          {
+            "name":"adding_course",
+            "in":"body",
+            "description":"Adding course details",
+            "schema": {
+              "$ref": "#/definitions/course"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully added",
+            "schema":{
+              "type":"object",
+              "properties":{
+                "id":{
+                  "type":"integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Data is missing or unique constraint has failed"
+          },
+          "500":{
+            "description":"Internal server has occured"
+          }
+        }
+      }
+    },
+    "/assign/teacher/course": {
+      "post": {
+        "operationId": "assign_teacher_course",
+        "summary": "assigning teacher",
+        "description": "This endpoint assigns teacher to a course",
+        "security": [
+          {
+            "oauth": ["write"]
+          }
+        ],
+        "parameters": [
+          {
+            "name":"assigning_teacher_course",
+            "in": "body",
+            "description": "Assigning teacher to course",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "teacher_id": {
+                  "type": "integer"
+                },
+                "course_id": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "teacher_id",
+                "course_id"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully assigned",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "teacher": {
+                  "type": "string"
+                },
+                "course": {
+                  "type": "string"
+                },
+                "fee": {
+                  "type": "number",
+                  "format": "float"
+                },
+                "duration": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Data is missing or teacher is already assigned"
+          },
+          "404":{
+            "description":"Teacher or Course object doesn't exist"
+          },
+          "500":{
+            "description":"Internal server has occured"
+          }
+        }
+      }
+    },
+    "/enroll/student/course": {
+      "post": {
+        "operationId": "enroll_student_course",
+        "summary": "enrolling in course",
+        "description": "This endpoint enrolls student in a course",
+        "security": [
+          {
+            "oauth": ["write"]
+          }
+        ],
+        "parameters": [
+          {
+            "name":"enrolling_student_course",
+            "in": "body",
+            "description": "Enrolling student to course",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "student_id": {
+                  "type": "integer"
+                },
+                "course_id": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "student_id",
+                "course_id"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully enrolled",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "student": {
+                  "type": "string"
+                },
+                "course": {
+                  "type": "string"
+                },
+                "fee": {
+                  "type": "number",
+                  "format": "float"
+                },
+                "duration": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Data is missing or student is already enrolled"
+          },
+          "404":{
+            "description":"Student or Course object doesn't exist"
+          },
+          "500":{
+            "description":"Internal server has occured"
+          }
+        }
+      }
+    },
+    "/all/assignments/course": {
+      "get": {
+        "operationId": "assignments_of_course",
+        "summary": "Assignments of course",
+        "description": "This endpoints shows all assignment of a course",
+        "security": [
+          {
+            "oauth": [
+              "read"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref":"#/parameters/Getlimit"
+          },
+          {
+            "$ref":"#/parameters/Getoffset"
+          },
+          {
+            "$ref":"#/parameters/ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully listed",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "assignment_name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "assignment_name"
+                ]
+              }
+            }
+          },
+          "400":{
+            "description":"Missing parameter"
+          },
+          "404":{
+            "description":"assignments doesn't exist"
+          },
+          "500":{
+            "description":"Internal server has occured"
+          }
+        }
+      }
+    },
+    "/add/assignment/course": {
+      "post":{
+        "operationId": "add_assignment_course",
+        "summary": "Adding assignment to course",
+        "description": "This endpoint adds assignment to course",
+        "security": [
+          {
+            "oauth": ["write"]
+          }
+        ],
+        "parameters": [
+          {
+            "name":"adding_assignment_course",
+            "in": "body",
+            "description": "Add assignment to course",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "assignment_id": {
+                  "type": "integer"
+                },
+                "course_id": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "assignment_id",
+                "course_id"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully added",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "course": {
+                  "type": "string"
+                },
+                "assignment": {
+                  "type": "string"
+                },
+                "max_duration_in_minutes": {
+                  "type": "number"
+                },
+                "assignment_description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400":{
+            "description":"Missing parameters or Assignment is already assigned"
+          },
+          "404":{
+            "description":"Course doesn't exist"
+          },
+          "500":{
+            "description":"Internal server has occured"
+          }
+        }
+      }
+    },
+    "/add/assignment": {
+      "post": {
+        "operationId": "add_assignment",
+        "summary": "Adding new assignment",
+        "description": "This endpoint adds new assignment",
+        "security": [
+          {
+            "oauth": ["write"]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "adding_assignment",
+            "in": "body",
+            "description": "Assignment details",
+            "schema": {
+              "$ref": "#/definitions/assignment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully created",
+            "schema":{
+              "type":"object",
+              "properties":{
+                "id":{
+                  "type":"integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Data is missing"
+          }
+        }
+      }
+    },
+    "/update/assignment/": {
+      "put": {
+        "operationId": "update_assignment",
+        "summary": "updating assignment",
+        "description": "This endpoint updates the assignment",
+        "security": [
+          {
+            "oauth": ["update"]
+          }
+        ],
+        "parameters":[
+          {
+            "name": "updating_assignment",
+            "in": "body",
+            "description": "Assignment details",
+            "schema": {
+              "$ref": "#/definitions/assignment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "max_duration_in_minutes": {
+                  "type": "number"
+                },
+                "assignment_description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Data is missing"
+          },
+          "404":{
+            "description":"assignment doesn't exist"
+          },
+          "500":{
+            "description":"Internal server has occured"
+          }
+        }
+      }
+    },
+    "/delete/assignment": {
+      "delete": {
+        "operationId": "delete_assignment",
+        "summary": "delete assignment",
+        "description": "This endpoint deletes assignment",
+        "security": [
+          {
+            "oauth": ["delete"]
+          }
+        ],
+        "parameters": [
+          {
+              "$ref":"#/parameters/ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted"
+          },
+          "400": {
+            "description": "Bad Request - Data is missing"
+          },
+          "404":{
+            "description":"Assignment doesn't exist"
+          },
+          "500":{
+            "description":"Internal server has occured"
+          }
+        }
+      }
+    },
+    "/all/submissions/assignment": {
+      "get": {
+        "operationId": "list_all_submissions",
+        "summary": "Listing all submissions",
+        "description": "This endpoint lists all submissions of an assignment",
+        "security": [
+          {
+            "oauth": ["read"]
+          }
+        ],
+        "parameters":[
+          {
+            "$ref":"#/parameters/Getlimit"
+          },
+          {
+            "$ref":"#/parameters/Getoffset"
+          },
+          {
+            "$ref":"#/parameters/ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully listed",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "submitted_by": {
+                    "type": "string"
+                  },
+                  "submitted_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "Grade": {
+                    "type": "string",
+                    "enum": [
+                      "A",
+                      "B",
+                      "C",
+                      "D"
+                    ]
+                  },
+                  "remarks": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "400":{
+            "description":"Missing parameters"
+          },
+          "404": {
+            "description": "Submissions doesn't exist"
+          },
+          "500":{
+            "description":"Internal server has occured"
+          }
+        }
+      }
+    },
+    "/add/submission": {
+      "post": {
+        "operationId": "add_submission",
+        "summary": "Adding submission",
+        "description": "This endpoint adds submission",
+        "security": [
+          {
+            "oauth": ["write"]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "adding_submission",
+            "in": "body",
+            "description": "Adding submission to an assignment",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "student_id": {
+                  "type": "integer"
+                },
+                "assignment_id": {
+                  "type": "integer"
+                },
+                "submitted_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully added",
+            "schema":{
+              "type":"object",
+              "properties":{
+                "id":{
+                  "type":"integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Data is missing or Assignment is already submitted"
+          },
+          "403":{
+            "description":"User is not authorized"
+          },
+          "500":{
+            "description":"Internal server error has occured"
+          }
+        }
+      }
+    },
+    "/grade/submission":{
+      "post": {
+        "operationId": "grade_submission",
+        "summary": "grading submission",
+        "description": "This endpoint grades a submission",
+        "security": [
+          {
+            "oauth": ["write"]
+          }
+        ],
+        "parameters": [
+          {
+            "$ref":"#/parameters/ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully graded",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "grade": {
+                  "type": "string",
+                  "enum": ["A","B","C","D"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Data is missing or already graded"
+          },
+          "403":{
+            "description":"User is not authorized"
+          },
+          "404":{
+            "description":"Submission object does not exist"
+          },
+          "500":{
+            "description":"Internal server error has occured"
+          }
+        }
+      }
+    }
+  }
+}

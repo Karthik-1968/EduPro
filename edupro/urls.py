@@ -23,6 +23,7 @@ from django.contrib import admin
 import os
 
 
+
 api = []
 
 apps = list(settings.SWAGGER_UTILS['APPS'].keys())
