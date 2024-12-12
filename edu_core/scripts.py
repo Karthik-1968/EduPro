@@ -1,5 +1,6 @@
-from edu_core.models import Submission
+from edu_core.models import User
 def usr():
-   submissions=Submission.objects.all()
-   for submission in submissions:
-      print(submission.id,submission.student.name,submission.assignment.name)
+   user=User.objects.get(email="chaitanyapatcherla46@gmail.com")
+   user.user_id="7ca96872-023b-4629-ac94-5b3ccc2b4feb"
+   user.save()
+   print(user.user_id)

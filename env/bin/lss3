@@ -1,4 +1,4 @@
-#!/workspaces/EduPro/env/bin/python3.10
+#!/workspaces/Edu-Pro/env/bin/python3.10
 import boto
 from boto.exception import S3ResponseError
 from boto.s3.connection import OrdinaryCallingFormat

@@ -16,7 +16,7 @@ def api_wrapper(*args, **kwargs):
 
     test_case = {
         "path_params": {},
-        "query_params": {'search': 906},
+        "query_params": {'search': 610},
         "header_params": {},
         "body": body,
         "securities": [{'oauth': ['delete']}]

@@ -13,6 +13,7 @@ def api_wrapper(*args, **kwargs):
     try:
         course_id=given_data['course_id']
         student_id=given_data['student_id']
+        user=kwargs['user']
         try:
             course=Course.objects.get(id=course_id)
         except ObjectDoesNotExist:
@@ -21,7 +22,10 @@ def api_wrapper(*args, **kwargs):
             student=Student.objects.get(id=student_id)
         except ObjectDoesNotExist:
             return JsonResponse({'error': 'Student does not exist'}, status=404)
-        return enroll_student_in_course(course,student)
+        if user.email==student.email:
+            return enroll_student_in_course(course,student)
+        else:
+            return JsonResponse({"error":"user is not authorized"},status=403)
     except KeyError as e:
         return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
 def enroll_student_in_course(course,student):
