@@ -29,7 +29,7 @@ MISSING_AGE=(
 )
 
 INVALID_STUDENT_ID=(
-    "Student is not exists",
+    "Student doesn't exists",
     "INVALID_STUDENT_ID"
 )
 
