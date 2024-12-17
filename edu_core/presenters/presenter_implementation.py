@@ -5,7 +5,8 @@ from django_swagger_utils.drf_server.exceptions import NotFound, Forbidden, BadR
 from edu_core.constants.exception_messages import INVALID_STUDENT,MISSING_NAME,MISSING_EMAIL,MISSING_AGE,INVALID_USER,\
 INVALID_TEACHER,INVALID_STUDENT_ID,INVALID_TEACHER_ID,INVALID_ACCESS,MISSING_FEE,MISSING_DURATION, INVALID_COURSE,\
 INVALID_COURSE_ID,MISSING_TEACHER_ID,MISSING_COURSE_ID,TEACHER_ALREADY_ASSIGNED,MISSING_STUDENT_ID,\
-STUDENT_ALREADY_ENROLLED,MISSING_DURATION_IN_MINS,MISSING_DESCRIPTION,INVALID_ASSIGNMENT,INVALID_ASSIGNMENT_ID
+STUDENT_ALREADY_ENROLLED,MISSING_DURATION_IN_MINS,MISSING_DESCRIPTION,INVALID_ASSIGNMENT,INVALID_ASSIGNMENT_ID,\
+MISSING_ASSIGNMENT_ID
 
 
 class PresenterImplementation(PresenterInterface):
@@ -261,3 +262,15 @@ class PresenterImplementation(PresenterInterface):
             "assignment_description":assignment_dto.assignment_description
         }
         return d
+    
+    def raise_exception_for_missing_assignmentid(self):
+        raise BadRequest(*MISSING_ASSIGNMENT_ID)
+    
+    def get_assignments_of_course_response(self,assignment_dtos:list[Assignmentdto])->list[dict]:
+        assignment_details=[]
+        for assignment_dto in assignment_dtos:
+            d={
+                "assignment_name":assignment_dto.name
+            }
+            assignment_details.append(d)
+        return assignment_details

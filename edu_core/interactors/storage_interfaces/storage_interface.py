@@ -195,3 +195,7 @@ class StorageInterface:
     @abstractmethod
     def update_assignment(self,name:str,max_duration:int,assign_description:str,id:int)->Assignmentdto:
         pass
+
+    @abstractmethod
+    def assignments_of_course(self,limit:int,offset:int,id:int)->list[Assignmentdto]:
+        pass

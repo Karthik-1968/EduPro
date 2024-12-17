@@ -216,13 +216,23 @@ class StorageImplementation(StorageInterface):
         assignment.max_duration=max_duration
         assignment.assign_description=assign_description
         assignment.save()
-        assignment_dto=self.convert_assignment_obj_to_dto(name=assignment.name,max_duration=assignment.max_duration,assign_description=assignment.assign_description)
+        assignment_dto=self.convert_assignment_obj_to_dto(assignment)
         return assignment_dto
     
     @staticmethod
-    def convert_assignment_obj_to_dto(name:str,max_duration:int,assign_description:str):
+    def convert_assignment_obj_to_dto(assignment):
         return Assignmentdto(
-            name=name,
-            max_duration_in_mins=max_duration,
-            assignment_description=assign_description
+            name=assignment.name,
+            max_duration_in_mins=assignment.max_duration,
+            assignment_description=assignment.assign_description
         )
+    
+    def assignments_of_course(self,limit:int,offset:int,id:int)->list[Assignmentdto]:
+        course=Course.objects.get(id=id)
+        assignments=Assignment.objects.filter(course=course)
+        assignment_dtos=[]
+        for assignment in assignments:
+            assignment_dto=self.convert_assignment_obj_to_dto(assignment)
+            assignment_dtos.append(assignment_dto)
+        assignment_dtos=assignment_dtos[offset:offset+limit]
+        return assignment_dtos

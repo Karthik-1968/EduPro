@@ -107,3 +107,8 @@ INVALID_ASSIGNMENT_ID=(
     "Assignment doesn't exists",
     "INVALID_ASSIGNMENT_ID"
 )
+
+MISSING_ASSIGNMENT_ID=(
+    "AssignmentId is missing",
+    "MISSING_ASSIGNMENT_ID"
+)

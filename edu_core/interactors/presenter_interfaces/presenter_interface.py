@@ -199,3 +199,11 @@ class PresenterInterface:
     @abstractmethod
     def get_update_assignment_response(self,assignment_dto:Assignmentdto)->dict:
         pass
+
+    @abstractmethod
+    def raise_exception_for_missing_assignmentid(self):
+        pass
+
+    @abstractmethod
+    def get_assignments_of_course_response(self,assignment_dtos:list[Assignmentdto])->list[dict]:
+        pass
