@@ -21,3 +21,39 @@ class InvalidStudentId(Exception):
 
 class InvalidTeacherId(Exception):
     pass
+
+class InvalidAccess(Exception):
+    pass
+
+class MissingFee(Exception):
+    pass
+
+class MissingDuration(Exception):
+    pass
+
+class InvalidCourse(Exception):
+    pass
+
+class InvalidCourseId(Exception):
+    pass
+
+class MissingId(Exception):
+    pass
+
+class TeacherAlreadyAssigned(Exception):
+    pass
+
+class StudentAlreadyEnrolled(Exception):
+    pass
+
+class MissingDurationInMins(Exception):
+    pass
+
+class MissingDescription(Exception):
+    pass
+
+class InvalidAssignment(Exception):
+    pass
+
+class InvalidAssignmentId(Exception):
+    pass

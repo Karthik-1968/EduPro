@@ -7,15 +7,40 @@ class tokendto:
     access_token:str
     expires_in:int
 
+@dataclass
 class Studentdto:
     name:str
     email:str
     age:int
 
+@dataclass
 class Teacherdto:
     name:str
     email:str
     age:int
+
+@dataclass
+class Coursedto:
+    name:str
+    fee:int
+    duration:str
+
+@dataclass
+class CourseTeacherdto:
+    teacher_dto:Teacherdto
+    course_dto:Coursedto
+
+@dataclass
+class CourseStudentdto:
+    student_dto:Studentdto
+    course_dto:Coursedto
+
+@dataclass
+class Assignmentdto:
+    name:str
+    max_duration_in_mins:int
+    assignment_description:str
+
 
 class StorageInterface:
 
@@ -81,4 +106,92 @@ class StorageInterface:
 
     @abstractmethod
     def get_list_of_teachers(self,limit:int,offset:int)->list[Teacherdto]:
+        pass
+
+    @abstractmethod
+    def delete_student(self,id:int):
+        pass
+
+    @abstractmethod
+    def check_user_authorization(self,student_email:str,user_email:str):
+        pass
+
+    @abstractmethod
+    def delete_teacher(self,id:int):
+        pass
+
+    @abstractmethod
+    def valid_fee_field(self,fee:int):
+        pass
+
+    @abstractmethod
+    def valid_duration_field(self,duration:str):
+        pass
+
+    @abstractmethod
+    def valid_course(self,name:str):
+        pass
+
+    @abstractmethod
+    def add_course(self,name:str,fee:int,duration:str)->int:
+        pass
+
+    @abstractmethod
+    def check_course_exists(self,id:int):
+        pass
+
+    @abstractmethod
+    def get_course_details(self,id:int)->Coursedto:
+        pass
+
+    @abstractmethod
+    def get_list_of_courses_details(self,limit:int,offset:int)->list[Coursedto]:
+        pass
+
+    @abstractmethod
+    def validate_id(self,id:int):
+        pass
+
+    @abstractmethod
+    def check_if_already_assigned(self,teacher_id:int,course_id:int):
+        pass
+
+    @abstractmethod
+    def assign_teacher_course(self,teacher_id:int,course_id:int)->CourseTeacherdto:
+        pass
+
+    @abstractmethod
+    def check_if_already_enrolled(self,student_id:int,course_id:int):
+        pass
+
+    @abstractmethod
+    def enroll_student_course(self,student_id:int,course_id:int)->CourseStudentdto:
+        pass
+
+    @abstractmethod
+    def valid_duration_in_mins_field(self,duration:int):
+        pass
+
+    @abstractmethod
+    def valid_assignment_description_field(self,assignment_description:str):
+        pass
+
+    @abstractmethod
+    def valid_assignment(self,name:str):
+        pass
+
+    @abstractmethod
+    def add_assignment(self,name:str,max_duration:int,assign_description:str)->int:
+        pass
+
+    @abstractmethod
+    def check_assignment_exists(self,id:int):
+        pass
+
+    @abstractmethod
+    def delete_assignment(self,id:int):
+        pass
+
+    @abstractmethod
+    def update_assignment(self,name:str,max_duration:int,assign_description:str,id:int)->Assignmentdto:
         pass

@@ -3,21 +3,18 @@ from dsu.dsu_gen.openapi.decorator.interface_decorator import \
 from .validator_class import ValidatorClass
 from django.http import JsonResponse
 from edu_core.models import Course
-from django.db import IntegrityError
+from edu_core.storages.storage_implementation import StorageImplementation
+from edu_core.presenters.presenter_implementation import PresenterImplementation
+from edu_core.interactors.add_course_interactor import AddCourse
 
 @validate_decorator(validator_class=ValidatorClass)
 def api_wrapper(*args, **kwargs):
     given_data=kwargs['request_data']
-    try:
-        name=given_data['name']
-        fee=given_data['fee']
-        duration=given_data['duration']
-        return add_course(name,fee,duration)
-    except KeyError as e:
-        return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
-def add_course(name,fee,duration):
-    if Course.objects.filter(name=name).exists():
-        return JsonResponse({"error": "Course is already created."}, status=400)
-    course=Course.objects.create(name=name,fee=fee,duration=duration)
-    data={"id":course.id}
+    name=given_data.get('name')
+    fee=given_data.get('fee')
+    duration=given_data.get('duration')
+    storage=StorageImplementation()
+    presenter=PresenterImplementation()
+    interactor=AddCourse(storage=storage,presenter=presenter)
+    data=interactor.add_course(name=name,fee=fee,duration=duration)
     return JsonResponse(data,status=200)

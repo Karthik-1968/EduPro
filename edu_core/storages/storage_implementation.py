@@ -2,8 +2,11 @@ from edu_core.models import Student,Teacher,Course,User,Assignment,Submission
 from edu_core.interactors.storage_interfaces.storage_interface import StorageInterface
 from ib_users.interfaces.service_interface import ServiceInterface
 from edu_core.exceptions.custom_exceptions import InvalidStudent, MissingName, MissingEmail, MissingAge, InvalidUser,\
-InvalidTeacher, InvalidStudentId, InvalidTeacherId
-from edu_core.interactors.storage_interfaces.storage_interface import tokendto, Studentdto, Teacherdto
+InvalidTeacher, InvalidStudentId, InvalidTeacherId, InvalidAccess, MissingFee, MissingDuration, InvalidCourse,\
+InvalidCourseId,MissingId,TeacherAlreadyAssigned,StudentAlreadyEnrolled,MissingDurationInMins,MissingDescription,\
+InvalidAssignment,InvalidAssignmentId
+from edu_core.interactors.storage_interfaces.storage_interface import tokendto, Studentdto, Teacherdto, Coursedto,\
+ CourseTeacherdto, CourseStudentdto, Assignmentdto
 
 
 class StorageImplementation(StorageInterface):
@@ -79,3 +82,147 @@ class StorageImplementation(StorageInterface):
         teachers=Teacher.objects.all()[offset:offset+limit]
         teachers=[teacher for teacher in teachers]
         return teachers
+    
+    def check_user_authorization(self,email:str,user_email:str):
+        if email!=user_email:
+            raise InvalidAccess
+    
+    def delete_student(self,id:int):
+        Student.objects.get(id=id).delete()
+    
+    def delete_teacher(self,id:int):
+        Teacher.objects.get(id=id).delete()
+
+    def valid_fee_field(self,fee:int):
+        fee_not_present=not fee
+        if fee_not_present:
+            raise MissingFee
+    
+    def valid_duration_field(self,duration:str):
+        duration_not_present=not duration
+        if duration_not_present:
+            raise MissingDuration
+        
+    def valid_course(self,name:str):
+        if Course.objects.filter(name=name).exists():
+            raise InvalidCourse
+    
+    def add_course(self,name:str,fee:int,duration:str)->int:
+        course=Course.objects.create(name=name,fee=fee,duration=duration)
+        course_id=course.id
+        return course_id
+    
+    def check_course_exists(self,id:int):
+        if Course.objects.filter(id=id).exists()==False:
+            raise InvalidCourseId
+        
+    def get_course_details(self,id:int)->Coursedto:
+        course=Course.objects.get(id=id)
+        return course
+    
+    def get_list_of_courses_details(self,limit:int,offset:int)->list[Coursedto]:
+        courses=Course.objects.all()[offset:offset+limit]
+        courses=[course for course in courses]
+        return courses
+    
+    def validate_id(self,id:int):
+        id_not_present=not id
+        if id_not_present:
+            raise MissingId
+    
+    def check_if_already_assigned(self,teacher_id:int,course_id:int):
+        teacher=Teacher.objects.get(id=teacher_id)
+        if Course.objects.filter(id=course_id,teacher=teacher).exists():
+            raise TeacherAlreadyAssigned
+        
+    def assign_teacher_course(self,teacher_id:int,course_id:int)->CourseTeacherdto:
+        teacher=Teacher.objects.get(id=teacher_id)
+        course=Course.objects.get(id=course_id)
+        course.teacher.add(teacher)
+        course_dto=self.convert_course_obj_to_dto(course)
+        teacher_dto=self.convert_teacher_obj_to_dto(teacher)
+        return CourseTeacherdto(
+            teacher_dto=teacher_dto,
+            course_dto=course_dto
+        )
+
+    @staticmethod
+    def convert_course_obj_to_dto(course):
+        course_dto=Coursedto(name=course.name,
+                             fee=course.fee,
+                             duration=course.duration)
+        return course_dto
+    
+    @staticmethod
+    def convert_teacher_obj_to_dto(teacher):
+        teacher_dto=Teacherdto(name=teacher.name,
+                               email=teacher.email,
+                               age=teacher.age)
+        return teacher_dto
+    
+    def check_if_already_enrolled(self,student_id:int,course_id:int):
+        student=Student.objects.get(id=student_id)
+        if Course.objects.filter(id=course_id,student=student).exists():
+            raise StudentAlreadyEnrolled
+        
+    def enroll_student_course(self,student_id:int,course_id:int)->CourseStudentdto:
+        student=Student.objects.get(id=student_id)
+        course=Course.objects.get(id=course_id)
+        course.student.add(student)
+        course_dto=self.convert_course_obj_to_dto(course)
+        student_dto=self.convert_student_obj_to_dto(student)
+        return CourseStudentdto(
+            student_dto=student_dto,
+            course_dto=course_dto
+        )
+    
+    @staticmethod
+    def convert_student_obj_to_dto(student):
+        return Studentdto(
+            name=student.name,
+            email=student.email,
+            age=student.age
+        )
+
+    def valid_duration_in_mins_field(self,duration:int):
+        duration_not_given=not duration
+        if duration_not_given:
+            raise MissingDurationInMins
+    
+    def valid_assignment_description_field(self,assignment_description:str):
+        assigment_description_not_given=not assignment_description
+        if assigment_description_not_given:
+            raise MissingDescription
+        
+    def valid_assignment(self,name:str):
+        if Assignment.objects.filter(name=name).exists():
+            raise InvalidAssignment
+        
+    def add_assignment(self,name:str,max_duration:int,assign_description:str)->int:
+        assignment=Assignment.objects.create(name=name,max_duration=max_duration,assign_description=assign_description)
+        assignment_id=assignment.id
+        return assignment_id
+    
+    def check_assignment_exists(self,id:int):
+        if Assignment.objects.filter(id=id).exists()==False:
+            raise InvalidAssignmentId
+        
+    def delete_assignment(self,id:int):
+        Assignment.objects.get(id=id).delete()
+
+    def update_assignment(self,name:str,max_duration:int,assign_description:str,id:int)->Assignmentdto:
+        assignment=Assignment.objects.get(id=id)
+        assignment.name=name
+        assignment.max_duration=max_duration
+        assignment.assign_description=assign_description
+        assignment.save()
+        assignment_dto=self.convert_assignment_obj_to_dto(name=assignment.name,max_duration=assignment.max_duration,assign_description=assignment.assign_description)
+        return assignment_dto
+    
+    @staticmethod
+    def convert_assignment_obj_to_dto(name:str,max_duration:int,assign_description:str):
+        return Assignmentdto(
+            name=name,
+            max_duration_in_mins=max_duration,
+            assignment_description=assign_description
+        )

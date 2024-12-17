@@ -1,5 +1,6 @@
 from abc import abstractmethod
-from edu_core.interactors.storage_interfaces.storage_interface import tokendto,Studentdto,Teacherdto
+from edu_core.interactors.storage_interfaces.storage_interface import tokendto,Studentdto,Teacherdto,Coursedto,\
+CourseTeacherdto,CourseStudentdto,Assignmentdto
 
 class PresenterInterface:
     
@@ -97,4 +98,104 @@ class PresenterInterface:
 
     @abstractmethod
     def get_list_of_teachers_details_response(self,teachers:list[Teacherdto])->list[dict]:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_invalid_access(self):
+        pass
+
+    @abstractmethod
+    def get_delete_student_response(self):
+        pass
+
+    @abstractmethod
+    def get_delete_teacher_response(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_fee(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_duration(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_invalid_course(self):
+        pass
+
+    @abstractmethod
+    def get_add_coure_response(self,course_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_invalid_course_id(self):
+        pass
+
+    @abstractmethod
+    def get_course_details_response(self,course:Coursedto)->list[dict]:
+        pass
+
+    @abstractmethod
+    def get_list_of_courses_details_response(self,courses:list[Coursedto])->list[dict]:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missingid(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_teacherid(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_courseid(self):
+        pass
+
+    @abstractmethod
+    def get_assign_teacher_course_response(self,teacher_to_course:CourseTeacherdto)->dict:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_teacher_already_assigned(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_studentid(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_student_already_enrolled(self):
+        pass
+
+    @abstractmethod
+    def get_enroll_student_course_response(self,course_student_dtos:CourseStudentdto)->dict:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_duration_in_mins(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_description(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_invalid_assignment(self):
+        pass
+
+    @abstractmethod
+    def get_add_assignment_response(self,assignment_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_invalid_assignment_id(self):
+        pass
+
+    @abstractmethod
+    def get_delete_assignment_response(self):
+        pass
+
+    @abstractmethod
+    def get_update_assignment_response(self,assignment_dto:Assignmentdto)->dict:
         pass

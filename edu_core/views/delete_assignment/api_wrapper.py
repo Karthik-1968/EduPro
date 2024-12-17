@@ -2,18 +2,15 @@ from dsu.dsu_gen.openapi.decorator.interface_decorator import \
     validate_decorator
 from .validator_class import ValidatorClass
 from django.http import JsonResponse
-from edu_core.models import Assignment
-from django.core.exceptions import ObjectDoesNotExist
+from edu_core.storages.storage_implementation import StorageImplementation
+from edu_core.presenters.presenter_implementation import PresenterImplementation
+from edu_core.interactors.delete_assignment_interactor import DeleteAssignment
 
 @validate_decorator(validator_class=ValidatorClass)
 def api_wrapper(*args, **kwargs):
-    try:
-        id=kwargs['query_params']['search']
-        try:
-            assignment=Assignment.objects.get(id=id)
-        except ObjectDoesNotExist:
-            return JsonResponse({'error': 'assignment does not exist'}, status=404)
-        assignment.delete()
-        return JsonResponse({"Sucess":"Successfully deleted"},status=200)
-    except KeyError as e:
-        return JsonResponse({"error": f"Missing parameter: {e}"}, status=400)
+    id=kwargs['query_params'].get('search')
+    storage=StorageImplementation()
+    presenter=PresenterImplementation()
+    interactor=DeleteAssignment(storage=storage)
+    data=interactor.delete_assignment(assignment_id=id,presenter=presenter)
+    return JsonResponse(data,status=200)
