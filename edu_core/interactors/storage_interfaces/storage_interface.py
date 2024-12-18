@@ -212,3 +212,15 @@ class StorageInterface:
     @abstractmethod
     def add_assignment_to_course(self,course_id:int,assignment_id:int)->CourseAssignmentdto:
         pass
+
+    @abstractmethod
+    def validate_submitted_at(self,submitted_at:str):
+        pass
+
+    @abstractmethod
+    def check_if_already_submitted(self,student_id:int,assignment_id:int):
+        pass
+
+    @abstractmethod
+    def add_submission(self,student_id:int,assignment_id:int,submitted_at:str)->int:
+        pass

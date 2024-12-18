@@ -60,3 +60,9 @@ class InvalidAssignmentId(Exception):
 
 class AssignmentAlreadyAddedtoCourse(Exception):
     pass
+
+class MissingSubmittedAt(Exception):
+    pass
+
+class AssignmentAlreadySubmitted(Exception):
+    pass

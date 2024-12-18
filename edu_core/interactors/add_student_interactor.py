@@ -34,6 +34,7 @@ class AddStudentInteractor:
         return presenter.get_add_student_response(student_id=student)
     
     def validate_input_data(self,name:str,email:str,age:int,presenter:PresenterInterface):
+        
         try:
             self.storage.valid_name_field(name=name)
         except MissingName:

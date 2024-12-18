@@ -117,3 +117,13 @@ ASSIGNMENT_ALREADY_ADDED_TO_COURSE=(
     "Assignment already added to course",
     "ASSIGNMENT_ALREADY_ADDED_TO_COURSE"
 )
+
+MISSING_SUBMITTED_AT=(
+    "Submitted at is missing",
+    "MISSING_SUBMITTED_AT"
+)
+
+ASSIGNMENT_ALREADY_SUBMITTED=(
+    "Assignment is already submitted",
+    "ASSIGNMENT_ALREADY_SUBMITTED"
+)

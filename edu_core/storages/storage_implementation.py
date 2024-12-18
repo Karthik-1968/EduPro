@@ -4,7 +4,7 @@ from ib_users.interfaces.service_interface import ServiceInterface
 from edu_core.exceptions.custom_exceptions import InvalidStudent, MissingName, MissingEmail, MissingAge, InvalidUser,\
 InvalidTeacher, InvalidStudentId, InvalidTeacherId, InvalidAccess, MissingFee, MissingDuration, InvalidCourse,\
 InvalidCourseId,MissingId,TeacherAlreadyAssigned,StudentAlreadyEnrolled,MissingDurationInMins,MissingDescription,\
-InvalidAssignment,InvalidAssignmentId,AssignmentAlreadyAddedtoCourse
+InvalidAssignment,InvalidAssignmentId,AssignmentAlreadyAddedtoCourse,MissingSubmittedAt,AssignmentAlreadySubmitted
 from edu_core.interactors.storage_interfaces.storage_interface import tokendto, Studentdto, Teacherdto, Coursedto,\
  CourseTeacherdto, CourseStudentdto, Assignmentdto, CourseAssignmentdto
 
@@ -251,6 +251,22 @@ class StorageImplementation(StorageInterface):
         course_dto=self.convert_course_obj_to_dto(course)
         assignment_dto=self.convert_assignment_obj_to_dto(assignment)
         return CourseAssignmentdto(
-            course_dto=course_dto,
-            assignment_dto=assignment_dto
+            course_dto =  course_dto,
+            assignment_dto = assignment_dto
         )
+    
+    def validate_submitted_at(self,submitted_at:str):
+        submitted_at_not_present=not submitted_at
+        if submitted_at_not_present:
+            raise MissingSubmittedAt
+        
+    def check_if_already_submitted(self,student_id:int,assignment_id:int):
+        if Submission.objects.filter(student_id=student_id,assignment_id=assignment_id).exists():
+            raise AssignmentAlreadySubmitted
+        
+    def add_submission(self,student_id:int,assignment_id:int,submitted_at:str)->int:
+        student=Student.objects.get(id=student_id)
+        assignment=Assignment.objects.get(id=assignment_id)
+        submission=Submission.objects.create(student=student,assignment=assignment,submitted_at=submitted_at)
+        submission_id=submission.id
+        return submission_id

@@ -45,38 +45,6 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def add_course(self,course_id:int):
-        pass
-
-    @abstractmethod
-    def add_assignment(self,assignment_id:int):
-        pass
-
-    @abstractmethod
-    def add_submission(self,submission_id:int):
-        pass
-
-    @abstractmethod
-    def update_assignment(self,name:str,max_duration:int,assign_description:str):
-        pass
-
-    @abstractmethod
-    def assign_teacher_course(self,teacher:str,course:str,fee:int,duration:str):
-        pass
-
-    @abstractmethod
-    def enroll_student_course(self,student:str,course:str,fee:int,duration:int):
-        pass
-
-    @abstractmethod
-    def add_assignment_course(self,course:str,assignment:str,max_duration:int,assign_description:str):
-        pass
-
-    @abstractmethod
-    def grade_submission(self,grade:str):
-        pass
-
-    @abstractmethod
     def get_student_details_response(self,student:Studentdto)->list[dict]:
         pass
     
@@ -214,4 +182,16 @@ class PresenterInterface:
 
     @abstractmethod
     def get_add_assignment_to_course_response(self,course_assignment_dtos:CourseAssignmentdto)->dict:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_submittedat(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_assignment_already_submitted(self):
+        pass
+
+    @abstractmethod
+    def get_add_submission_response(self,submission_id:int)->dict:
         pass

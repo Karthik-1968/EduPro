@@ -6,7 +6,7 @@ from edu_core.constants.exception_messages import INVALID_STUDENT,MISSING_NAME,M
 INVALID_TEACHER,INVALID_STUDENT_ID,INVALID_TEACHER_ID,INVALID_ACCESS,MISSING_FEE,MISSING_DURATION, INVALID_COURSE,\
 INVALID_COURSE_ID,MISSING_TEACHER_ID,MISSING_COURSE_ID,TEACHER_ALREADY_ASSIGNED,MISSING_STUDENT_ID,\
 STUDENT_ALREADY_ENROLLED,MISSING_DURATION_IN_MINS,MISSING_DESCRIPTION,INVALID_ASSIGNMENT,INVALID_ASSIGNMENT_ID,\
-MISSING_ASSIGNMENT_ID,ASSIGNMENT_ALREADY_ADDED_TO_COURSE
+MISSING_ASSIGNMENT_ID,ASSIGNMENT_ALREADY_ADDED_TO_COURSE,MISSING_SUBMITTED_AT,ASSIGNMENT_ALREADY_SUBMITTED
 
 
 class PresenterImplementation(PresenterInterface):
@@ -17,7 +17,7 @@ class PresenterImplementation(PresenterInterface):
             "expires_in":auth_tokens.expires_in
         }
     
-    def get_add_student_response(self,student_id:int):
+    def get_add_student_response(self,student_id:int)->dict:
         return {
             "id": student_id
         }
@@ -40,7 +40,7 @@ class PresenterImplementation(PresenterInterface):
     def raise_exception_for_invalid_user(self):
         raise BadRequest(*INVALID_USER)
     
-    def get_add_teacher_response(self,teacher_id:int):
+    def get_add_teacher_response(self,teacher_id:int)->dict:
         return {
             "id":teacher_id
         }
@@ -48,57 +48,6 @@ class PresenterImplementation(PresenterInterface):
     def get_user_email_response(self):
         return {
             "success":"user is successfully created"
-        }
-    
-    def add_course(self,course_id:int):
-        return {
-            "id":course_id
-        }
-    
-    def add_assignment(self,assignment_id:int):
-        return {
-            "id":assignment_id
-        }
-    
-    def add_submission(self,submission_id:int):
-        return {
-            "id":submission_id
-        }
-    
-    def update_assignment(self,name:str,max_duration:int,assign_description:str):
-        return {
-            "name":name,
-            "max_duration_in_minutes":max_duration,
-            "assignment_description":assign_description
-        }
-    
-    def assign_teacher_course(self,teacher:str,course:str,fee:int,duration:str):
-        return {
-            "teacher":teacher,
-            "course":course,
-            "fee":fee,
-            "duration":duration
-        }
-    
-    def enroll_student_course(self,student:str,course:str,fee:int,duration:int):
-        return {
-            "student":student,
-            "course":course,
-            "fee":fee,
-            "duration":duration
-        }
-    
-    def add_assignment_course(self,course:str,assignment:str,max_duration:int,assign_description:str):
-        return {
-            "course":course,
-            "assignment":assignment,
-            "max_duration_in_minutes":max_duration,
-            "assignment_description":assign_description
-        }
-    
-    def grade_submission(self,grade:str):
-        return {
-            "grade":grade
         }
     
     def get_student_details_response(self,student:Studentdto)->list[dict]:
@@ -162,7 +111,7 @@ class PresenterImplementation(PresenterInterface):
             "success":"teacher is deleted successfully"
         }
     
-    def raise_exception_for_missing_age(self):
+    def raise_exception_for_missing_fee(self):
         raise BadRequest(*MISSING_FEE)
     
     def raise_exception_for_missing_duration(self):
@@ -171,7 +120,7 @@ class PresenterImplementation(PresenterInterface):
     def raise_exception_for_invalid_course(self):
         raise BadRequest(*INVALID_COURSE)
     
-    def get_add_coure_response(self,course_id:int):
+    def get_add_coure_response(self,course_id:int)->dict:
         return {
             "id":course_id
         }
@@ -242,9 +191,9 @@ class PresenterImplementation(PresenterInterface):
     def raise_exception_for_invalid_assignment(self):
         raise BadRequest(*INVALID_ASSIGNMENT)
     
-    def get_add_assignment_response(self,assignment_id:int):
+    def get_add_assignment_response(self,assignment_id:int)->dict:
         return {
-            'id':assignment_id
+            "id":assignment_id
         }
     
     def raise_exception_for_invalid_assignment_id(self):
@@ -286,3 +235,14 @@ class PresenterImplementation(PresenterInterface):
             "assignment_description":course_assignment_dtos.assignment_dto.assignment_description
         }
         return d
+    
+    def raise_exception_for_missing_submittedat(self):
+        raise BadRequest(*MISSING_SUBMITTED_AT)
+    
+    def raise_exception_for_assignment_already_submitted(self):
+        raise BadRequest(*ASSIGNMENT_ALREADY_SUBMITTED)
+    
+    def get_add_submission_response(self,submission_id:int)->dict:
+        return {
+            "id":submission_id
+        }
