@@ -4,7 +4,7 @@ from .validator_class import ValidatorClass
 from django.http import JsonResponse
 from edu_core.storages.storage_implementation import StorageImplementation
 from edu_core.presenters.presenter_implementation import PresenterImplementation
-from edu_core.interactors.get_list_of_assignment_of_course import AssignmentsofCourse
+from edu_core.interactors.get_list_of_assignment_of_course_interactor import AssignmentsofCourse
 
 @validate_decorator(validator_class=ValidatorClass)
 def api_wrapper(*args, **kwargs):

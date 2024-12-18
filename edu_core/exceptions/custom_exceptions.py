@@ -66,3 +66,9 @@ class MissingSubmittedAt(Exception):
 
 class AssignmentAlreadySubmitted(Exception):
     pass
+
+class InvalidSubmissionId(Exception):
+    pass
+
+class SubmissionAlreadyGraded(Exception):
+    pass

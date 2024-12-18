@@ -1,12 +1,17 @@
 from edu_core.interactors.presenter_interfaces.presenter_interface import PresenterInterface
+
 from edu_core.interactors.storage_interfaces.storage_interface import tokendto,Studentdto,Teacherdto,Coursedto,\
-CourseTeacherdto,CourseStudentdto,Assignmentdto,CourseAssignmentdto
+CourseTeacherdto,CourseStudentdto,Assignmentdto,CourseAssignmentdto,Submissiondto
+
 from django_swagger_utils.drf_server.exceptions import NotFound, Forbidden, BadRequest
+from edu_core.constants.enums import Choices
+
 from edu_core.constants.exception_messages import INVALID_STUDENT,MISSING_NAME,MISSING_EMAIL,MISSING_AGE,INVALID_USER,\
 INVALID_TEACHER,INVALID_STUDENT_ID,INVALID_TEACHER_ID,INVALID_ACCESS,MISSING_FEE,MISSING_DURATION, INVALID_COURSE,\
 INVALID_COURSE_ID,MISSING_TEACHER_ID,MISSING_COURSE_ID,TEACHER_ALREADY_ASSIGNED,MISSING_STUDENT_ID,\
 STUDENT_ALREADY_ENROLLED,MISSING_DURATION_IN_MINS,MISSING_DESCRIPTION,INVALID_ASSIGNMENT,INVALID_ASSIGNMENT_ID,\
-MISSING_ASSIGNMENT_ID,ASSIGNMENT_ALREADY_ADDED_TO_COURSE,MISSING_SUBMITTED_AT,ASSIGNMENT_ALREADY_SUBMITTED
+MISSING_ASSIGNMENT_ID,ASSIGNMENT_ALREADY_ADDED_TO_COURSE,MISSING_SUBMITTED_AT,ASSIGNMENT_ALREADY_SUBMITTED,\
+MISSING_SUBMISSION_ID,INVALID_SUBMISSION_ID,SUBMISSION_ALREADY_GRADED
 
 
 class PresenterImplementation(PresenterInterface):
@@ -245,4 +250,35 @@ class PresenterImplementation(PresenterInterface):
     def get_add_submission_response(self,submission_id:int)->dict:
         return {
             "id":submission_id
+        }
+    
+    def get_list_of_submissions_response(self,submission_dtos:list[Submissiondto])->list[dict]:
+        submission_details=[]
+        for submission_dto in submission_dtos:
+            d={
+                "submitted_by":submission_dto.student_dto.name,
+                "submitted_at":submission_dto.submitted_at,
+                "Grade":submission_dto.grade,
+                "remarks":submission_dto.remarks
+            }
+            submission_details.append(d)
+        return submission_details
+
+    def raise_exception_for_missing_submissionid(self):
+        raise BadRequest(*MISSING_SUBMISSION_ID)
+    
+    def raise_exception_for_invalid_submission_id(self):
+        raise NotFound(*INVALID_SUBMISSION_ID)
+    
+    def raise_exception_for_submission_already_graded(self):
+        raise BadRequest(*SUBMISSION_ALREADY_GRADED)
+    
+    def get_grade_submission_response(self,grade:Choices)->dict:
+        return {
+            "grade":grade
+        }
+    
+    def get_logout_response(self):
+        return {
+            "Success":"Successfully logged out"
         }

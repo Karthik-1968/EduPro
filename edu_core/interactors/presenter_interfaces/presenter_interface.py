@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from edu_core.interactors.storage_interfaces.storage_interface import tokendto,Studentdto,Teacherdto,Coursedto,\
-CourseTeacherdto,CourseStudentdto,Assignmentdto,CourseAssignmentdto
+CourseTeacherdto,CourseStudentdto,Assignmentdto,CourseAssignmentdto,Submissiondto
+from edu_core.constants.enums import Choices
 
 class PresenterInterface:
     
@@ -109,10 +110,6 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_missingid(self):
-        pass
-
-    @abstractmethod
     def raise_exception_for_missing_teacherid(self):
         pass
 
@@ -194,4 +191,28 @@ class PresenterInterface:
 
     @abstractmethod
     def get_add_submission_response(self,submission_id:int)->dict:
+        pass
+
+    @abstractmethod
+    def get_list_of_submissions_response(self,submission_dtos:list[Submissiondto])->list[dict]:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_submissionid(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_invalid_submission_id(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_submission_already_graded(self):
+        pass
+
+    @abstractmethod
+    def get_grade_submission_response(self,grade:Choices)->dict:
+        pass
+
+    @abstractmethod
+    def get_logout_response(self):
         pass

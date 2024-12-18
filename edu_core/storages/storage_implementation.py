@@ -1,13 +1,16 @@
 from edu_core.models import Student,Teacher,Course,User,Assignment,Submission
 from edu_core.interactors.storage_interfaces.storage_interface import StorageInterface
 from ib_users.interfaces.service_interface import ServiceInterface
+
 from edu_core.exceptions.custom_exceptions import InvalidStudent, MissingName, MissingEmail, MissingAge, InvalidUser,\
 InvalidTeacher, InvalidStudentId, InvalidTeacherId, InvalidAccess, MissingFee, MissingDuration, InvalidCourse,\
 InvalidCourseId,MissingId,TeacherAlreadyAssigned,StudentAlreadyEnrolled,MissingDurationInMins,MissingDescription,\
-InvalidAssignment,InvalidAssignmentId,AssignmentAlreadyAddedtoCourse,MissingSubmittedAt,AssignmentAlreadySubmitted
-from edu_core.interactors.storage_interfaces.storage_interface import tokendto, Studentdto, Teacherdto, Coursedto,\
- CourseTeacherdto, CourseStudentdto, Assignmentdto, CourseAssignmentdto
+InvalidAssignment,InvalidAssignmentId,AssignmentAlreadyAddedtoCourse,MissingSubmittedAt,AssignmentAlreadySubmitted,\
+InvalidSubmissionId,SubmissionAlreadyGraded
 
+from edu_core.interactors.storage_interfaces.storage_interface import tokendto, Studentdto, Teacherdto, Coursedto,\
+ CourseTeacherdto, CourseStudentdto, Assignmentdto, CourseAssignmentdto,Submissiondto
+from edu_core.constants.enums import Choices
 
 class StorageImplementation(StorageInterface):
 
@@ -270,3 +273,45 @@ class StorageImplementation(StorageInterface):
         submission=Submission.objects.create(student=student,assignment=assignment,submitted_at=submitted_at)
         submission_id=submission.id
         return submission_id
+    
+    def list_of_submissions(self,limit:int,offset:int,id:int)->list[Submissiondto]:
+        submissions=Submission.objects.filter(assignment_id=id)
+        submission_dtos=[]
+        for submission in submissions:
+            submission_dto=self.convert_submission_obj_to_dto(submission)
+            submission_dtos.append(submission_dto)
+        submission_dtos=submission_dtos[offset:offset+limit]
+        return submission_dtos
+
+    @staticmethod
+    def convert_submission_obj_to_dto(submission):
+        return Submissiondto(
+            student_dto=Studentdto(name=submission.student.name,email=submission.student.email,age=submission.student.age),
+            assignment_dto=Assignmentdto(name=submission.assignment.name,max_duration_in_mins=submission.assignment.max_duration,\
+                                         assignment_description=submission.assignment.assign_description),
+            submitted_at=submission.submitted_at,
+            grade=submission.Grade,
+            remarks=submission.remarks
+        )
+    
+    def check_submission_exists(self,id:int):
+        if Submission.objects.filter(id=id).exists()==False:
+            raise InvalidSubmissionId
+        
+    def check_user_is_teacher(self,user_email:str):
+        teachers=Teacher.objects.all()
+        teacher_emails=[teacher.email for teacher in teachers]
+        if user_email not in teacher_emails:
+            raise InvalidAccess
+    
+    def check_if_submission_already_graded(self,id=int):
+        submission=Submission.objects.get(id=id)
+        if submission.Grade:
+            raise SubmissionAlreadyGraded
+    
+    def grade_submission(self,id:int)->Choices:
+        submission=Submission.objects.get(id=id)
+        submission.Grade="B"
+        submission.remarks="Good"
+        submission.save
+        return submission.Grade

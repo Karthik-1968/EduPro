@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from dataclasses import dataclass
-
+from edu_core.constants.enums import Choices
+from typing import Optional
 
 @dataclass
 class tokendto:
@@ -45,6 +46,14 @@ class Assignmentdto:
 class CourseAssignmentdto:
     course_dto:Coursedto
     assignment_dto:Assignmentdto
+
+@dataclass
+class Submissiondto:
+    student_dto:Studentdto
+    assignment_dto:Assignmentdto
+    submitted_at:str
+    grade: Optional[Choices]
+    remarks:Optional[str]
 
 
 class StorageInterface:
@@ -223,4 +232,24 @@ class StorageInterface:
 
     @abstractmethod
     def add_submission(self,student_id:int,assignment_id:int,submitted_at:str)->int:
+        pass
+
+    @abstractmethod
+    def list_of_submissions(self,limit:int,offset:int,id:int)->list[Submissiondto]:
+        pass
+
+    @abstractmethod
+    def check_submission_exists(self,id:int):
+        pass
+
+    @abstractmethod
+    def check_user_is_teacher(self,user_email:str):
+        pass
+
+    @abstractmethod
+    def check_if_submission_already_graded(self,id=int):
+        pass
+
+    @abstractmethod
+    def grade_submission(self,id:int)->Choices:
         pass

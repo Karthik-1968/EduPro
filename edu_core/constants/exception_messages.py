@@ -127,3 +127,18 @@ ASSIGNMENT_ALREADY_SUBMITTED=(
     "Assignment is already submitted",
     "ASSIGNMENT_ALREADY_SUBMITTED"
 )
+
+MISSING_SUBMISSION_ID=(
+    "SubmissionId is missing",
+    "MISSING_SUBMISSION_ID"
+)
+
+INVALID_SUBMISSION_ID=(
+    "Submission doesn't exist",
+    "INVALID_SUBMISSION_ID"
+)
+
+SUBMISSION_ALREADY_GRADED=(
+    "Submission already graded",
+    "SUBMISSION_ALREADY_GRADED"
+)
