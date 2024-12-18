@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from edu_core.interactors.storage_interfaces.storage_interface import tokendto,Studentdto,Teacherdto,Coursedto,\
-CourseTeacherdto,CourseStudentdto,Assignmentdto
+CourseTeacherdto,CourseStudentdto,Assignmentdto,CourseAssignmentdto
 
 class PresenterInterface:
     
@@ -206,4 +206,12 @@ class PresenterInterface:
 
     @abstractmethod
     def get_assignments_of_course_response(self,assignment_dtos:list[Assignmentdto])->list[dict]:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_assignment_already_added_to_course(self):
+        pass
+
+    @abstractmethod
+    def get_add_assignment_to_course_response(self,course_assignment_dtos:CourseAssignmentdto)->dict:
         pass

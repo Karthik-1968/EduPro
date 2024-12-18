@@ -1,6 +1,5 @@
-from edu_core.models import User
+from edu_core.models import Assignment,Course
 def usr():
-   user=User.objects.get(email="chaitanyapatcherla46@gmail.com")
-   user.user_id="7ca96872-023b-4629-ac94-5b3ccc2b4feb"
-   user.save()
-   print(user.user_id)
+   assignments=Assignment.objects.all()
+   for assignment in assignments:
+      print(assignment.name,assignment.id)

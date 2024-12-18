@@ -57,3 +57,6 @@ class InvalidAssignment(Exception):
 
 class InvalidAssignmentId(Exception):
     pass
+
+class AssignmentAlreadyAddedtoCourse(Exception):
+    pass

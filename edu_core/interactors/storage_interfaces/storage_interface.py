@@ -41,6 +41,11 @@ class Assignmentdto:
     max_duration_in_mins:int
     assignment_description:str
 
+@dataclass
+class CourseAssignmentdto:
+    course_dto:Coursedto
+    assignment_dto:Assignmentdto
+
 
 class StorageInterface:
 
@@ -198,4 +203,12 @@ class StorageInterface:
 
     @abstractmethod
     def assignments_of_course(self,limit:int,offset:int,id:int)->list[Assignmentdto]:
+        pass
+
+    @abstractmethod
+    def check_if_assignment_already_added_to_course(self,course_id:int,assignment_id:int):
+        pass
+
+    @abstractmethod
+    def add_assignment_to_course(self,course_id:int,assignment_id:int)->CourseAssignmentdto:
         pass

@@ -1,12 +1,12 @@
 from edu_core.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from edu_core.interactors.storage_interfaces.storage_interface import tokendto,Studentdto,Teacherdto,Coursedto,\
-CourseTeacherdto,CourseStudentdto,Assignmentdto
+CourseTeacherdto,CourseStudentdto,Assignmentdto,CourseAssignmentdto
 from django_swagger_utils.drf_server.exceptions import NotFound, Forbidden, BadRequest
 from edu_core.constants.exception_messages import INVALID_STUDENT,MISSING_NAME,MISSING_EMAIL,MISSING_AGE,INVALID_USER,\
 INVALID_TEACHER,INVALID_STUDENT_ID,INVALID_TEACHER_ID,INVALID_ACCESS,MISSING_FEE,MISSING_DURATION, INVALID_COURSE,\
 INVALID_COURSE_ID,MISSING_TEACHER_ID,MISSING_COURSE_ID,TEACHER_ALREADY_ASSIGNED,MISSING_STUDENT_ID,\
 STUDENT_ALREADY_ENROLLED,MISSING_DURATION_IN_MINS,MISSING_DESCRIPTION,INVALID_ASSIGNMENT,INVALID_ASSIGNMENT_ID,\
-MISSING_ASSIGNMENT_ID
+MISSING_ASSIGNMENT_ID,ASSIGNMENT_ALREADY_ADDED_TO_COURSE
 
 
 class PresenterImplementation(PresenterInterface):
@@ -274,3 +274,15 @@ class PresenterImplementation(PresenterInterface):
             }
             assignment_details.append(d)
         return assignment_details
+    
+    def raise_exception_for_assignment_already_added_to_course(self):
+        raise BadRequest(*ASSIGNMENT_ALREADY_ADDED_TO_COURSE)
+    
+    def get_add_assignment_to_course_response(self,course_assignment_dtos:CourseAssignmentdto)->dict:
+        d={
+            "course":course_assignment_dtos.course_dto.name,
+            "assignment":course_assignment_dtos.assignment_dto.name,
+            "max_duration_in_minutes":course_assignment_dtos.assignment_dto.max_duration_in_mins,
+            "assignment_description":course_assignment_dtos.assignment_dto.assignment_description
+        }
+        return d

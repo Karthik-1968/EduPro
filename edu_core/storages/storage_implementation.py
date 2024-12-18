@@ -4,9 +4,9 @@ from ib_users.interfaces.service_interface import ServiceInterface
 from edu_core.exceptions.custom_exceptions import InvalidStudent, MissingName, MissingEmail, MissingAge, InvalidUser,\
 InvalidTeacher, InvalidStudentId, InvalidTeacherId, InvalidAccess, MissingFee, MissingDuration, InvalidCourse,\
 InvalidCourseId,MissingId,TeacherAlreadyAssigned,StudentAlreadyEnrolled,MissingDurationInMins,MissingDescription,\
-InvalidAssignment,InvalidAssignmentId
+InvalidAssignment,InvalidAssignmentId,AssignmentAlreadyAddedtoCourse
 from edu_core.interactors.storage_interfaces.storage_interface import tokendto, Studentdto, Teacherdto, Coursedto,\
- CourseTeacherdto, CourseStudentdto, Assignmentdto
+ CourseTeacherdto, CourseStudentdto, Assignmentdto, CourseAssignmentdto
 
 
 class StorageImplementation(StorageInterface):
@@ -236,3 +236,21 @@ class StorageImplementation(StorageInterface):
             assignment_dtos.append(assignment_dto)
         assignment_dtos=assignment_dtos[offset:offset+limit]
         return assignment_dtos
+    
+    def check_if_assignment_already_added_to_course(self,course_id:int,assignment_id:int):
+        assignment=Assignment.objects.get(id=assignment_id)
+        if assignment.course:
+            if assignment.course.id==course_id:
+                raise AssignmentAlreadyAddedtoCourse
+        
+    def add_assignment_to_course(self,course_id:int,assignment_id:int)->CourseAssignmentdto:
+        course=Course.objects.get(id=course_id)
+        assignment=Assignment.objects.get(id=assignment_id)
+        assignment.course=course
+        assignment.save()
+        course_dto=self.convert_course_obj_to_dto(course)
+        assignment_dto=self.convert_assignment_obj_to_dto(assignment)
+        return CourseAssignmentdto(
+            course_dto=course_dto,
+            assignment_dto=assignment_dto
+        )

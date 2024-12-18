@@ -112,3 +112,8 @@ MISSING_ASSIGNMENT_ID=(
     "AssignmentId is missing",
     "MISSING_ASSIGNMENT_ID"
 )
+
+ASSIGNMENT_ALREADY_ADDED_TO_COURSE=(
+    "Assignment already added to course",
+    "ASSIGNMENT_ALREADY_ADDED_TO_COURSE"
+)
