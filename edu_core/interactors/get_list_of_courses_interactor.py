@@ -23,7 +23,7 @@ class ListofCoursesInteractor:
             try:
                 self.storage.check_course_exists(id=search)
             except InvalidCourseId:
-                return self.presenter.raise_exception_for_invalid_course_id()
+                self.presenter.raise_exception_for_invalid_course_id()
             
             course_dto=self.storage.get_course_details(id=search)
             return self.presenter.get_course_details_response(course_dto=course_dto)

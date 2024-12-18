@@ -4,11 +4,6 @@ from edu_core.constants.enums import Choices
 from typing import Optional
 
 @dataclass
-class tokendto:
-    access_token:str
-    expires_in:int
-
-@dataclass
 class Studentdto:
     name:str
     email:str
@@ -91,7 +86,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def login(self,user_email:str)->tokendto:
+    def login(self,user_email:str)->list:
         pass
 
     @abstractmethod

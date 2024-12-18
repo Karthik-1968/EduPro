@@ -22,14 +22,13 @@ class AddAssignmentInteractor:
                 create a assignment
 
         """
-        missing_input_fields=self.validate_input_data(name=name,max_duration_in_mins=max_duration_in_minutes,assignment_description=assignment_description)
-        if missing_input_fields:
-            return missing_input_fields
+        self.validate_input_data(name=name,max_duration_in_mins=max_duration_in_minutes,\
+                                 assignment_description=assignment_description)
 
         try:
             self.storage.valid_assignment(name=name)
         except InvalidAssignment:
-            return self.presenter.raise_exception_for_invalid_assignment()
+            self.presenter.raise_exception_for_invalid_assignment()
         
         assignment=self.storage.add_assignment(name=name,max_duration=max_duration_in_minutes,assign_description=assignment_description)
         return self.presenter.get_add_assignment_response(assignment_id=assignment)
@@ -38,16 +37,14 @@ class AddAssignmentInteractor:
         try:
             self.storage.valid_name_field(name=name)
         except MissingName:
-            return self.presenter.raise_exception_for_missing_name()
+            self.presenter.raise_exception_for_missing_name()
 
         try:
             self.storage.valid_duration_in_mins_field(duration=max_duration_in_mins)
         except MissingDurationInMins:
-            return self.presenter.raise_exception_for_missing_duration_in_mins()
+            self.presenter.raise_exception_for_missing_duration_in_mins()
         
         try:
             self.storage.valid_assignment_description_field(assignment_description=assignment_description)
         except MissingDescription:
-            return self.presenter.raise_exception_for_missing_description()
-        
-        return None
+            self.presenter.raise_exception_for_missing_description()

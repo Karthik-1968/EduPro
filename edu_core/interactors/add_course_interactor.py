@@ -21,14 +21,12 @@ class AddCourseInteractor:
             -else
                 add course
         """
-        missing_input_fields=self.validate_input_fields(name=name,fee=fee,duration=duration)
-        if missing_input_fields:
-            return missing_input_fields
+        self.validate_input_fields(name=name,fee=fee,duration=duration)
         
         try:
             self.storage.valid_course(name=name)
         except InvalidCourse:
-            return self.presenter.raise_exception_for_invalid_course()
+            self.presenter.raise_exception_for_invalid_course()
 
         course=self.storage.add_course(name=name,fee=fee,duration=duration)
         return self.presenter.get_add_coure_response(course_id=course)
@@ -38,16 +36,14 @@ class AddCourseInteractor:
         try:
             self.storage.valid_name_field(name=name)
         except MissingName:
-            return self.presenter.raise_exception_for_missing_name()
+            self.presenter.raise_exception_for_missing_name()
         
         try:
             self.storage.valid_fee_field(fee=fee)
         except MissingFee:
-            return self.presenter.raise_exception_for_missing_fee()
+            self.presenter.raise_exception_for_missing_fee()
         
         try:
             self.storage.valid_duration_field(duration=duration)
         except MissingDuration:
-            return self.presenter.raise_exception_for_missing_duration()
-        
-        return None
+            self.presenter.raise_exception_for_missing_duration()

@@ -19,14 +19,12 @@ class AddTeacherInteractor:
             -add teacher
         """
 
-        missing_input_fields=self.validate_input_data(name=name,email=email,age=age,presenter=presenter)
-        if missing_input_fields:
-            return missing_input_fields
-        
+        self.validate_input_data(name=name,email=email,age=age,presenter=presenter)
+
         try:
             self.storage.valid_teacher(email=email)
         except InvalidTeacher:
-            return presenter.raise_exception_for_invalid_teacher()
+            presenter.raise_exception_for_invalid_teacher()
         
         teacher=self.storage.add_teacher(name=name,email=email,age=age)
         return presenter.get_add_teacher_response(teacher_id=teacher)
@@ -35,16 +33,14 @@ class AddTeacherInteractor:
         try:
             self.storage.valid_name_field(name=name)
         except MissingName:
-            return presenter.raise_exception_for_missing_name()
+            presenter.raise_exception_for_missing_name()
 
         try:
             self.storage.valid_email_field(email=email)
         except MissingEmail:
-            return presenter.raise_exception_for_missing_email()
+            presenter.raise_exception_for_missing_email()
         
         try:
             self.storage.valid_age_field(age=age)
         except MissingAge:
-            return presenter.raise_exception_for_missing_age()
-        
-        return None
+            presenter.raise_exception_for_missing_age()

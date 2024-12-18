@@ -8,7 +8,7 @@ InvalidCourseId,MissingId,TeacherAlreadyAssigned,StudentAlreadyEnrolled,MissingD
 InvalidAssignment,InvalidAssignmentId,AssignmentAlreadyAddedtoCourse,MissingSubmittedAt,AssignmentAlreadySubmitted,\
 InvalidSubmissionId,SubmissionAlreadyGraded,InvalidUserEmail
 
-from edu_core.interactors.storage_interfaces.storage_interface import tokendto, Studentdto, Teacherdto, Coursedto,\
+from edu_core.interactors.storage_interfaces.storage_interface import Studentdto, Teacherdto, Coursedto,\
  CourseTeacherdto, CourseStudentdto, Assignmentdto, CourseAssignmentdto,Submissiondto
 from edu_core.constants.enums import Choices
 
@@ -50,13 +50,16 @@ class StorageImplementation(StorageInterface):
         if Student.objects.filter(email=email).exists():
             raise InvalidStudent
         
-    def login(self,user_email:str)->tokendto:
+    def login(self,user_email:str)->list:
 
         user=User.objects.get(email=user_email).user_id
         service_interface = ServiceInterface()
         auth_tokens = service_interface.create_auth_tokens_for_user(user)
 
-        return auth_tokens
+        access_token=auth_tokens.access_token
+        expires_in=auth_tokens.expries_in
+
+        return [access_token,expires_in]
     
     def valid_teacher(self,email:str)->int:
         if Teacher.objects.filter(email=email).exists():
@@ -154,6 +157,7 @@ class StorageImplementation(StorageInterface):
         for course in courses:
             course_dto=self.convert_course_obj_to_dto(course)
             course_dtos.append(course_dto)
+        course_dtos=course_dtos[offset:offset+limit]
         
         return course_dtos
     

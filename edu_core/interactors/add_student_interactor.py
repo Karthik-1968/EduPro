@@ -21,14 +21,12 @@ class AddStudentInteractor:
                 create a student
 
         """
-        missing_input_fields=self.validate_input_data(name=name,email=email,age=age,presenter=presenter)
-        if missing_input_fields:
-            return missing_input_fields
+        self.validate_input_data(name=name,email=email,age=age,presenter=presenter)
 
         try:
             self.storage.valid_student(email=email)
         except InvalidStudent:
-            return presenter.raise_exception_for_invalid_student()
+            presenter.raise_exception_for_invalid_student()
         
         student=self.storage.add_student(name=name,email=email,age=age)
         return presenter.get_add_student_response(student_id=student)
@@ -38,16 +36,14 @@ class AddStudentInteractor:
         try:
             self.storage.valid_name_field(name=name)
         except MissingName:
-            return presenter.raise_exception_for_missing_name()
+            presenter.raise_exception_for_missing_name()
 
         try:
             self.storage.valid_email_field(email=email)
         except MissingEmail:
-            return presenter.raise_exception_for_missing_email()
+            presenter.raise_exception_for_missing_email()
         
         try:
             self.storage.valid_age_field(age=age)
         except MissingAge:
-            return presenter.raise_exception_for_missing_age()
-        
-        return None
+            presenter.raise_exception_for_missing_age()

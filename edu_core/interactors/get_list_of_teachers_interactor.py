@@ -24,7 +24,7 @@ class ListofTeachersInteractor:
             try:
                 self.storage.check_teacher_exists(id=search)
             except InvalidTeacherId:
-                return presenter.raise_exception_for_invalid_teacher_id()
+                presenter.raise_exception_for_invalid_teacher_id()
             
             teacher_dto=self.storage.get_teacher_details(id=search)
             return presenter.get_teacher_details_response(teacher_dto=teacher_dto)

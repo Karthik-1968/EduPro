@@ -20,12 +20,12 @@ class CreateUserInteractor:
         try:
             self.storage.valid_email_field(email=user_email)
         except MissingEmail:
-            return presenter.raise_exception_for_missing_email()
+            presenter.raise_exception_for_missing_email()
         
         try:
             self.storage.check_user(email=user_email)
         except InvalidUser:
-            return presenter.raise_exception_for_invalid_user()
+            presenter.raise_exception_for_invalid_user()
         
         self.storage.create_user(email=user_email)
         return presenter.get_user_email_response()

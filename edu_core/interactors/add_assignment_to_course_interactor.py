@@ -18,14 +18,12 @@ class AddAssignmenttoCourseInteractor:
             -check if assignment is already added to  course
             -add assignment to course
         """
-        check_if_input_exists=self.check_input_exists(course_id=course_id,assignment_id=assignment_id)
-        if check_if_input_exists:
-            return check_if_input_exists
+        self.check_input_exists(course_id=course_id,assignment_id=assignment_id)
         
         try:
             self.storage.check_if_assignment_already_added_to_course(course_id=course_id,assignment_id=assignment_id)
         except AssignmentAlreadyAddedtoCourse:
-            return self.presenter.raise_exception_for_assignment_already_added_to_course()
+            self.presenter.raise_exception_for_assignment_already_added_to_course()
         
         course_assignment_dtos=self.storage.add_assignment_to_course(course_id=course_id,assignment_id=assignment_id)
         return self.presenter.get_add_assignment_to_course_response(course_assignment_dtos=course_assignment_dtos)
@@ -35,14 +33,12 @@ class AddAssignmenttoCourseInteractor:
         try:
             self.storage.check_course_exists(id=course_id)
         except InvalidCourseId:
-            return self.presenter.raise_exception_for_invalid_course_id()
+            self.presenter.raise_exception_for_invalid_course_id()
         
         try:
             self.storage.check_assignment_exists(id=assignment_id)
         except InvalidAssignmentId:
-            return self.presenter.raise_exception_for_invalid_assignment_id()
-        
-        return None
+            self.presenter.raise_exception_for_invalid_assignment_id()
     
 
         

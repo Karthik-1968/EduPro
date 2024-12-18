@@ -20,14 +20,13 @@ class UpdateAssignmentInteractor:
             -check if current assignment exists
             -update assignment
         """
-        check_input_exists=self.validate_input_data(name=name,max_duration_in_mins=max_duration_in_mins,assignment_description=assignment_description,current_assignment=current_assignment)
-        if check_input_exists:
-            return check_input_exists
+        self.validate_input_data(name=name,max_duration_in_mins=max_duration_in_mins,\
+                                 assignment_description=assignment_description,current_assignment=current_assignment)
         
         try:
             self.storage.check_assignment_exists(id=current_assignment)
         except InvalidAssignmentId:
-            return self.presenter.raise_exception_for_invalid_assignment_id()
+            self.presenter.raise_exception_for_invalid_assignment_id()
         
         assignment_dto=self.storage.update_assignment(name=name,max_duration=max_duration_in_mins,assign_description=assignment_description,id=current_assignment)
         return self.presenter.get_update_assignment_response(assignment_dto=assignment_dto)
@@ -37,22 +36,19 @@ class UpdateAssignmentInteractor:
         try:
             self.storage.valid_name_field(name=name)
         except MissingName:
-            return self.presenter.raise_exception_for_missing_name()
+            self.presenter.raise_exception_for_missing_name()
         
         try:
             self.storage.validate_id(id=current_assignment)
         except MissingId:
-            return self.presenter.raise_exception_for_missing_assignmentid()
+            self.presenter.raise_exception_for_missing_assignmentid()
         
-
         try:
             self.storage.valid_duration_in_mins_field(duration=max_duration_in_mins)
         except MissingDurationInMins:
-            return self.presenter.raise_exception_for_missing_duration_in_mins()
+            self.presenter.raise_exception_for_missing_duration_in_mins()
         
         try:
             self.storage.valid_assignment_description_field(assignment_description=assignment_description)
         except MissingDescription:
-            return self.presenter.raise_exception_for_missing_description()
-        
-        return None
+            self.presenter.raise_exception_for_missing_description()

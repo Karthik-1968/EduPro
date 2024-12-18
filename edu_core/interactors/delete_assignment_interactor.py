@@ -20,12 +20,12 @@ class DeleteAssignmentInteractor:
         try:
             self.storage.validate_id(id=assignment_id)
         except MissingId:
-            return presenter.raise_exception_for_missingid()
+            presenter.raise_exception_for_missingid()
         
         try:
             self.storage.check_assignment_exists(id=assignment_id)
         except InvalidAssignmentId:
-            return presenter.raise_exception_for_invalid_assignment_id()
+            presenter.raise_exception_for_invalid_assignment_id()
         
         self.storage.delete_assignment(id=assignment_id)
         return presenter.get_delete_assignment_response()

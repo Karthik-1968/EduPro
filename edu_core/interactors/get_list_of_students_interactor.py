@@ -21,7 +21,7 @@ class ListofStudentsInteractor:
             try:
                 self.storage.check_student_exists(id=search)
             except InvalidStudentId:
-                return presenter.raise_exception_for_invalid_student_id()
+                presenter.raise_exception_for_invalid_student_id()
             
             student_dto=self.storage.get_student_details(id=search)
             return presenter.get_student_details_response(student_dto=student_dto)

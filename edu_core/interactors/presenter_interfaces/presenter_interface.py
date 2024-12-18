@@ -1,12 +1,12 @@
 from abc import abstractmethod
-from edu_core.interactors.storage_interfaces.storage_interface import tokendto,Studentdto,Teacherdto,Coursedto,\
+from edu_core.interactors.storage_interfaces.storage_interface import Studentdto,Teacherdto,Coursedto,\
 CourseTeacherdto,CourseStudentdto,Assignmentdto,CourseAssignmentdto,Submissiondto
 from edu_core.constants.enums import Choices
 
 class PresenterInterface:
     
     @abstractmethod
-    def get_login_response(self,auth_tokens:tokendto)->dict:
+    def get_login_response(self,auth_details:list)->dict:
         pass
 
     @abstractmethod

@@ -20,12 +20,12 @@ class ListofSubmissionsInteractor:
         try:
             self.storage.validate_id(id=id)
         except MissingId:
-            return self.presenter.raise_exception_for_missing_assignmentid()
+            self.presenter.raise_exception_for_missing_assignmentid()
         
         try:
             self.storage.check_assignment_exists(id=id)
         except InvalidAssignmentId:
-            return self.presenter.raise_exception_for_invalid_assignment_id()
+            self.presenter.raise_exception_for_invalid_assignment_id()
 
         submission_dtos=self.storage.list_of_submissions(limit=limit,offset=offset,id=id)
         return self.presenter.get_list_of_submissions_response(submission_dtos=submission_dtos)

@@ -20,12 +20,12 @@ class AssignmentsofCourseInteractor:
         try:
             self.storage.validate_id(id=id)
         except MissingId:
-            return self.presenter.raise_exception_for_missing_courseid()
+            self.presenter.raise_exception_for_missing_courseid()
         
         try:
             self.storage.check_course_exists(id=id)
         except InvalidCourseId:
-            return self.presenter.raise_exception_for_invalid_course_id()
+            self.presenter.raise_exception_for_invalid_course_id()
         
         assignment_dtos=self.storage.assignments_of_course(limit=limit,offset=offset,id=id)
         return self.presenter.get_assignments_of_course_response(assignment_dtos=assignment_dtos)

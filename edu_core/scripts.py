@@ -1,5 +1,9 @@
-from edu_core.models import Assignment,Course
+from edu_core.models import Student,Teacher
 def usr():
-   assignments=Assignment.objects.all()
-   for assignment in assignments:
-      print(assignment.name,assignment.id)
+   students=Student.objects.all()
+   for student in students:
+      print(student.email)
+   print("\n")
+   teachers=Teacher.objects.all()
+   for teacher in teachers:
+      print(teacher.email)

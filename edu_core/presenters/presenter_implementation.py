@@ -1,6 +1,6 @@
 from edu_core.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 
-from edu_core.interactors.storage_interfaces.storage_interface import tokendto,Studentdto,Teacherdto,Coursedto,\
+from edu_core.interactors.storage_interfaces.storage_interface import Studentdto,Teacherdto,Coursedto,\
 CourseTeacherdto,CourseStudentdto,Assignmentdto,CourseAssignmentdto,Submissiondto
 
 from django_swagger_utils.drf_server.exceptions import NotFound, Forbidden, BadRequest
@@ -16,10 +16,10 @@ MISSING_SUBMISSION_ID,INVALID_SUBMISSION_ID,SUBMISSION_ALREADY_GRADED,INVALID_US
 
 class PresenterImplementation(PresenterInterface):
 
-    def get_login_response(self,auth_tokens:tokendto):
+    def get_login_response(self,auth_details:list)->dict:
         return {
-            "access_token":auth_tokens.access_token,
-            "expires_in":auth_tokens.expires_in
+            "access_token":auth_details[0],
+            "expires_in":auth_details[1]
         }
     
     def get_add_student_response(self,student_id:int)->dict:
@@ -52,18 +52,18 @@ class PresenterImplementation(PresenterInterface):
     
     def get_user_email_response(self):
         return {
-            "Success":"User is created successfully"
+            "success":"user is created successfully"
         }
     
     def get_student_details_response(self,student_dto:Studentdto)->list[dict]:
         student_details=[]
-        d={
+        student={
             "name": student_dto.name,
            "email": student_dto.email,
             "age" : student_dto.age
         }
-        student_details.append(d)
-        
+        student_details.append(student)
+
         return student_details
     
     def raise_exception_for_invalid_student_id(self):
@@ -73,23 +73,23 @@ class PresenterImplementation(PresenterInterface):
         students_details=[]
 
         for student_dto in student_dtos:
-            d={
+            student={
                 "name":student_dto.name,
                 "email":student_dto.email,
                 "age":student_dto.age
             }
-            students_details.append(d)
+            students_details.append(student)
         
         return students_details
     
     def get_teacher_details_response(self,teacher_dto:Teacherdto)->list[dict]:
         teacher_details=[]
-        d={
+        teacher={
             "name": teacher_dto.name,
            "email": teacher_dto.email,
             "age" : teacher_dto.age
         }
-        teacher_details.append(d)
+        teacher_details.append(teacher)
 
         return teacher_details
     
@@ -100,12 +100,12 @@ class PresenterImplementation(PresenterInterface):
         teachers_details=[]
 
         for teacher_dto in teacher_dtos:
-            d={
+            teacher={
                 "name":teacher_dto.name,
                 "email":teacher_dto.email,
                 "age":teacher_dto.age
             }
-            teachers_details.append(d)
+            teachers_details.append(teacher)
 
         return teachers_details
     
@@ -114,12 +114,12 @@ class PresenterImplementation(PresenterInterface):
     
     def get_delete_student_response(self):
         return {
-            "Success":"Student is deleted successfully"
+            "success":"student is deleted successfully"
         }
     
     def get_delete_teacher_response(self):
         return {
-            "Success":"Teacher is deleted successfully"
+            "success":"teacher is deleted successfully"
         }
     
     def raise_exception_for_missing_fee(self):
@@ -141,12 +141,12 @@ class PresenterImplementation(PresenterInterface):
     
     def get_course_details_response(self,course_dto:Coursedto)->list[dict]:
         course_details=[]
-        d={
+        course={
             "name":course_dto.name,
             "fee":course_dto.fee,
             "duration":course_dto.duration
         }
-        course_details.append(d)
+        course_details.append(course)
 
         return course_details
     
@@ -154,12 +154,12 @@ class PresenterImplementation(PresenterInterface):
         courses_details=[]
 
         for course_dto in course_dtos:
-            d={
+            course={
                 "name":course_dto.name,
                 "fee":course_dto.fee,
                 "duration":course_dto.duration
             }
-            courses_details.append(d)
+            courses_details.append(course)
         
         return courses_details
     
@@ -170,14 +170,14 @@ class PresenterImplementation(PresenterInterface):
         raise BadRequest(*MISSING_COURSE_ID)
     
     def get_assign_teacher_course_response(self,course_teacher_dtos:CourseTeacherdto)->dict:
-        d={
+        teacher_of_course={
             "teacher":course_teacher_dtos.teacher_dto.name,
             "course":course_teacher_dtos.course_dto.name,
             "fee":course_teacher_dtos.course_dto.fee,
             "duration":course_teacher_dtos.course_dto.duration
         }
 
-        return d
+        return teacher_of_course
     
     def raise_exception_for_teacher_already_assigned(self):
         raise BadRequest(*TEACHER_ALREADY_ASSIGNED)
@@ -189,13 +189,13 @@ class PresenterImplementation(PresenterInterface):
         raise BadRequest(*STUDENT_ALREADY_ENROLLED)
     
     def get_enroll_student_course_response(self,course_student_dtos:CourseStudentdto)->dict:
-        d={
+        student_in_course={
             "student":course_student_dtos.student_dto.name,
             "course":course_student_dtos.course_dto.name,
             "fee":course_student_dtos.course_dto.fee,
             "duration":course_student_dtos.course_dto.duration
         }
-        return d
+        return student_in_course
     
     def raise_exception_for_missing_duration_in_mins(self):
         raise BadRequest(*MISSING_DURATION_IN_MINS)
@@ -216,16 +216,16 @@ class PresenterImplementation(PresenterInterface):
     
     def get_delete_assignment_response(self):
         return {
-            "Success":"Assignment deleted successfully"
+            "success":"assignment deleted successfully"
         }
     
     def get_update_assignment_response(self,assignment_dto:Assignmentdto)->dict:
-        d={
+        updated_assignment={
             "name":assignment_dto.name,
             "max_duration_in_minutes":assignment_dto.max_duration_in_mins,
             "assignment_description":assignment_dto.assignment_description
         }
-        return d
+        return updated_assignment
     
     def raise_exception_for_missing_assignmentid(self):
         raise BadRequest(*MISSING_ASSIGNMENT_ID)
@@ -234,10 +234,10 @@ class PresenterImplementation(PresenterInterface):
         assignment_details=[]
 
         for assignment_dto in assignment_dtos:
-            d={
+            assignment={
                 "assignment_name":assignment_dto.name
             }
-            assignment_details.append(d)
+            assignment_details.append(assignment)
         
         return assignment_details
     
@@ -245,13 +245,13 @@ class PresenterImplementation(PresenterInterface):
         raise BadRequest(*ASSIGNMENT_ALREADY_ADDED_TO_COURSE)
     
     def get_add_assignment_to_course_response(self,course_assignment_dtos:CourseAssignmentdto)->dict:
-        d={
+        assignment_of_course={
             "course":course_assignment_dtos.course_dto.name,
             "assignment":course_assignment_dtos.assignment_dto.name,
             "max_duration_in_minutes":course_assignment_dtos.assignment_dto.max_duration_in_mins,
             "assignment_description":course_assignment_dtos.assignment_dto.assignment_description
         }
-        return d
+        return assignment_of_course
     
     def raise_exception_for_missing_submittedat(self):
         raise BadRequest(*MISSING_SUBMITTED_AT)
@@ -268,13 +268,13 @@ class PresenterImplementation(PresenterInterface):
         submission_details=[]
 
         for submission_dto in submission_dtos:
-            d={
+            submission={
                 "submitted_by":submission_dto.student_dto.name,
                 "submitted_at":submission_dto.submitted_at,
                 "Grade":submission_dto.grade,
                 "remarks":submission_dto.remarks
             }
-            submission_details.append(d)
+            submission_details.append(submission)
 
         return submission_details
 
@@ -294,7 +294,7 @@ class PresenterImplementation(PresenterInterface):
     
     def get_logout_response(self):
         return {
-            "Success":"Successfully logged out"
+            "success":"successfully logged out"
         }
     
     def raise_exception_for_invalid_user_email(self):

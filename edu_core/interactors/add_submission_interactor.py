@@ -22,13 +22,10 @@ class AddSubmissionInteractor:
             -check if student already submitted the assignment
             -submit the assignment
         """
-        missing_input_fields=self.validate_input_fields(student_id=student_id,assignment_id=assignment_id,submitted_at=submitted_at)
-        if missing_input_fields:
-            return missing_input_fields
+        self.validate_input_fields(student_id=student_id,assignment_id=assignment_id,\
+                                                        submitted_at=submitted_at)
         
-        input_not_exists=self.check_input_exists(student_id=student_id,assignment_id=assignment_id)
-        if input_not_exists:
-            return input_not_exists
+        self.check_input_exists(student_id=student_id,assignment_id=assignment_id)
         
         student=self.storage.get_student_details(id=student_id)
 
@@ -36,12 +33,12 @@ class AddSubmissionInteractor:
             student_email=student.email
             self.storage.check_user_authorization(email=student_email,user_email=user_email)
         except InvalidAccess:
-            return self.presenter.raise_exception_for_invalid_access()
+            self.presenter.raise_exception_for_invalid_access()
         
         try:
             self.storage.check_if_already_submitted(student_id=student_id,assignment_id=assignment_id)
         except AssignmentAlreadySubmitted:
-            return self.presenter.raise_exception_for_assignment_already_submitted()
+            self.presenter.raise_exception_for_assignment_already_submitted()
         
         submission_id=self.storage.add_submission(student_id=student_id,assignment_id=assignment_id,submitted_at=submitted_at)
         return self.presenter.get_add_submission_response(submission_id=submission_id)
@@ -51,30 +48,26 @@ class AddSubmissionInteractor:
         try:
             self.storage.validate_id(id=student_id)
         except MissingId:
-            return self.presenter.raise_exception_for_missing_studentid()
+            self.presenter.raise_exception_for_missing_studentid()
         
         try:
             self.storage.validate_id(id=assignment_id)
         except MissingId:
-            return self.presenter.raise_exception_for_missing_assignmentid()
+            self.presenter.raise_exception_for_missing_assignmentid()
         
         try:
             self.storage.validate_submitted_at(submitted_at=submitted_at)
         except MissingSubmittedAt:
-            return self.presenter.raise_exception_for_missing_submittedat()
-        
-        return None
+            self.presenter.raise_exception_for_missing_submittedat()
     
     def check_input_exists(self,student_id:int,assignment_id:int):
 
         try:
             self.storage.check_student_exists(id=student_id)
         except InvalidStudentId:
-            return self.presenter.raise_exception_for_invalid_student_id()
+            self.presenter.raise_exception_for_invalid_student_id()
         
         try:
             self.storage.check_assignment_exists(id=assignment_id)
         except InvalidAssignmentId:
-            return self.presenter.raise_exception_for_invalid_assignment_id()
-        
-        return None
+            self.presenter.raise_exception_for_invalid_assignment_id()
