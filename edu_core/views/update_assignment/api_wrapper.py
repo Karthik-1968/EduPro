@@ -4,7 +4,8 @@ from .validator_class import ValidatorClass
 from django.http import JsonResponse
 from edu_core.storages.storage_implementation import StorageImplementation
 from edu_core.presenters.presenter_implementation import PresenterImplementation
-from edu_core.interactors.update_assignment_interactor import UpdateAssignment
+from edu_core.interactors.update_assignment_interactor import UpdateAssignmentInteractor
+
 
 @validate_decorator(validator_class=ValidatorClass)
 def api_wrapper(*args, **kwargs):
@@ -13,8 +14,12 @@ def api_wrapper(*args, **kwargs):
     max_duration_in_minutes=given_data.get('max_duration_in_minutes')
     assignment_description=given_data.get('assignment_description')
     current_assignment=given_data.get('current_assignment')
+
     storage=StorageImplementation()
     presenter=PresenterImplementation()
-    interactor=UpdateAssignment(storage=storage,presenter=presenter)
-    data=interactor.update_assignment(name=name,max_duration_in_mins=max_duration_in_minutes,assignment_description=assignment_description,current_assignment=current_assignment)
+    interactor=UpdateAssignmentInteractor(storage=storage,presenter=presenter)
+
+    data=interactor.update_assignment(name=name,max_duration_in_mins=max_duration_in_minutes,\
+                                      assignment_description=assignment_description,current_assignment=current_assignment)
+    
     return JsonResponse(data,status=200)

@@ -22,9 +22,9 @@ class AddAssignmentInteractor:
                 create a assignment
 
         """
-        validation_data=self.validate_input_data(name=name,max_duration_in_mins=max_duration_in_minutes,assignment_description=assignment_description)
-        if validation_data:
-            return validation_data
+        missing_input_fields=self.validate_input_data(name=name,max_duration_in_mins=max_duration_in_minutes,assignment_description=assignment_description)
+        if missing_input_fields:
+            return missing_input_fields
 
         try:
             self.storage.valid_assignment(name=name)

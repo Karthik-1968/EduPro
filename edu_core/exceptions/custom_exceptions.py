@@ -72,3 +72,6 @@ class InvalidSubmissionId(Exception):
 
 class SubmissionAlreadyGraded(Exception):
     pass
+
+class InvalidUserEmail(Exception):
+    pass

@@ -253,3 +253,7 @@ class StorageInterface:
     @abstractmethod
     def grade_submission(self,id:int)->Choices:
         pass
+
+    @abstractmethod
+    def check_if_user_email(self,email:str):
+        pass

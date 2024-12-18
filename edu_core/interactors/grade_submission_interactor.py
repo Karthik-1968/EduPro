@@ -3,7 +3,7 @@ from edu_core.interactors.presenter_interfaces.presenter_interface import Presen
 from edu_core.exceptions.custom_exceptions import MissingId,InvalidSubmissionId,InvalidAccess,SubmissionAlreadyGraded
 
 
-class GradeSubmission:
+class GradeSubmissionInteractor:
 
     def __init__(self,storage:StorageInterface,presenter:PresenterInterface):
         self.storage=storage

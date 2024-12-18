@@ -3,7 +3,7 @@ from edu_core.interactors.storage_interfaces.storage_interface import StorageInt
 from edu_core.exceptions.custom_exceptions import MissingId,InvalidStudentId,InvalidCourseId,StudentAlreadyEnrolled,\
 InvalidAccess
 
-class EnrollStudentCourse:
+class EnrollStudentCourseInteractor:
 
     def __init__(self,storage:StorageInterface,presenter:PresenterInterface):
         self.storage=storage
@@ -21,13 +21,13 @@ class EnrollStudentCourse:
             check if student already enrolled to course
             enroll student to course
         """
-        validation_data=self.validate_input_data(student_id=student_id,course_id=course_id)
-        if validation_data:
-            return validation_data
+        missing_input_fields=self.validate_input_data(student_id=student_id,course_id=course_id)
+        if missing_input_fields:
+            return missing_input_fields
         
-        checking_data=self.check_input_data(student_id=student_id,course_id=course_id)
-        if checking_data:
-            return checking_data
+        input_not_exists=self.check_input_exists(student_id=student_id,course_id=course_id)
+        if input_not_exists:
+            return input_not_exists
         
         student=self.storage.get_student_details(id=student_id)
 
@@ -59,7 +59,7 @@ class EnrollStudentCourse:
 
         return None
     
-    def check_input_data(self,student_id:int,course_id:int):
+    def check_input_exists(self,student_id:int,course_id:int):
         try:
             self.storage.check_student_exists(id=student_id)
         except InvalidStudentId:

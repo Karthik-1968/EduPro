@@ -2,7 +2,8 @@ from edu_core.interactors.presenter_interfaces.presenter_interface import Presen
 from edu_core.interactors.storage_interfaces.storage_interface import StorageInterface
 from edu_core.exceptions.custom_exceptions import MissingName,MissingFee,MissingDuration,InvalidCourse
 
-class AddCourse:
+
+class AddCourseInteractor:
 
     def __init__(self,storage:StorageInterface,presenter:PresenterInterface):
         self.storage=storage
@@ -20,9 +21,9 @@ class AddCourse:
             -else
                 add course
         """
-        validation_data=self.validate_input_fields(name=name,fee=fee,duration=duration)
-        if validation_data:
-            return validation_data
+        missing_input_fields=self.validate_input_fields(name=name,fee=fee,duration=duration)
+        if missing_input_fields:
+            return missing_input_fields
         
         try:
             self.storage.valid_course(name=name)
@@ -31,6 +32,7 @@ class AddCourse:
 
         course=self.storage.add_course(name=name,fee=fee,duration=duration)
         return self.presenter.get_add_coure_response(course_id=course)
+    
     def validate_input_fields(self,name:str,fee:int,duration:str):
 
         try:
@@ -47,4 +49,5 @@ class AddCourse:
             self.storage.valid_duration_field(duration=duration)
         except MissingDuration:
             return self.presenter.raise_exception_for_missing_duration()
+        
         return None

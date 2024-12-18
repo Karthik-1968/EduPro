@@ -2,7 +2,8 @@ from edu_core.interactors.storage_interfaces.storage_interface import StorageInt
 from edu_core.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from edu_core.exceptions.custom_exceptions import InvalidStudentId,InvalidAccess,MissingId
 
-class DeleteStudent:
+
+class DeleteStudentInteractor:
 
     def __init__(self,storage:StorageInterface):
         self.storage=storage

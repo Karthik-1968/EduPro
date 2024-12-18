@@ -21,9 +21,9 @@ class AddStudentInteractor:
                 create a student
 
         """
-        validation_data=self.validate_input_data(name=name,email=email,age=age,presenter=presenter)
-        if validation_data:
-            return validation_data
+        missing_input_fields=self.validate_input_data(name=name,email=email,age=age,presenter=presenter)
+        if missing_input_fields:
+            return missing_input_fields
 
         try:
             self.storage.valid_student(email=email)

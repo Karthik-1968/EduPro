@@ -3,7 +3,7 @@ from edu_core.interactors.presenter_interfaces.presenter_interface import Presen
 from edu_core.exceptions.custom_exceptions import MissingName,MissingDurationInMins,MissingDescription,MissingId,\
 InvalidAssignmentId
 
-class UpdateAssignment:
+class UpdateAssignmentInteractor:
 
     def __init__(self,storage:StorageInterface,presenter:PresenterInterface):
         self.storage=storage
@@ -20,9 +20,9 @@ class UpdateAssignment:
             -check if current assignment exists
             -update assignment
         """
-        validation_data=self.validate_input_data(name=name,max_duration_in_mins=max_duration_in_mins,assignment_description=assignment_description,current_assignment=current_assignment)
-        if validation_data:
-            return validation_data
+        check_input_exists=self.validate_input_data(name=name,max_duration_in_mins=max_duration_in_mins,assignment_description=assignment_description,current_assignment=current_assignment)
+        if check_input_exists:
+            return check_input_exists
         
         try:
             self.storage.check_assignment_exists(id=current_assignment)

@@ -2,7 +2,8 @@ from edu_core.interactors.storage_interfaces.storage_interface import StorageInt
 from edu_core.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from edu_core.exceptions.custom_exceptions import MissingId,InvalidCourseId
 
-class AssignmentsofCourse:
+
+class AssignmentsofCourseInteractor:
 
     def __init__(self,storage:StorageInterface,presenter:PresenterInterface):
         self.storage=storage

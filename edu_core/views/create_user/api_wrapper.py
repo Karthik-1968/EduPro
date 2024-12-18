@@ -3,7 +3,7 @@ from dsu.dsu_gen.openapi.decorator.interface_decorator import validate_decorator
 from .validator_class import ValidatorClass
 from edu_core.storages.storage_implementation import StorageImplementation
 from edu_core.presenters.presenter_implementation import PresenterImplementation
-from edu_core.interactors.create_user_interactor import create_user_interactor
+from edu_core.interactors.create_user_interactor import CreateUserInteractor
 from django.http import JsonResponse
 
 
@@ -14,7 +14,7 @@ def api_wrapper(*args, **kwargs):
 
     storage=StorageImplementation()
     presenter=PresenterImplementation()
-    interactor=create_user_interactor(storage=storage)
+    interactor=CreateUserInteractor(storage=storage)
 
     data=interactor.create_user(email=email,presenter=presenter)
 

@@ -2,16 +2,26 @@ from edu_core.interactors.presenter_interfaces.presenter_interface import Presen
 from edu_core.interactors.storage_interfaces.storage_interface import StorageInterface
 from edu_core.exceptions.custom_exceptions import InvalidTeacher,MissingName,MissingEmail,MissingAge
 
+
 class AddTeacherInteractor:
 
     def __init__(self,storage:StorageInterface):
         self.storage=storage
 
     def add_teacher(self,name:str,email:str,age:int,presenter:PresenterInterface):
+        """
+        ELP:
+            -validate input details
+                -validate name
+                -validate email
+                -valiate age
+            -check if teacher exists
+            -add teacher
+        """
 
-        validation_data=self.validate_input_data(name=name,email=email,age=age,presenter=presenter)
-        if validation_data:
-            return validation_data
+        missing_input_fields=self.validate_input_data(name=name,email=email,age=age,presenter=presenter)
+        if missing_input_fields:
+            return missing_input_fields
         
         try:
             self.storage.valid_teacher(email=email)
@@ -36,4 +46,5 @@ class AddTeacherInteractor:
             self.storage.valid_age_field(age=age)
         except MissingAge:
             return presenter.raise_exception_for_missing_age()
+        
         return None

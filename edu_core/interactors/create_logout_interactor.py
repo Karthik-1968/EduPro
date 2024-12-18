@@ -2,7 +2,11 @@ from edu_core.interactors.presenter_interfaces.presenter_interface import Presen
 import uuid
 from ib_users.interfaces.service_interface import ServiceInterface
 
-class Logout:
+class LogoutInteractor:
+    """
+    ELP:
+        -logout the user
+    """
 
     def __init__(self,presenter:PresenterInterface):
         self.presenter=presenter

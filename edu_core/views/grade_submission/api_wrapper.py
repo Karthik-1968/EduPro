@@ -4,7 +4,8 @@ from .validator_class import ValidatorClass
 from django.http import JsonResponse
 from edu_core.storages.storage_implementation import StorageImplementation
 from edu_core.presenters.presenter_implementation import PresenterImplementation
-from edu_core.interactors.grade_submission_interactor import GradeSubmission
+from edu_core.interactors.grade_submission_interactor import GradeSubmissionInteractor
+
 
 @validate_decorator(validator_class=ValidatorClass)
 def api_wrapper(*args, **kwargs):
@@ -12,10 +13,13 @@ def api_wrapper(*args, **kwargs):
     id=given_data.get('search')
     user=kwargs['user']
     user_email=user.email
+
     storage=StorageImplementation()
     presenter=PresenterImplementation()
-    interactor=GradeSubmission(storage=storage,presenter=presenter)
+    interactor=GradeSubmissionInteractor(storage=storage,presenter=presenter)
+
     data=interactor.grade_submission(submission_id=id,user_email=user_email)
+    
     return JsonResponse(data,status=200)
 
 

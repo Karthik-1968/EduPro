@@ -4,7 +4,8 @@ from .validator_class import ValidatorClass
 from django.http import JsonResponse
 from edu_core.storages.storage_implementation import StorageImplementation
 from edu_core.presenters.presenter_implementation import PresenterImplementation
-from edu_core.interactors.get_list_of_assignment_of_course_interactor import AssignmentsofCourse
+from edu_core.interactors.get_list_of_assignment_of_course_interactor import AssignmentsofCourseInteractor
+
 
 @validate_decorator(validator_class=ValidatorClass)
 def api_wrapper(*args, **kwargs):
@@ -12,8 +13,11 @@ def api_wrapper(*args, **kwargs):
     l=given_data.get('limit')
     o=given_data.get('offset')
     id=given_data.get('search')
+
     storage=StorageImplementation()
     presenter=PresenterImplementation()
-    interactor=AssignmentsofCourse(storage=storage,presenter=presenter)
+    interactor=AssignmentsofCourseInteractor(storage=storage,presenter=presenter)
+
     data=interactor.assignments_of_course(limit=l,offset=o,id=id)
+    
     return JsonResponse(data,safe=False,status=200)

@@ -1,10 +1,10 @@
 from dsu.dsu_gen.openapi.decorator.interface_decorator import validate_decorator
 from edu_core.interactors.add_student_interactor import AddStudentInteractor
 from .validator_class import ValidatorClass
-from edu_core.models import Student
 from django.http import JsonResponse
 from edu_core.storages.storage_implementation import StorageImplementation
 from edu_core.presenters.presenter_implementation import PresenterImplementation
+
 
 @validate_decorator(validator_class=ValidatorClass)
 def api_wrapper(*args, **kwargs):

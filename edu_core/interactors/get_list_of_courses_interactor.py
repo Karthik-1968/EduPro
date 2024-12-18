@@ -2,7 +2,8 @@ from edu_core.interactors.presenter_interfaces.presenter_interface import Presen
 from edu_core.interactors.storage_interfaces.storage_interface import StorageInterface
 from edu_core.exceptions.custom_exceptions import InvalidCourseId
 
-class ListofCourses:
+
+class ListofCoursesInteractor:
 
     def __init__(self,storage:StorageInterface,presenter:PresenterInterface):
         self.storage=storage
@@ -24,8 +25,8 @@ class ListofCourses:
             except InvalidCourseId:
                 return self.presenter.raise_exception_for_invalid_course_id()
             
-            course=self.storage.get_course_details(id=search)
-            return self.presenter.get_course_details_response(course=course)
+            course_dto=self.storage.get_course_details(id=search)
+            return self.presenter.get_course_details_response(course_dto=course_dto)
         else:
-            courses=self.storage.get_list_of_courses_details(limit=limit,offset=offset)
-            return self.presenter.get_list_of_courses_details_response(courses)
+            course_dtos=self.storage.get_list_of_courses_details(limit=limit,offset=offset)
+            return self.presenter.get_list_of_courses_details_response(course_dtos=course_dtos)

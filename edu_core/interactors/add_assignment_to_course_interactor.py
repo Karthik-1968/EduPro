@@ -4,7 +4,7 @@ from edu_core.exceptions.custom_exceptions import MissingId,InvalidAssignmentId,
 AssignmentAlreadyAddedtoCourse
 
 
-class AddAssignmenttoCourse:
+class AddAssignmenttoCourseInteractor:
 
     def __init__(self,storage:StorageInterface,presenter:PresenterInterface):
         self.storage=storage

@@ -6,7 +6,7 @@ from edu_core.exceptions.custom_exceptions import InvalidStudent, MissingName, M
 InvalidTeacher, InvalidStudentId, InvalidTeacherId, InvalidAccess, MissingFee, MissingDuration, InvalidCourse,\
 InvalidCourseId,MissingId,TeacherAlreadyAssigned,StudentAlreadyEnrolled,MissingDurationInMins,MissingDescription,\
 InvalidAssignment,InvalidAssignmentId,AssignmentAlreadyAddedtoCourse,MissingSubmittedAt,AssignmentAlreadySubmitted,\
-InvalidSubmissionId,SubmissionAlreadyGraded
+InvalidSubmissionId,SubmissionAlreadyGraded,InvalidUserEmail
 
 from edu_core.interactors.storage_interfaces.storage_interface import tokendto, Studentdto, Teacherdto, Coursedto,\
  CourseTeacherdto, CourseStudentdto, Assignmentdto, CourseAssignmentdto,Submissiondto
@@ -51,9 +51,11 @@ class StorageImplementation(StorageInterface):
             raise InvalidStudent
         
     def login(self,user_email:str)->tokendto:
+
         user=User.objects.get(email=user_email).user_id
         service_interface = ServiceInterface()
         auth_tokens = service_interface.create_auth_tokens_for_user(user)
+
         return auth_tokens
     
     def valid_teacher(self,email:str)->int:
@@ -65,26 +67,46 @@ class StorageImplementation(StorageInterface):
             raise InvalidStudentId
     
     def get_student_details(self,id:int)->Studentdto:
+
         student=Student.objects.get(id=id)
-        return student
+        student_dto=self.convert_student_obj_to_dto(student)
+
+        return student_dto
     
     def get_list_of_students(self,limit:int,offset:int)->list[Studentdto]:
-        students=Student.objects.all()[offset:offset+limit]
-        students=[student for student in students]
-        return students
+
+        students=Student.objects.all()
+        student_dtos=[]
+
+        for student in students:
+            student_dto=self.convert_student_obj_to_dto(student)
+            student_dtos.append(student_dto)
+        student_dtos=student_dtos[offset:offset+limit]
+
+        return student_dtos
     
     def check_teacher_exists(self,id:int):
         if Teacher.objects.filter(id=id).exists()==False:
             raise InvalidTeacherId
     
     def get_teacher_details(self,id:int)->Teacherdto:
+
         teacher=Teacher.objects.get(id=id)
-        return teacher
+        teacher_dto=self.convert_teacher_obj_to_dto(teacher)
+
+        return teacher_dto
     
     def get_list_of_teachers(self,limit:int,offset:int)->list[Teacherdto]:
-        teachers=Teacher.objects.all()[offset:offset+limit]
-        teachers=[teacher for teacher in teachers]
-        return teachers
+
+        teachers=Teacher.objects.all()
+        teacher_dtos=[]
+
+        for teacher in teachers:
+            teacher_dto=self.convert_teacher_obj_to_dto(teacher)
+            teacher_dtos.append(teacher_dto)
+        teacher_dtos=teacher_dtos[offset:offset+limit]
+
+        return teacher_dtos
     
     def check_user_authorization(self,email:str,user_email:str):
         if email!=user_email:
@@ -121,12 +143,19 @@ class StorageImplementation(StorageInterface):
         
     def get_course_details(self,id:int)->Coursedto:
         course=Course.objects.get(id=id)
-        return course
+        course_dto=self.convert_course_obj_to_dto(course)
+
+        return course_dto
     
     def get_list_of_courses_details(self,limit:int,offset:int)->list[Coursedto]:
-        courses=Course.objects.all()[offset:offset+limit]
-        courses=[course for course in courses]
-        return courses
+        courses=Course.objects.all()
+        course_dtos=[]
+
+        for course in courses:
+            course_dto=self.convert_course_obj_to_dto(course)
+            course_dtos.append(course_dto)
+        
+        return course_dtos
     
     def validate_id(self,id:int):
         id_not_present=not id
@@ -144,6 +173,7 @@ class StorageImplementation(StorageInterface):
         course.teacher.add(teacher)
         course_dto=self.convert_course_obj_to_dto(course)
         teacher_dto=self.convert_teacher_obj_to_dto(teacher)
+
         return CourseTeacherdto(
             teacher_dto=teacher_dto,
             course_dto=course_dto
@@ -174,6 +204,7 @@ class StorageImplementation(StorageInterface):
         course.student.add(student)
         course_dto=self.convert_course_obj_to_dto(course)
         student_dto=self.convert_student_obj_to_dto(student)
+
         return CourseStudentdto(
             student_dto=student_dto,
             course_dto=course_dto
@@ -220,6 +251,7 @@ class StorageImplementation(StorageInterface):
         assignment.assign_description=assign_description
         assignment.save()
         assignment_dto=self.convert_assignment_obj_to_dto(assignment)
+
         return assignment_dto
     
     @staticmethod
@@ -234,10 +266,12 @@ class StorageImplementation(StorageInterface):
         course=Course.objects.get(id=id)
         assignments=Assignment.objects.filter(course=course)
         assignment_dtos=[]
+
         for assignment in assignments:
             assignment_dto=self.convert_assignment_obj_to_dto(assignment)
             assignment_dtos.append(assignment_dto)
         assignment_dtos=assignment_dtos[offset:offset+limit]
+
         return assignment_dtos
     
     def check_if_assignment_already_added_to_course(self,course_id:int,assignment_id:int):
@@ -253,6 +287,7 @@ class StorageImplementation(StorageInterface):
         assignment.save()
         course_dto=self.convert_course_obj_to_dto(course)
         assignment_dto=self.convert_assignment_obj_to_dto(assignment)
+
         return CourseAssignmentdto(
             course_dto =  course_dto,
             assignment_dto = assignment_dto
@@ -272,15 +307,18 @@ class StorageImplementation(StorageInterface):
         assignment=Assignment.objects.get(id=assignment_id)
         submission=Submission.objects.create(student=student,assignment=assignment,submitted_at=submitted_at)
         submission_id=submission.id
+
         return submission_id
     
     def list_of_submissions(self,limit:int,offset:int,id:int)->list[Submissiondto]:
         submissions=Submission.objects.filter(assignment_id=id)
         submission_dtos=[]
+
         for submission in submissions:
             submission_dto=self.convert_submission_obj_to_dto(submission)
             submission_dtos.append(submission_dto)
         submission_dtos=submission_dtos[offset:offset+limit]
+
         return submission_dtos
 
     @staticmethod
@@ -314,4 +352,11 @@ class StorageImplementation(StorageInterface):
         submission.Grade="B"
         submission.remarks="Good"
         submission.save
+        
         return submission.Grade
+    
+    def check_if_user_email(self,email:str):
+        users=User.objects.all()
+        user_emails=[user.email for user in users]
+        if email not in user_emails:
+            raise InvalidUserEmail

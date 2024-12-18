@@ -11,7 +11,7 @@ INVALID_TEACHER,INVALID_STUDENT_ID,INVALID_TEACHER_ID,INVALID_ACCESS,MISSING_FEE
 INVALID_COURSE_ID,MISSING_TEACHER_ID,MISSING_COURSE_ID,TEACHER_ALREADY_ASSIGNED,MISSING_STUDENT_ID,\
 STUDENT_ALREADY_ENROLLED,MISSING_DURATION_IN_MINS,MISSING_DESCRIPTION,INVALID_ASSIGNMENT,INVALID_ASSIGNMENT_ID,\
 MISSING_ASSIGNMENT_ID,ASSIGNMENT_ALREADY_ADDED_TO_COURSE,MISSING_SUBMITTED_AT,ASSIGNMENT_ALREADY_SUBMITTED,\
-MISSING_SUBMISSION_ID,INVALID_SUBMISSION_ID,SUBMISSION_ALREADY_GRADED
+MISSING_SUBMISSION_ID,INVALID_SUBMISSION_ID,SUBMISSION_ALREADY_GRADED,INVALID_USER_EMAIL
 
 
 class PresenterImplementation(PresenterInterface):
@@ -52,55 +52,61 @@ class PresenterImplementation(PresenterInterface):
     
     def get_user_email_response(self):
         return {
-            "success":"user is successfully created"
+            "Success":"User is created successfully"
         }
     
-    def get_student_details_response(self,student:Studentdto)->list[dict]:
+    def get_student_details_response(self,student_dto:Studentdto)->list[dict]:
         student_details=[]
         d={
-            "name": student.name,
-           "email": student.email,
-            "age" : student.age
+            "name": student_dto.name,
+           "email": student_dto.email,
+            "age" : student_dto.age
         }
         student_details.append(d)
+        
         return student_details
     
     def raise_exception_for_invalid_student_id(self):
         raise NotFound(*INVALID_STUDENT_ID)
     
-    def get_list_of_student_details_response(self,students:list[Studentdto])->list[dict]:
+    def get_list_of_student_details_response(self,student_dtos:list[Studentdto])->list[dict]:
         students_details=[]
-        for student in students:
+
+        for student_dto in student_dtos:
             d={
-                "name":student.name,
-                "email":student.email,
-                "age":student.age
+                "name":student_dto.name,
+                "email":student_dto.email,
+                "age":student_dto.age
             }
             students_details.append(d)
+        
         return students_details
     
-    def get_teacher_details_response(self,teacher:Teacherdto)->list[dict]:
+    def get_teacher_details_response(self,teacher_dto:Teacherdto)->list[dict]:
         teacher_details=[]
         d={
-            "name": teacher.name,
-           "email": teacher.email,
-            "age" : teacher.age
+            "name": teacher_dto.name,
+           "email": teacher_dto.email,
+            "age" : teacher_dto.age
         }
         teacher_details.append(d)
+
         return teacher_details
     
     def raise_exception_for_invalid_teacher_id(self):
         raise NotFound(*INVALID_TEACHER_ID)
     
-    def get_list_of_teacher_details_response(self,teachers:list[Teacherdto])->list[dict]:
+    def get_list_of_teacher_details_response(self,teacher_dtos:list[Teacherdto])->list[dict]:
         teachers_details=[]
-        for teacher in teachers:
+
+        for teacher_dto in teacher_dtos:
             d={
-                "name":teacher.name,
-                "email":teacher.email,
-                "age":teacher.age
+                "name":teacher_dto.name,
+                "email":teacher_dto.email,
+                "age":teacher_dto.age
             }
             teachers_details.append(d)
+
         return teachers_details
     
     def raise_exception_for_invalid_access(self):
@@ -108,12 +114,12 @@ class PresenterImplementation(PresenterInterface):
     
     def get_delete_student_response(self):
         return {
-            "success":"student is deleted successfully"
+            "Success":"Student is deleted successfully"
         }
     
     def get_delete_teacher_response(self):
         return {
-            "success":"teacher is deleted successfully"
+            "Success":"Teacher is deleted successfully"
         }
     
     def raise_exception_for_missing_fee(self):
@@ -133,25 +139,28 @@ class PresenterImplementation(PresenterInterface):
     def raise_exception_for_invalid_course_id(self):
         raise NotFound(*INVALID_COURSE_ID)
     
-    def get_course_details_response(self,course:Coursedto)->list[dict]:
+    def get_course_details_response(self,course_dto:Coursedto)->list[dict]:
         course_details=[]
         d={
-            "name":course.name,
-            "fee":course.fee,
-            "duration":course.duration
+            "name":course_dto.name,
+            "fee":course_dto.fee,
+            "duration":course_dto.duration
         }
         course_details.append(d)
+
         return course_details
     
-    def get_list_of_courses_details_response(self,courses:list[Coursedto])->list[dict]:
+    def get_list_of_courses_details_response(self,course_dtos:list[Coursedto])->list[dict]:
         courses_details=[]
-        for course in courses:
+
+        for course_dto in course_dtos:
             d={
-                "name":course.name,
-                "fee":course.fee,
-                "duration":course.duration
+                "name":course_dto.name,
+                "fee":course_dto.fee,
+                "duration":course_dto.duration
             }
             courses_details.append(d)
+        
         return courses_details
     
     def raise_exception_for_missing_teacherid(self):
@@ -167,6 +176,7 @@ class PresenterImplementation(PresenterInterface):
             "fee":course_teacher_dtos.course_dto.fee,
             "duration":course_teacher_dtos.course_dto.duration
         }
+
         return d
     
     def raise_exception_for_teacher_already_assigned(self):
@@ -222,11 +232,13 @@ class PresenterImplementation(PresenterInterface):
     
     def get_assignments_of_course_response(self,assignment_dtos:list[Assignmentdto])->list[dict]:
         assignment_details=[]
+
         for assignment_dto in assignment_dtos:
             d={
                 "assignment_name":assignment_dto.name
             }
             assignment_details.append(d)
+        
         return assignment_details
     
     def raise_exception_for_assignment_already_added_to_course(self):
@@ -254,6 +266,7 @@ class PresenterImplementation(PresenterInterface):
     
     def get_list_of_submissions_response(self,submission_dtos:list[Submissiondto])->list[dict]:
         submission_details=[]
+
         for submission_dto in submission_dtos:
             d={
                 "submitted_by":submission_dto.student_dto.name,
@@ -262,6 +275,7 @@ class PresenterImplementation(PresenterInterface):
                 "remarks":submission_dto.remarks
             }
             submission_details.append(d)
+
         return submission_details
 
     def raise_exception_for_missing_submissionid(self):
@@ -282,3 +296,6 @@ class PresenterImplementation(PresenterInterface):
         return {
             "Success":"Successfully logged out"
         }
+    
+    def raise_exception_for_invalid_user_email(self):
+        raise BadRequest(*INVALID_USER_EMAIL)

@@ -142,3 +142,8 @@ SUBMISSION_ALREADY_GRADED=(
     "Submission already graded",
     "SUBMISSION_ALREADY_GRADED"
 )
+
+INVALID_USER_EMAIL=(
+    "User email is invalid",
+    "INVALID_USER_EMAIL"
+)

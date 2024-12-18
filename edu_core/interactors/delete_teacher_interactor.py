@@ -2,7 +2,8 @@ from edu_core.interactors.storage_interfaces.storage_interface import StorageInt
 from edu_core.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from edu_core.exceptions.custom_exceptions import InvalidTeacherId,InvalidAccess,MissingId
 
-class DeleteTeacher:
+
+class DeleteTeacherInteractor:
 
     def __init__(self,storage:StorageInterface):
         self.storage=storage
@@ -11,6 +12,9 @@ class DeleteTeacher:
 
         """
         ELP:
+            -validate input
+                -validate id
+                
             -if teacher present
             -else error
 

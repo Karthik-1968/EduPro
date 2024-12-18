@@ -46,7 +46,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_student_details_response(self,student:Studentdto)->list[dict]:
+    def get_student_details_response(self,student_dto:Studentdto)->list[dict]:
         pass
     
     @abstractmethod
@@ -54,11 +54,11 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_list_of_students_details_response(self,students:list[Studentdto])->list[dict]:
+    def get_list_of_student_details_response(self,student_dtos:list[Studentdto])->list[dict]:
         pass
 
     @abstractmethod
-    def get_teacher_details_response(self,teacher:Teacherdto)->list[dict]:
+    def get_teacher_details_response(self,teacher_dto:Teacherdto)->list[dict]:
         pass
     
     @abstractmethod
@@ -66,7 +66,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_list_of_teachers_details_response(self,teachers:list[Teacherdto])->list[dict]:
+    def get_list_of_teachers_details_response(self,teacher_dtos:list[Teacherdto])->list[dict]:
         pass
 
     @abstractmethod
@@ -102,11 +102,11 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_course_details_response(self,course:Coursedto)->list[dict]:
+    def get_course_details_response(self,course_dto:Coursedto)->list[dict]:
         pass
 
     @abstractmethod
-    def get_list_of_courses_details_response(self,courses:list[Coursedto])->list[dict]:
+    def get_list_of_courses_details_response(self,course_dtos:list[Coursedto])->list[dict]:
         pass
 
     @abstractmethod
@@ -215,4 +215,8 @@ class PresenterInterface:
 
     @abstractmethod
     def get_logout_response(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_invalid_user_email(self):
         pass
