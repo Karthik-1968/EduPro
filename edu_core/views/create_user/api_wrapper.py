@@ -1,4 +1,3 @@
-from django.db import IntegrityError
 from dsu.dsu_gen.openapi.decorator.interface_decorator import validate_decorator
 from .validator_class import ValidatorClass
 from edu_core.storages.storage_implementation import StorageImplementation
@@ -12,8 +11,11 @@ def api_wrapper(*args, **kwargs):
     
     email = kwargs['request_data'].get('email')
 
+    print('------------------------------------------->',email)
     storage=StorageImplementation()
+    print('------------------------------------------->',email)
     presenter=PresenterImplementation()
+    print('------------------------------------------->',email)
     interactor=CreateUserInteractor(storage=storage)
 
     data=interactor.create_user(email=email,presenter=presenter)

@@ -1,7 +1,7 @@
 from dsu.runtime.security.request_response import request_response
 from dsu.dsu_gen.openapi.constants.config import PARSER_MAPPING
 from dsu.dsu_gen.openapi.constants.config import RENDERER_MAPPING
-from edu_core.build.view_environments.user_email_.Create_email.user_email.user_emailSerializer import user_emailSerializer
+from edu_core.build.view_environments.user_email_.create_user.user_email.user_emailSerializer import user_emailSerializer
 
 
 options = {
@@ -51,12 +51,12 @@ options = {
 }
 
 app_name = "edu_core"
-operation_id  = "Create_email"
+operation_id  = "create_user"
 group_name = ""
 
 
 @request_response(options=options, app_name=app_name, operation_id=operation_id, group_name=group_name)
-def Create_email(request, *args, **kwargs):
+def create_user(request, *args, **kwargs):
     args = (request,) + args
     from dsu.dsu_gen.openapi.wrappers.view_env_wrapper import view_env_wrapper
-    return view_env_wrapper(app_name, "Create_email", group_name, *args, **kwargs)
+    return view_env_wrapper(app_name, "create_user", group_name, *args, **kwargs)

@@ -1,6 +1,6 @@
 path_method_dict = {
     "user/email/": {
-        "POST": "Create_email"
+        "POST": "create_user"
     }
 }
 

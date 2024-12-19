@@ -8,7 +8,7 @@ class CreateUserInteractor:
     def __init__(self,storage:StorageInterface):
         self.storage=storage
 
-    def create_user(self,user_email:str,presenter:PresenterInterface):
+    def create_user(self,email:str,presenter:PresenterInterface):
         """
         ELP:
             -validate input fields
@@ -18,14 +18,14 @@ class CreateUserInteractor:
         """
 
         try:
-            self.storage.valid_email_field(email=user_email)
+            self.storage.valid_email_field(email=email)
         except MissingEmail:
             presenter.raise_exception_for_missing_email()
         
         try:
-            self.storage.check_user(email=user_email)
+            self.storage.check_user(email=email)
         except InvalidUser:
             presenter.raise_exception_for_invalid_user()
         
-        self.storage.create_user(email=user_email)
+        self.storage.create_user(email=email)
         return presenter.get_user_email_response()

@@ -106,8 +106,8 @@
   "paths": {
     "/user/email/": {
       "post": {
-        "operationId": "Create_email",
-        "summary": "Create new email",
+        "operationId": "create_user",
+        "summary": "Create new user",
         "description": "Create new user email",
         "parameters": [
           {

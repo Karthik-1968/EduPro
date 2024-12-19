@@ -8,7 +8,7 @@ def api_wrapper(*args, **kwargs):
     # ---------MOCK IMPLEMENTATION---------
 
     try:
-        from edu_core.views.Create_email.request_response_mocks \
+        from edu_core.views.create_user.request_response_mocks \
             import REQUEST_BODY_JSON
         body = REQUEST_BODY_JSON
     except ImportError:
@@ -28,12 +28,12 @@ def api_wrapper(*args, **kwargs):
         response = ''
         status_code = 200
         if '200' in ['200', '400', '500']:
-            from edu_core.views.Create_email.request_response_mocks \
+            from edu_core.views.create_user.request_response_mocks \
                 import RESPONSE_200_JSON
             response = RESPONSE_200_JSON
             status_code = 200
         elif '201' in ['200', '400', '500']:
-            from edu_core.views.Create_email.request_response_mocks \
+            from edu_core.views.create_user.request_response_mocks \
                 import RESPONSE_201_JSON
             response = RESPONSE_201_JSON
             status_code = 201
@@ -42,7 +42,7 @@ def api_wrapper(*args, **kwargs):
         status_code = 200
     response_tuple = mock_response(
         app_name="edu_core", test_case=test_case,
-        operation_name="Create_email",
+        operation_name="create_user",
         kwargs=kwargs, default_response_body=response,
         group_name="", status_code=status_code)
     return response_tuple
