@@ -1,7 +1,7 @@
 {
         "swagger": "2.0",
         "host": "127.0.0.1:8000",
-        "basePath": "/api/type-form/",
+        "basePath": "/api/type_form/",
         "info": {
             "version": "1.0.0",
             "title": "Simple API",

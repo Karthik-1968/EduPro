@@ -10,7 +10,7 @@ class Fixture(object):
     @staticmethod
     def populate():
         """
-        Populates data for app type-form
+        Populates data for app type_form
         :return:
         """
         pass
