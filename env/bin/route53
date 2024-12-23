@@ -1,4 +1,4 @@
-#!/workspaces/Edu-Pro/env/bin/python3.10
+#!/workspaces/EduPro/env/bin/python
 # Author: Chris Moyer
 #
 # route53 is similar to sdbadmin for Route53, it's a simple

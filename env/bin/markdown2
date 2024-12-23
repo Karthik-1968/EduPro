@@ -1,4 +1,4 @@
-#!/workspaces/Edu-Pro/env/bin/python3.10
+#!/workspaces/EduPro/env/bin/python
 
 import sys
 from os.path import join, dirname, exists

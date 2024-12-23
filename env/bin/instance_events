@@ -1,4 +1,4 @@
-#!/workspaces/Edu-Pro/env/bin/python3.10
+#!/workspaces/EduPro/env/bin/python
 # Copyright (c) 2011 Jim Browne http://www.42lines.net
 # Borrows heavily from boto/bin/list_instances which has no attribution
 #

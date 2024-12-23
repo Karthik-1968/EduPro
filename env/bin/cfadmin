@@ -1,4 +1,4 @@
-#!/workspaces/Edu-Pro/env/bin/python3.10
+#!/workspaces/EduPro/env/bin/python
 # Author: Chris Moyer
 #
 # cfadmin is similar to sdbadmin for CloudFront, it's a simple
