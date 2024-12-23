@@ -24,6 +24,7 @@ from django_swagger_utils.drf_server.utils.general.import_app_settings import \
 THIRD_PARTY_APPS = []
 APPS = [
     "edu_core",
+    "type_form"
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS
@@ -69,6 +70,7 @@ SWAGGER_UTILS = {
     },
     "APPS": {
         "edu_core": {"dsu_version": "1.0"},
+        "type_form": {"dsu_version": "1.0"}
     },
     "HOST": os.environ.get('APIGATEWAY_ENDPOINT', '127.0.0.1:8000'),
 }
