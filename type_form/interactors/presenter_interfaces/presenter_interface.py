@@ -154,3 +154,23 @@ class PresenterInterface:
     @abstractmethod
     def get_response_for_add_field_to_form(self):
         pass
+
+    @abstractmethod
+    def get_response_for_views_of_form(self,count_of_views:int):
+        pass
+
+    @abstractmethod
+    def get_response_for_submissions_of_form(self,count_of_submissions:int):
+        pass
+
+    @abstractmethod
+    def get_response_for_from_completionrate(self,completion_rate:float):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_status(self):
+        pass
+    
+    @abstractmethod
+    def get_response_for_reject_invitation(self):
+        pass

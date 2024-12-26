@@ -51,3 +51,6 @@ class MissingDevice(Exception):
 
 class InvalidField(Exception):
     pass
+
+class MissingStatus(Exception):
+    pass

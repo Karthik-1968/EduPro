@@ -46,6 +46,7 @@ class FormResponsedto:
     id:Optional[int]
     data:str
     device:str
+    status:str
 
 @dataclass
 class FormFielddto:
@@ -204,4 +205,24 @@ class StorageInterface:
 
     @abstractmethod
     def add_field_to_form(self,formfielddto:FormFielddto):
+        pass
+
+    @abstractmethod
+    def get_views_of_form(self,id:int)->int:
+        pass
+
+    @abstractmethod
+    def get_submissions_of_form(self,id:int)->int:
+        pass 
+
+    @abstractmethod
+    def get_form_completionrate(self,id:int)->float:
+        pass
+
+    @abstractmethod
+    def valid_status_field(self,status:str):
+        pass
+
+    @abstractmethod
+    def reject_invitation(self,id:int):
         pass

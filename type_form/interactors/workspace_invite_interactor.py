@@ -1,10 +1,11 @@
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
-from type_form.interactors.storage_interfaces.storage_interface import Workspacedto,Userdto,WorkspaceInvitedto
+from type_form.interactors.storage_interfaces.storage_interface import WorkspaceInvitedto
 import uuid
-from type_form.exceptions.custom_exceptions import InvalidUser,MissingId,InvalidWorkspace,MissingRole
+from type_form.exceptions.custom_exceptions import InvalidUser,MissingId,InvalidWorkspace,MissingRole,AlreadyAccepted,\
+InvalidInvitation,AlreadyInvited
 
-class CreateWorkspaceInviteInteractor:
+class WorkspaceInviteInteractor:
 
     def __init__(self,storage:StorageInterface,presenter:PresenterInterface):
 
@@ -22,7 +23,7 @@ class CreateWorkspaceInviteInteractor:
                 create workspace invite
         """
         
-        self.validate_input_data(user_id = user_id,workspace_id = workspace_id,role = role)
+        self.validate_input_data_for_create_workspace_invite(user_id = user_id,workspace_id = workspace_id,role = role)
 
         try:
             self.storage.check_user(id = user_id)
@@ -45,9 +46,10 @@ class CreateWorkspaceInviteInteractor:
         workspaceinvitedto = WorkspaceInvitedto(user = userdto,workspace = workspacedto,role = role,is_accepted = is_accepted)
 
         workspace_id = self.storage.create_workspace_invite(workspacedinviteto = workspaceinvitedto)
+
         return self.presenter.get_response_for_create_workspace_invite(id = workspace_id)       
 
-    def validate_input_data(self,user_id:uuid,workspace_id:int,role:str):
+    def validate_input_data_for_create_workspace_invite(self,user_id:uuid,workspace_id:int,role:str):
 
         try:
             self.storage.valid_userid_field(id = user_id)
@@ -63,3 +65,53 @@ class CreateWorkspaceInviteInteractor:
             self.storage.valid_role_field(role = role)
         except MissingRole:
             self.presenter.raise_exception_for_missing_role()
+
+    def accept_invitation(self,id:int):
+        """
+        ELP:
+            check if input data exists
+            check if invitation exists
+            check if invitaion already accepted
+            accept the invitation
+        """
+        try:
+            self.storage.valid_id_field(id = id)
+        except MissingId:
+            self.presenter.raise_exception_for_missing_invite_id()
+
+        try:
+            self.storage.check_invitation(id = id)
+        except InvalidInvitation:
+            self.presenter.raise_exception_for_invalid_invite()
+
+        try:
+            self.storage.check_if_invitation_already_accepted(id = id)
+        except AlreadyAccepted:
+            self.presenter.raise_exception_for_invitation_already_accepted()
+
+        self.storage.accept_invitation(id = id)
+
+        return self.presenter.get_response_for_accept_invitation()
+
+    def reject_invitation(self,id:int):
+        """
+        ELP:
+            check if input data exists
+            check if invitation exists
+            check if invitaion already accepted
+            accept the invitation
+        """
+        try:
+            self.storage.valid_id_field(id = id)
+        except MissingId:
+            self.presenter.raise_exception_for_missing_invite_id()
+
+        try:
+            self.storage.check_invitation(id = id)
+        except InvalidInvitation:
+            self.presenter.raise_exception_for_invalid_invite()
+
+
+        self.storage.reject_invitation(id = id)
+
+        return self.presenter.get_response_for_reject_invitation()
