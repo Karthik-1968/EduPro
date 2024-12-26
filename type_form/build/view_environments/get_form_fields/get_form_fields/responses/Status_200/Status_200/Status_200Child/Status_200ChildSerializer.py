@@ -7,9 +7,10 @@ from dsu.dsu_gen.openapi.fields.collection_format_field import CollectionFormatF
 
 
 class Status_200ChildType(object):
-    def __init__(self, label, field_type,  **kwargs):
+    def __init__(self, label, field_type, field_id=None,  **kwargs):
         self.label = label
         self.field_type = field_type
+        self.field_id = field_id
 
     def __str__(self):
         from dsu.dsu_gen.openapi.utils.get_unicode_str import get_unicode_str
@@ -20,6 +21,7 @@ class Status_200ChildType(object):
 
 
 class Status_200ChildSerializer(serializers.Serializer):
+    field_id = serializers.IntegerField(required=False, allow_null=True)
     label = serializers.CharField()
     field_type = serializers.ChoiceField(choices=(('Text', 'Text'), ('Integer', 'Integer'), ('Float', 'Float'), ('Email', 'Email'), ('Decimal', 'Decimal'), ('Boolean', 'Boolean'), ('DateTime', 'DateTime'), ('UUID', 'UUID'), ('Binary', 'Binary'), ('Date', 'Date'), ('Time', 'Time'), ('JSON', 'JSON'), ('PhoneNumber', 'PhoneNumber')))
 

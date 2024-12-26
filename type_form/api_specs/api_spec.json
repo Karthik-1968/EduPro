@@ -1,352 +1,355 @@
 {
-    "swagger": "2.0",
-    "host": "127.0.0.1:8000",
-    "basePath": "/api/ip_traffic/",
-    "info": {
-        "version": "1.0.0",
-        "title": "Simple API",
-        "description": "A simple API to learn how to write OpenAPI Specification"
-    },
-    "schemes": [
-        "https",
-        "http"
-    ],
-    "consumes": [
-        "application/json"
-    ],
-    "produces": [
-        "application/json"
-    ],
-    "securityDefinitions": {
-        "oauth": {
-            "tokenUrl": "http://auth.ibtspl.com/oauth2/",
-            "flow": "password",
-            "scopes": {
-                "read": "read users",
-                "write": "create users",
-                "update": "update users",
-                "delete": "delete users"
-            },
-            "type": "oauth2"
+  "swagger": "2.0",
+  "host": "127.0.0.1:8000",
+  "basePath": "/api/type_form/",
+  "info": {
+      "version": "1.0.0",
+      "title": "Simple API",
+      "description": "A simple API to learn how to write OpenAPI Specification"
+  },
+  "schemes": [
+      "https",
+      "http"
+  ],
+  "consumes": [
+      "application/json"
+  ],
+  "produces": [
+      "application/json"
+  ],
+  "securityDefinitions": {
+      "oauth": {
+          "tokenUrl": "http://auth.ibtspl.com/oauth2/",
+          "flow": "password",
+          "scopes": {
+              "read": "read users",
+              "write": "create users",
+              "update": "update users",
+              "delete": "delete users"
+          },
+          "type": "oauth2"
+      }
+  },
+  "definitions": {},
+  "parameters": {
+    "ID":{
+      "name":"id",
+      "in":"query",
+      "required":true,
+      "description":"This is form id",
+      "type":"integer"
+    }
+  },
+  "responses": {},
+  "paths": {
+    "/user/email/": {
+      "post": {
+        "operationId": "create_user",
+        "summary": "Create new user",
+        "description": "Create new user email",
+        "parameters": [
+          {
+            "name": "user_email",
+            "in": "body",
+            "description": "user's email",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email"
+                }
+              },
+              "required": [
+                "email"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User is successfully created"
+          }
         }
-    },
-    "definitions": {},
-    "parameters": {
-      "ID":{
-        "name":"id",
-        "in":"query",
-        "required":true,
-        "description":"This is form id",
-        "type":"integer"
       }
     },
-    "responses": {},
-    "paths": {
-      "/user/email/": {
-        "post": {
-          "operationId": "create_user",
-          "summary": "Create new user",
-          "description": "Create new user email",
-          "parameters": [
-            {
-              "name": "user_email",
-              "in": "body",
-              "description": "user's email",
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "format": "email"
-                  }
-                },
-                "required": [
-                  "email"
-                ]
-              }
-            }
-          ],
-          "responses": {
-            "201": {
-              "description": "User is successfully created"
-            }
-          }
-        }
-      },
-      "/login/":{
-        "post": {
-          "operationId": "login_user",
-          "summary": "Login User",
-          "description": "Login and get the access token",
-          "parameters": [
-            {
-              "name": "login",
-              "in": "body",
-              "description": "email to create access token",
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "user_email": {
-                    "type": "string",
-                    "format": "email"
-                  }
-                },
-                "required": [
-                  "user_email"
-                ]
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Successfully logged and token generated",
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "access_token": {
-                    "type": "string",
-                    "description": "The access token for authentication."
-                  },
-                  "expires_in": {
-                    "type": "integer",
-                    "description": "The expiration time of the token in seconds."
-                  }
-                },
-                "required": [
-                  "access_token"
-                ]
-              }
-            }
-          }
-        }
-      },
-      "/logout/": {
-        "post": {
-          "operationId": "logout_user",
-          "summary": "Logout User",
-          "description": "This endpoint logs the user out by invalidating their access token.",
-          "security": [
-                {
-                    "oauth": ["write"]
+    "/login/":{
+      "post": {
+        "operationId": "login_user",
+        "summary": "Login User",
+        "description": "Login and get the access token",
+        "parameters": [
+          {
+            "name": "login",
+            "in": "body",
+            "description": "email to create access token",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_email": {
+                  "type": "string",
+                  "format": "email"
                 }
-            ],
-          "responses": {
-            "200": {
-              "description": "Successfully logged out"
+              },
+              "required": [
+                "user_email"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully logged and token generated",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "access_token": {
+                  "type": "string",
+                  "description": "The access token for authentication."
+                },
+                "expires_in": {
+                  "type": "integer",
+                  "description": "The expiration time of the token in seconds."
+                }
+              },
+              "required": [
+                "access_token"
+              ]
             }
           }
         }
-      },
-      "/create/form/":{
-        "post":{
-          "operationId":"create_form",
-          "summary":"creating form",
-          "description":"creating new form by user",
-          "security":[
-            {
-              "oauth":["write"]
-            }
+      }
+    },
+    "/logout/": {
+      "post": {
+        "operationId": "logout_user",
+        "summary": "Logout User",
+        "description": "This endpoint logs the user out by invalidating their access token.",
+        "security": [
+              {
+                  "oauth": ["write"]
+              }
           ],
-          "parameters":[
-            {
-              "name":"form",
-              "description":"create a new form ",
-              "in":"body",
-              "required":true,
-              "schema":{
+        "responses": {
+          "200": {
+            "description": "Successfully logged out"
+          }
+        }
+      }
+    },
+    "/create/form/":{
+      "post":{
+        "operationId":"create_form",
+        "summary":"creating form",
+        "description":"creating new form by user",
+        "security":[
+          {
+            "oauth":["write"]
+          }
+        ],
+        "parameters":[
+          {
+            "name":"form",
+            "description":"create a new form ",
+            "in":"body",
+            "required":true,
+            "schema":{
+              "type":"object",
+              "properties":{
+                "name":{
+                  "type":"string"
+                },
+                "created_by":{
+                  "type":"string",
+                  "format":"email"
+                }
+              }
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"Form is created successfully",
+            "schema":{
+              "type":"object",
+              "properties":{
+                "form_id":{
+                  "type":"integer"
+                }
+              },
+              "required":[
+                "form_id"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/add/fields/to/form/":{
+      "post":{
+        "operationId":"add_fields_to_form",
+        "summary":"Add fields to form",
+        "description":"Adding fields to form",
+        "security":[
+          {
+            "oauth":["write"]
+          }
+        ],
+        "parameters":[
+          {
+            "$ref":"#/parameters/ID"
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"Fields added successfully",
+            "schema":{
+              "type":"array",
+              "items":{
                 "type":"object",
                 "properties":{
-                  "name":{
+                  "label":{
                     "type":"string"
                   },
-                  "created_by":{
+                  "field_type":{
                     "type":"string",
-                    "format":"email"
-                  }
-                }
-              }
-            }
-          ],
-          "responses":{
-            "201":{
-              "description":"Form is created successfully",
-              "schema":{
-                "type":"object",
-                "properties":{
-                  "form_id":{
-                    "type":"integer"
+                    "enum": [
+                      "Text",
+                      "Integer",
+                      "Float",
+                      "Email",
+                      "Decimal",
+                      "Boolean",
+                      "DateTime",
+                      "UUID",
+                      "Binary",
+                      "Date",
+                      "Time",
+                      "JSON",
+                      "PhoneNumber"
+                    ] 
+                  },
+                  "place_holder":{
+                    "type":"string"
                   }
                 },
                 "required":[
-                  "form_id"
+                  "label",
+                  "field_type"
                 ]
               }
             }
           }
         }
-      },
-      "/add/fields/to/form/":{
-        "post":{
-          "operationId":"add_fields_to_form",
-          "summary":"Add fields to form",
-          "description":"Adding fields to form",
-          "security":[
-            {
-              "oauth":["write"]
-            }
-          ],
-          "parameters":[
-            {
-              "$ref":"#/parameters/ID"
-            }
-          ],
-          "responses":{
-            "201":{
-              "description":"Fields added successfully",
-              "schema":{
-                "type":"array",
-                "items":{
-                  "type":"object",
-                  "properties":{
-                    "label":{
-                      "type":"string"
-                    },
-                    "field_type":{
-                      "type":"string",
-                      "enum": [
-                        "Text",
-                        "Integer",
-                        "Float",
-                        "Email",
-                        "Decimal",
-                        "Boolean",
-                        "DateTime",
-                        "UUID",
-                        "Binary",
-                        "Date",
-                        "Time",
-                        "JSON",
-                        "PhoneNumber"
-                      ] 
-                    },
-                    "place_holder":{
-                      "type":"string"
-                    }
-                  },
-                  "required":[
-                    "label",
-                    "field_type"
-                  ]
-                }
-              }
-            }
+      }
+    },
+    "/get/form/fields":{
+      "get":{
+        "operationId":"get_form_fields",
+        "summary":"get from fields",
+        "description":"getting form fields",
+        "security":[
+          {
+            "oauth":["read"]
           }
-        }
-      },
-      "/get/form/fields":{
-        "get":{
-          "operationId":"get_form_fields",
-          "summary":"get from fields",
-          "description":"getting form fields",
-          "security":[
-            {
-              "oauth":["read"]
-            }
-          ],
-          "parameters":[
-            {
-              "$ref":"#/parameters/ID"
-            }  
-          ],
-          "responses":{
-            "200":{
-              "description":"List of fields of form",
-              "schema":{
-                "type":"array",
-                "items":{
-                  "type":"object",
-                  "properties":{
-                    "label":{
-                      "type":"string"
-                    },
-                    "field_type":{
-                      "type":"string",
-                      "enum": [
-                        "Text",
-                        "Integer",
-                        "Float",
-                        "Email",
-                        "Decimal",
-                        "Boolean",
-                        "DateTime",
-                        "UUID",
-                        "Binary",
-                        "Date",
-                        "Time",
-                        "JSON",
-                        "PhoneNumber"
-                      ] 
-                    }
-                  },
-                  "required":[
-                    "label",
-                    "field_type"
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
-      "/submit/data/":{
-        "post":{
-          "operationId":"submit_data",
-          "summary":"submit data",
-          "description":"submit the data",
-          "security":[
-            {
-              "oauth":["write"]
-            }
-          ],
-          "parameters":[
-            {
-              "name":"submitteddata",
-              "in":"body",
-              "description":"This is submitted data",
-              "schema":{
+        ],
+        "parameters":[
+          {
+            "$ref":"#/parameters/ID"
+          }  
+        ],
+        "responses":{
+          "200":{
+            "description":"List of fields of form",
+            "schema":{
+              "type":"array",
+              "items":{
                 "type":"object",
                 "properties":{
-                  "form_id":{
+                  "field_id":{
                     "type":"integer"
                   },
-                  "data":{
-                    "type": "array",
-                    "items": {
-                      "type":"object",
-                      "properties":{
-                        "field_id":{
-                            "type":"integer"
-                        },
-                        "response":{
-                            "type":"string"
-                        }
+                  "label":{
+                    "type":"string"
+                  },
+                  "field_type":{
+                    "type":"string",
+                    "enum": [
+                      "Text",
+                      "Integer",
+                      "Float",
+                      "Email",
+                      "Decimal",
+                      "Boolean",
+                      "DateTime",
+                      "UUID",
+                      "Binary",
+                      "Date",
+                      "Time",
+                      "JSON",
+                      "PhoneNumber"
+                    ] 
+                  }
+                },
+                "required":[
+                  "label",
+                  "field_type"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/submit/data/":{
+      "post":{
+        "operationId":"submit_data",
+        "summary":"submit data",
+        "description":"submit the data",
+        "security":[
+          {
+            "oauth":["write"]
+          }
+        ],
+        "parameters":[
+          {
+            "name":"submitteddata",
+            "in":"body",
+            "description":"This is submitted data",
+            "schema":{
+              "type":"object",
+              "properties":{
+                "form_id":{
+                  "type":"integer"
+                },
+                "data":{
+                  "type": "array",
+                  "items": {
+                    "type":"object",
+                    "properties":{
+                      "field_id":{
+                          "type":"integer"
+                      },
+                      "response":{
+                          "type":"string"
                       }
                     }
                   }
-                },
-                "required":[
-                  "form_id",
-                  "data"
-                ]
-              }
-            }  
-          ],
-          "responses":{
-            "201":{
-              "description":"Form submitted successfully"
+                }
+              },
+              "required":[
+                "form_id",
+                "data"
+              ]
             }
+          }  
+        ],
+        "responses":{
+          "201":{
+            "description":"Form submitted successfully"
           }
         }
       }
     }
   }
+}

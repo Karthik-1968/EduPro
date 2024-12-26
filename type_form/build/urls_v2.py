@@ -10,7 +10,7 @@ from type_form.build.view_environments.get_form_fields.router import get_form_fi
 from type_form.build.view_environments.submit_data_.router import submit_data_
 
 
-base_path = "api/ip_traffic/"
+base_path = "api/type_form/"
 
 api_paths = [
     re_path(r'^user/email/$', user_email_),

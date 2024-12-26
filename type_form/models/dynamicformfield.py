@@ -1,5 +1,5 @@
 from django.db import models
-from .DynamicForm import DynamicForm
+from .dynamicform import DynamicForm
 
 
 Field_types = [("Text", "Text Field"),

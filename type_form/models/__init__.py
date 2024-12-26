@@ -1,7 +1,7 @@
-from .User import User
-from .DynamicForm import DynamicForm
-from .DynamicFormField import DynamicFormField
-from .SubmittedFormData import SubmittedFormData
+from .user import User
+from .dynamicform import DynamicForm
+from .dynamicformfield import DynamicFormField
+from .submittedformdata import SubmittedFormData
 __all__ = [User,DynamicForm,DynamicFormField,SubmittedFormData]
 
 # class DummyModel(AbstractDateTimeModel):

@@ -11,11 +11,8 @@ def api_wrapper(*args, **kwargs):
     
     email = kwargs['request_data'].get('email')
 
-    print('------------------------------------------->',email)
     storage=StorageImplementation()
-    print('------------------------------------------->',email)
     presenter=PresenterImplementation()
-    print('------------------------------------------->',email)
     interactor=CreateUserInteractor(storage=storage)
 
     data=interactor.create_user(email=email,presenter=presenter)
