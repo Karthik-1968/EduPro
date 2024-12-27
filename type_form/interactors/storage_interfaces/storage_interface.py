@@ -35,7 +35,7 @@ class Formdto:
 @dataclass
 class Fielddto:
     id:Optional[int]
-    label:str
+    field_name:str
     field_type:str
     is_required:Optional[bool]
 
@@ -51,178 +51,144 @@ class FormResponsedto:
 @dataclass
 class FormFielddto:
     form:Formdto
+    user:Userdto
     field:Fielddto
+    label:str
 
 class StorageInterface:
 
     @abstractmethod
-    def valid_userid_field(self,id:uuid):
+    def check_if_user_already_present(self, email:str):
         pass
     
     @abstractmethod
-    def valid_email_field(self,email:str):
+    def check_user(self, id:uuid):
         pass
 
     @abstractmethod
-    def check_if_user_already_present(self,email:str):
+    def create_user(self, userdto:Userdto):
+        pass
+
+    @abstractmethod
+    def check_if_workspace_already_exists(self, name:str):
+        pass
+
+    @abstractmethod
+    def get_user(self, id:uuid)->Userdto:
+        pass
+
+    @abstractmethod
+    def create_workspace(self, workspacedto:Workspacedto)->int:
+        pass
+
+    @abstractmethod
+    def check_workspace(self, id:int):
+        pass
+
+    @abstractmethod
+    def check_if_user_already_invited(self, user_id:uuid, workspace_id:int):
+        pass
+
+    @abstractmethod
+    def get_workspace(self, id:int)->Workspacedto:
+        pass
+
+    @abstractmethod
+    def create_workspace_invite(self, workspaceinvitedto:WorkspaceInvitedto)->int:
         pass
     
     @abstractmethod
-    def check_user(self,id:uuid):
+    def check_invitation(self, id:int):
         pass
 
     @abstractmethod
-    def create_user(self,userdto:Userdto):
+    def check_if_invitation_already_accepted(self, id:int):
         pass
 
     @abstractmethod
-    def valid_name_field(self,name:str):
+    def accept_invitation(self, id:int):
         pass
 
     @abstractmethod
-    def check_if_workspace_already_exists(self,name:str):
+    def get_workspaces_of_user(self, id:uuid)->list[Workspacedto]:
         pass
 
     @abstractmethod
-    def get_user(self,id:uuid)->Userdto:
+    def get_workspaces_of_user(self, id:int)->list[WorkspaceInvitedto]:
         pass
 
     @abstractmethod
-    def create_workspace(self,workspacedto:Workspacedto)->int:
+    def check_if_form_already_exists(self, name:str):
         pass
 
     @abstractmethod
-    def valid_id_field(self,id:int):
+    def create_form(self, formdto:Formdto)->int:
         pass
 
     @abstractmethod
-    def check_workspace(self,id:int):
+    def get_forms_of_workspace(self, id:int)->list[Formdto]:
         pass
 
     @abstractmethod
-    def check_if_user_already_invited(self,user_id:uuid,workspace_id::int):
+    def get_forms_of_user(self, id:uuid)->list[Formdto]:
         pass
 
     @abstractmethod
-    def get_workspace(self,id:int)->Workspacedto:
+    def check_form(self, id:int):
         pass
 
     @abstractmethod
-    def create_workspace_invite(self,workspaceinvitedto:WorkspaceInvitedto)->int:
-        pass
-    
-    @abstractmethod
-    def check_invitation(self,id:int):
+    def get_form(self, id:int)->Formdto:
         pass
 
     @abstractmethod
-    def check_if_invitation_already_accepted(self,id:int):
+    def create_field(self, field_dto:Fielddto)->int:
         pass
 
     @abstractmethod
-    def accept_invitation(self,id:int):
+    def get_fields_of_form(self, id:int)->list[Fielddto]:
         pass
 
     @abstractmethod
-    def get_workspaces_of_user(self,id:uuid)->list[Workspacedto]:
+    def check_if_field_already_exists(self, field_type:str):
         pass
 
     @abstractmethod
-    def get_workspaces_of_user(self,id:int)->list[WorkspaceInvitedto]:
+    def create_form_response(self, formresponsedto:FormResponsedto):
         pass
 
     @abstractmethod
-    def check_if_form_already_exists(self,name:str):
+    def get_responses_of_form(self, id:int)->list[FormResponsedto]:
         pass
 
     @abstractmethod
-    def create_form(self,formdto:Formdto)->int:
+    def check_field(self, id:int):
         pass
 
     @abstractmethod
-    def get_forms_of_workspace(self,id:int)->list[Formdto]:
+    def get_field(self, id:int)->Fielddto:
         pass
 
     @abstractmethod
-    def get_forms_of_user(self,id:uuid)->list[Formdto]:
+    def add_field_to_form(self, formfielddto:FormFielddto):
         pass
 
     @abstractmethod
-    def valid_label_field(self,label:str):
+    def get_views_of_form(self, id:int)->int:
         pass
 
     @abstractmethod
-    def valid_field_type_field(self,field_type:str):
-        pass
-
-    @abstractmethod
-    def check_form(self,id:int):
-        pass
-
-    @abstractmethod
-    def get_form(self,id:int)->Formdto:
-        pass
-
-    @abstractmethod
-    def create_field(self,field_dto:Fielddto)->int:
-        pass
-
-    @abstractmethod
-    def get_fields_of_form(self,id:int)->list[Fielddto]:
-        pass
-
-    @abstractmethod
-    def check_if_field_already_exists(self,label:str,field_type:str):
-        pass
-
-    @abstractmethod
-    def valid_device_field(self,device:str):
-        pass
-
-    @abstractmethod
-    def valid_data_field(self,data:str):
-        pass
-
-    @abstractmethod
-    def create_form_response(self,formresponsedto:FormResponsedto):
-        pass
-
-    @abstractmethod
-    def get_responses_of_form(self,id:int)->list[FormResponsedto]:
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_fieldid(self):
-        pass
-
-    @abstractmethod
-    def check_field(self,id:int):
-        pass
-
-    @abstractmethod
-    def get_field(self,id:int)->Fielddto:
-        pass
-
-    @abstractmethod
-    def add_field_to_form(self,formfielddto:FormFielddto):
-        pass
-
-    @abstractmethod
-    def get_views_of_form(self,id:int)->int:
-        pass
-
-    @abstractmethod
-    def get_submissions_of_form(self,id:int)->int:
+    def get_submissions_of_form(self, id:int)->int:
         pass 
 
     @abstractmethod
-    def get_form_completionrate(self,id:int)->float:
+    def get_form_completionrate(self, id:int)->float:
         pass
 
     @abstractmethod
-    def valid_status_field(self,status:str):
+    def reject_invitation(self, id:int):
         pass
-
+    
     @abstractmethod
-    def reject_invitation(self,id:int):
+    def check_if_invites_limit_reached(self, id:int):
         pass

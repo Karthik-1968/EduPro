@@ -174,3 +174,27 @@ class PresenterInterface:
     @abstractmethod
     def get_response_for_reject_invitation(self):
         pass
+    
+    @abstractmethod
+    def raise_exception_for_missing_role(self):
+        pass
+    
+    @abstractmethod
+    def raise_exception_for_maximum_invites_reached(self):
+        pass
+    
+    @abstractmethod
+    def raise_exception_for_missing_fieldid(self):
+        pass
+    
+    @abstractmethod
+    def raise_exception_for_missing_invite_name(self):
+        pass
+    
+    @abstractmethod
+    def raise_exception_for_missing_field_name(self):
+        pass
+    
+    @abstractmethod
+    def raise_exception_for_missing_formfield_label(self):
+        pass

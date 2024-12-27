@@ -1,8 +1,9 @@
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
-from type_form.exceptions.custom_exceptions import MissingId,InvalidForm,InvalidUser,MissingData,MissingDevice,MissingStatus
+from type_form.exceptions.custom_exceptions import InvalidFormException, InvalidUserException
 from type_form.interactors.storage_interfaces.storage_interface import FormResponsedto
 import uuid
+
 
 class FormResponseInteractor:
 
@@ -11,78 +12,79 @@ class FormResponseInteractor:
         self.storage=storage
         self.presenter=presenter
 
-    def create_form_response(self,user_id:uuid,form_id:int,data:str,device:str):
+    def create_form_response(self, user_id:uuid, form_id:int, data:str, device:str, status:str):
 
         """ELP:
-            check if input data exists
-            check if user exists
-            check if form exists
-            create form response 
+            -validate input data
+                -validate user_id
+                -validate form_id
+                -validate data
+                -validate device
+                -validate status
+            -check if user exists
+            -check if form exists
+            -create form response 
         """
         self.validate_input_data(user_id = user_id, form_id = form_id, data = data, device = device, status = status)
 
         try:
             self.storage.check_user(id = user_id)
-        except InvalidUser:
+        except InvalidUserException:
             self.presenter.raise_exception_for_invalid_user()
 
         try:
             self.storage.check_form(id = form_id)
-        except InvalidForm:
+        except InvalidFormException:
             self.presenter.raise_exception_for_invalid_form()
 
         userdto = self.storage.get_user(id = user_id)
         formdto = self.storage.get_form(id = form_id)
 
-        fromresponsedto = FormResponsedto(user = userdto,form = formdto, data = data, device = device,status = status)
+        formresponsedto = FormResponsedto(user = userdto,form = formdto, data = data, device = device,status = status)
 
         formresponse_id = self.storage.create_form_response(formresponsedto = formresponsedto)
+        
         return self.presenter.get_response_for_create_form_response(id = formresponse_id)
 
-    def validata_input_data(self,user_id:uuid,form_id:int,data:str,device:str,status:str):
+    def validate_input_data(self, user_id:uuid, form_id:int, data:str, device:str, status:str):
 
-        try:
-            self.storage.valid_userid_field(id = user_id)
-        except MissingId:
+        user_id_not_present = not user_id
+        if user_id_not_present:
             self.presenter.raise_exception_for_missing_userid()
         
-        try:
-            self.storage.valid_id_field(id = form_id)
-        except MissingId:
+        form_id_not_present = not form_id
+        if form_id_not_present:
             self.presenter.raise_exception_for_missing_formid()
 
-        try:
-            self.strorage.valid_data_field(data = data)
-        except MissingData:
+        data_not_present = not data
+        if data_not_present:
             self.presenter.raise_exception_for_missing_data()
 
-        try:
-            self.storage.valid_device_field(device = device)
-        except MissingDevice:
+        device_not_present = not device
+        if device_not_present:
             self.presenter.raise_exception_for_missing_device()
 
-        try:
-            self.storage.valid_status_field(status = status)
-        except MissingStatus:
-            sel.presenter.raise_exception_for_missing_status()
+        status_not_present = not status
+        if status_not_present:
+            self.presenter.raise_exception_for_missing_status()
 
 
     def get_responses_of_form(self,form_id:int):
 
         """
             ELP:
-                check if input data exists
-                check if form exists
-                get responses of the form
+                -validate input data
+                    -validate form_id
+                -check if form exists
+                -get responses of the form
         """
-        try:
-            self.storage.valid_id_field(id = form_id)
-        except MissingId:
+        form_id_not_present = not form_id
+        if form_id_not_present:
             self.presenter.raise_exception_for_missing_formid()
 
         try:
             self.storage.check_form(id = form_id)
-        except InvalidForm:
+        except InvalidFormException:
             self.presenter.raise_exception_for_invalid_form()
 
         formresponsedtos = self.storage.get_responses_of_form(id = form_id)

@@ -1,56 +1,35 @@
-class MissingEmail(Exception):
+class UserAlreadyPresentException(Exception):
     pass
 
-class UserAlreadyPresent(Exception):
+class InvalidUserException(Exception):
     pass
 
-class InvalidUser(Exception):
+class WorkspaceAlreadyExistsException(Exception):
     pass
 
-class MissingId(Exception):
-    pass 
-
-class WorkspaceAlreadyExists(Exception):
+class InvalidWorkspaceException(Exception):
     pass
 
-class InvalidWorkspace(Exception):
+class AlreadyInvitedException(Exception):
     pass
 
-class AlreadyInvited(Exception):
+class InvalidInvitationException(Exception):
     pass
 
-class MissingRole(Exception):
+class AlreadyAcceptedException(Exception):
     pass
 
-class InvalidInvitation(Exception):
+class FormAlreadyExistsException(Exception):
     pass
 
-class AlreadyAccepted(Exception):
+class InvalidFormException(Exception):
     pass
 
-class FormAlreadyExists(Exception):
+class FieldAlreadyExistsException(Exception):
     pass
 
-class MissingLabel(Exception):
+class InvalidFieldException(Exception):
     pass
 
-class MissingFieldType(Exception):
-    pass
-
-class InvalidForm(Exception):
-    pass
-
-class FieldAlreadyExists(Exception):
-    pass
-
-class MissingData(Exception):
-    pass
-
-class MissingDevice(Exception):
-    pass
-
-class InvalidField(Exception):
-    pass
-
-class MissingStatus(Exception):
+class MaximumInvitesLimitReachedException(Exception):
     pass

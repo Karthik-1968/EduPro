@@ -1,29 +1,32 @@
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
-from type_form.exceptions.custom_exceptions import MissingId,MissingName,FormAlreadyExists,InvalidWorkspace,InvalidUser
+from type_form.exceptions.custom_exceptions import FormAlreadyExistsException,InvalidWorkspaceException, InvalidUserException
 from type_form.interactors.storage_interfaces.storage_interface import Formdto
-
+import uuid
 
 class FormInteractor:
 
-    def __init__(self,storage:StorageInterface,presenter:PresenterInterface):
+    def __init__(self, storage:StorageInterface, presenter:PresenterInterface):
 
         self.storage = storage
         self.presenter = presenter 
 
-    def create_form(self,user_id:uuid,workspace_id:int,name:str):
+    def create_form(self, user_id:uuid, workspace_id:int, name:str):
         """
             ELP:
-                check if input data exists
-                check if form exists
-                create form
+                -validate input data
+                    -validate user_id
+                    -validate workspace_id
+                    -validate name
+                -check if form exists
+                -create form
         """
 
-        self.validate_input_fields_for_create_form(user_id = user_id,workspace_id = workspace_id,name = name)
+        self.validate_input_fields_for_create_form(user_id = user_id, workspace_id = workspace_id, name = name)
 
         try:
             self.storage.check_if_form_already_exists(name = name)
-        except FormAlreadyExists:
+        except FormAlreadyExistsException:
             self.presenter.raise_exception_for_form_already_exists()
 
         userdto=self.storage.get_user(id = user_id)
@@ -34,64 +37,61 @@ class FormInteractor:
 
         return self.presenter.get_response_for_create_form(id = form_id)
 
-    def validate_input_fields_for_create_form(self,user_id:uuid,workspace_id:int,name:str):
+    def validate_input_fields_for_create_form(self, user_id:uuid, workspace_id:int, name:str):
 
-        try:
-            self.storage.valid_userid_field(id = user_id)
-        except MissingId:
+        user_id_not_present = not user_id
+        if user_id_not_present:
             self.raise_exception_for_missing_userid()
 
-        try:
-            self.storage.valid_id_field(id = workspace_id)
-        except MissingId:
+        workspace_id_not_present = not workspace_id
+        if workspace_id_not_present:
             self.raise_exception_for_missing_workspaceid()
 
-        try:
-            self.storage.valid_name_field(name = name)
-        except MissingName:
+        name_not_present = not name
+        if name_not_present:
             self.raise_exception_for_missing_form_name()
 
-    def get_forms_of_workspace(self,id:int):
+    def get_forms_of_workspace(self, workspace_id:int):
 
         """
             ELP:
-                check if input data exists
-                check if workspace exists
-                get forms of workspace
+                -validate input data
+                    -validate workspace_id
+                -check if workspace exists
+                -get forms of workspace
         """
 
-        try:
-            self.storage.valid_id_field(id = id)
-        except MissingId:
+        workspace_id_not_present = not workspace_id
+        if workspace_id_not_present:
             self.presenter.raise_exception_for_missing_workspaceid()
 
         try:
             self.storage.check_workspace(id = id)
-        except InvalidWorkspace:
+        except InvalidWorkspaceException:
             self.presenter.raise_exception_for_invalid_workspace()
 
        
         formdtos=self.storage.get_forms_of_workspace(id = id)
 
-        return presenter.get_forms_of_workspace_response(formdtos = formdtos)
+        return self.presenter.get_forms_of_workspace_response(formdtos = formdtos)
 
-    def get_forms_of_user(self,user_id:uuid):
+    def get_forms_of_user(self, user_id:uuid):
 
         """
             ELP:
-                check if input data exists
-                check if user exists
-                get list of forms of user
+                -validate input data
+                    -validate user_id
+                -check if user exists
+                -get list of forms of user
         """
 
-        try:
-            self.storage.valid_userid_field(id = user_id)
-        except MissingId:
+        user_id_not_present = not user_id
+        if user_id_not_present:
             self.presenter.raise_exception_for_missing_userid()
 
         try:
             self.storage.check_user(id = user_id)
-        except InvalidUser:
+        except InvalidUserException:
             self.presenter.raise_exception_for_invalid_user()
 
         formdtos=self.storage.get_forms_of_user(id = user_id)
