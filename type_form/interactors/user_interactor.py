@@ -32,6 +32,6 @@ class UserInteractor:
             presenter.raise_exception_for_user_already_present()
         
         userdto=Userdto(id = id,email = email)
-        self.storage.create_user(userto = userdto)
+        user_id = self.storage.create_user(userdto = userdto)
 
-        return presenter.get_response_for_create_user()
+        return presenter.get_response_for_create_user(id = user_id)

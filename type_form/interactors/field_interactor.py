@@ -80,7 +80,7 @@ class FieldInteractor:
             self.presenter.raise_exception_for_invalid_field()
 
         formdto = self.storage.get_form(id = form_id)
-        userdto = self.storage.gt_user(id = user_id)
+        userdto = self.storage.get_user(id = user_id)
         fielddto = self.storage.get_field(id = field_id)
 
         formfielddto = FormFielddto(form = formdto, user = userdto, field = fielddto, label = label)

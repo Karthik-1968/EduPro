@@ -127,3 +127,26 @@ class WorkspaceInviteInteractor:
         self.storage.reject_invitation(id = id)
 
         return self.presenter.get_response_for_reject_invitation()
+    
+    
+    def get_invities_of_workspace_interactor(self, workspace_id:int):
+
+        """
+            ELP:
+               -validate input data
+                -validate workspace_id
+               -check if workspace exists
+               -get list of invites of workspace
+        """
+        workspace_id_not_present = not workspace_id
+        if workspace_id_not_present:
+            self.presenter.raise_exception_for_missing_workspaceid()
+
+        try:
+            self.storage.check_workspace(id = workspace_id)
+        except InvalidWorkspaceException:
+            self.presenter.raise_exception_for_invalid_workspace()
+
+        workspaceinvitedtos = self.storage.get_workspace_invites(id = workspace_id)
+
+        return self.presenter.get_response_for_workspace_invites(workspaceinvitedtos = workspaceinvitedtos)

@@ -1,5 +1,7 @@
 from abc import abstractmethod
-from type_form.interactors.storage_interfaces.storage_interface import Workspacedto,WorkspaceInvitedto,Formdto,Fielddto
+from type_form.interactors.storage_interfaces.storage_interface import Workspacedto,WorkspaceInvitedto,Formdto,Fielddto,FormResponsedto
+import uuid
+
 
 class PresenterInterface:
 
@@ -20,7 +22,7 @@ class PresenterInterface:
         pass
     
     @abstractmethod
-    def get_response_for_create_user(self):
+    def get_response_for_create_user(self,id:uuid)->dict:
         pass
 
     @abstractmethod
@@ -32,15 +34,11 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_create_workspace(self,id:int):
+    def get_response_for_create_workspace(self,workspace_id:int)->dict:
         pass
 
     @abstractmethod
     def raise_exception_for_missing_workspaceid(self):
-        pass
-
-    @abstractmethod
-    def get_response_for_create_workspace(self):
         pass
 
     @abstractmethod
@@ -68,7 +66,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_workspaces_of_user(workspacedtos:list[Workspacedto]):
+    def get_response_for_workspaces_of_user(self,workspacedtos:list[Workspacedto])->list[dict]:
         pass
 
     @abstractmethod

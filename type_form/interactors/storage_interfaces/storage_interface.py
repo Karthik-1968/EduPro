@@ -1,7 +1,6 @@
 from abc import abstractmethod
 import uuid
 from dataclasses import dataclass
-from type_form.interactors.storage_interfaces.storage_interface import Workspacedto,WorkspaceInvitedto,Formdto
 from typing import Optional
 
 @dataclass
@@ -12,10 +11,10 @@ class Userdto:
 @dataclass
 class Workspacedto:
     user:Userdto
-    id:Optional[int]
     name:str
-    is_private:Optional[bool]
+    is_private:bool
     max_invites:int
+    id:int = None
 
 @dataclass 
 class WorkspaceInvitedto:
@@ -66,7 +65,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_user(self, userdto:Userdto):
+    def create_user(self, userdto:Userdto)->uuid:
         pass
 
     @abstractmethod
@@ -111,10 +110,6 @@ class StorageInterface:
 
     @abstractmethod
     def get_workspaces_of_user(self, id:uuid)->list[Workspacedto]:
-        pass
-
-    @abstractmethod
-    def get_workspaces_of_user(self, id:int)->list[WorkspaceInvitedto]:
         pass
 
     @abstractmethod

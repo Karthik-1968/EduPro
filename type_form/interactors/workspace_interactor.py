@@ -2,7 +2,7 @@ from type_form.interactors.presenter_interfaces.presenter_interface import Prese
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
 from type_form.interactors.storage_interfaces.storage_interface import Workspacedto
 import uuid
-from type_form.exceptions.custom_exceptions import InvalidUserException,WorkspaceAlreadyExistsException, InvalidWorkspaceException
+from type_form.exceptions.custom_exceptions import InvalidUserException, WorkspaceAlreadyExistsException
 
 class WorkspaceInteractor:
 
@@ -11,7 +11,7 @@ class WorkspaceInteractor:
         self.storage = storage
         self.presenter = presenter
 
-    def create_workspace(self, user_id:int, name:str, is_private:bool = False, max_invities:int = 5):
+    def create_workspace(self, user_id:int, name:str, is_private:bool = False, max_invites:int = 5):
 
         """
             ELP:
@@ -35,11 +35,11 @@ class WorkspaceInteractor:
             self.presenter.raise_exception_for_workspace_already_exists()
 
         userdto = self.storage.get_user(id = user_id)
-        workspacedto = Workspacedto(user = userdto,name = name,is_private = is_private,max_invities = max_invities)
+        workspacedto = Workspacedto(user = userdto,name = name,is_private = is_private, max_invites = max_invites)
 
         workspace_id = self.storage.create_workspace(workspacedto = workspacedto)
         
-        return self.presenter.get_response_for_create_workspace(id = workspace_id)
+        return self.presenter.get_response_for_create_workspace(workspace_id = workspace_id)
 
     def validate_input_data_for_create_workspace(self, id:uuid, name:str):
         
@@ -72,28 +72,6 @@ class WorkspaceInteractor:
         workspacedtos=self.storage.get_workspaces_of_user(id = user_id)
 
         return self.presenter.get_response_for_workspaces_of_user(workspacedtos = workspacedtos)
-
-    def get_invities_of_workspace_interactor(self, workspace_id:int):
-
-        """
-            ELP:
-               -validate input data
-                -validate workspace_id
-               -check if workspace exists
-               -get list of invites of workspace
-        """
-        workspace_id_not_present = not workspace_id
-        if workspace_id_not_present:
-            self.presenter.raise_exception_for_missing_workspaceid()
-
-        try:
-            self.storage.check_workspace(id = workspace_id)
-        except InvalidWorkspaceException:
-            self.presenter.raise_exception_for_invalid_workspace()
-
-        workspaceinvitedtos = self.storage.get_workspace_invites(id = workspace_id)
-
-        return self.presenter.get_response_for_workspace_invites(workspaceinvitedtos = workspaceinvitedtos)
 
 
     
