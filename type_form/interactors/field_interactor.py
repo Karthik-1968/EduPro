@@ -15,7 +15,7 @@ class FieldInteractor:
         self.storage = storage
         self.presenter = presenter
 
-    def create_field(self, field_name:str, field_type:str, is_required:bool=True):
+    def create_field(self, field_name:str, field_type:str):
 
         """
             ELP:
@@ -32,8 +32,7 @@ class FieldInteractor:
         except FieldAlreadyExistsException:
             self.presenter.raise_exception_for_field_already_exists()
 
-        field_dto = Fielddto(field_name = field_name, field_type = field_type, is_required = is_required)
-        field_id = self.storage.create_field(field_dto = field_dto)
+        field_id = self.storage.create_field(field_name = field_name, field_type = field_type)
         
         return self.presenter.get_response_for_create_field(id = field_id)
 
@@ -49,7 +48,7 @@ class FieldInteractor:
 
 
 
-    def add_fields_to_form(self, form_id:int, user_id:uuid, field_id:int, label:str):
+    def add_field_to_form(self, form_id:int, user_id:uuid, field_id:int, label:str, is_required:bool=False):
         """
             ELP:
                 -validate input data
@@ -79,13 +78,8 @@ class FieldInteractor:
         except InvalidFieldException:
             self.presenter.raise_exception_for_invalid_field()
 
-        formdto = self.storage.get_form(id = form_id)
-        userdto = self.storage.get_user(id = user_id)
-        fielddto = self.storage.get_field(id = field_id)
-
-        formfielddto = FormFielddto(form = formdto, user = userdto, field = fielddto, label = label)
-
-        self.storage.add_field_to_form(formfielddto = formfielddto)
+        self.storage.add_field_to_form(form_id = form_id, user_id = user_id, field_id = field_id, label = label, \
+            is_required = is_required)
         
         return self.presenter.get_response_for_add_field_to_form()
         
@@ -123,7 +117,7 @@ class FieldInteractor:
             self.presenter.raise_exception_for_missing_formid()
 
         try:
-            self.storage.check_form(id = id)
+            self.storage.check_form(id = form_id)
         except InvalidFormException:
             self.presenter.raise_exception_for_invalid_form()
 

@@ -1,7 +1,6 @@
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
 from type_form.exceptions.custom_exceptions import FormAlreadyExistsException,InvalidWorkspaceException, InvalidUserException
-from type_form.interactors.storage_interfaces.storage_interface import Formdto
 import uuid
 
 class FormInteractor:
@@ -23,17 +22,23 @@ class FormInteractor:
         """
 
         self.validate_input_fields_for_create_form(user_id = user_id, workspace_id = workspace_id, name = name)
+        
+        try:
+            self.storage.check_user(id = user_id)
+        except InvalidUserException:
+            self.presenter.raise_exception_for_invalid_user()
+            
+        try:
+            self.storage.check_workspace(id = workspace_id)
+        except InvalidWorkspaceException:
+            self.presenter.raise_exception_for_invalid_workspace()
 
         try:
             self.storage.check_if_form_already_exists(name = name)
         except FormAlreadyExistsException:
             self.presenter.raise_exception_for_form_already_exists()
 
-        userdto=self.storage.get_user(id = user_id)
-        workspacedto=self.storage.get_workspace(id = workspace_id)
-
-        formdto = Formdto(user = userdto, workspace = workspacedto, name =name)
-        form_id = self.storage.create_form(formdto = formdto)
+        form_id = self.storage.create_form(user_id = user_id, workspace_id = workspace_id, name = name)
 
         return self.presenter.get_response_for_create_form(id = form_id)
 
@@ -41,15 +46,15 @@ class FormInteractor:
 
         user_id_not_present = not user_id
         if user_id_not_present:
-            self.raise_exception_for_missing_userid()
+            self.presenter.raise_exception_for_missing_userid()
 
         workspace_id_not_present = not workspace_id
         if workspace_id_not_present:
-            self.raise_exception_for_missing_workspaceid()
+            self.presenter.raise_exception_for_missing_workspaceid()
 
         name_not_present = not name
         if name_not_present:
-            self.raise_exception_for_missing_form_name()
+            self.presenter.raise_exception_for_missing_form_name()
 
     def get_forms_of_workspace(self, workspace_id:int):
 
@@ -66,14 +71,14 @@ class FormInteractor:
             self.presenter.raise_exception_for_missing_workspaceid()
 
         try:
-            self.storage.check_workspace(id = id)
+            self.storage.check_workspace(id = workspace_id)
         except InvalidWorkspaceException:
             self.presenter.raise_exception_for_invalid_workspace()
 
        
-        formdtos=self.storage.get_forms_of_workspace(id = id)
+        formdtos=self.storage.get_forms_of_workspace(id = workspace_id)
 
-        return self.presenter.get_forms_of_workspace_response(formdtos = formdtos)
+        return self.presenter.get_response_for_forms_of_workspace(formdtos = formdtos)
 
     def get_forms_of_user(self, user_id:uuid):
 

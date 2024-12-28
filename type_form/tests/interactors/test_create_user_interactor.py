@@ -45,7 +45,6 @@ class TestCreateUserInteractor:
             "email": user.email
         }
         
-        self.storage.check_if_user_already_present.return_value = None
         self.storage.create_user.return_value = user.id
         self.presenter.get_response_for_create_user.return_value = expected_output
 

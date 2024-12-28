@@ -94,7 +94,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_forms_of_workspace_response(self,formdtos:list[Formdto]):
+    def get_response_for_forms_of_workspace(self,formdtos:list[Formdto]):
         pass
 
     @abstractmethod
@@ -138,11 +138,11 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_create_form_response(self,id:int):
+    def get_response_for_create_form_response(self,id:int)->dict:
         pass
 
     @abstractmethod
-    def get_response_for_responses_of_form(self,formresponsedtos:list[FormResponsedto]):
+    def get_response_for_responses_of_form(self,formresponse_dtos:list[FormResponsedto])->list[dict]:
         pass
 
     @abstractmethod
@@ -150,7 +150,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_add_field_to_form(self):
+    def get_response_for_add_field_to_form(self)->dict:
         pass
 
     @abstractmethod
@@ -195,4 +195,8 @@ class PresenterInterface:
     
     @abstractmethod
     def raise_exception_for_missing_formfield_label(self):
+        pass
+    
+    @abstractmethod
+    def get_response_for_responses_of_user(self,formresponse_dtos:list[FormResponsedto])->list[dict]:
         pass

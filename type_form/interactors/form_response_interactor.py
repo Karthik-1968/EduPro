@@ -1,7 +1,6 @@
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
 from type_form.exceptions.custom_exceptions import InvalidFormException, InvalidUserException
-from type_form.interactors.storage_interfaces.storage_interface import FormResponsedto
 import uuid
 
 
@@ -37,12 +36,8 @@ class FormResponseInteractor:
         except InvalidFormException:
             self.presenter.raise_exception_for_invalid_form()
 
-        userdto = self.storage.get_user(id = user_id)
-        formdto = self.storage.get_form(id = form_id)
-
-        formresponsedto = FormResponsedto(user = userdto,form = formdto, data = data, device = device,status = status)
-
-        formresponse_id = self.storage.create_form_response(formresponsedto = formresponsedto)
+        formresponse_id = self.storage.create_form_response(user_id = user_id, form_id = form_id, data = data, device = device,\
+            status = status)
         
         return self.presenter.get_response_for_create_form_response(id = formresponse_id)
 
@@ -89,4 +84,26 @@ class FormResponseInteractor:
 
         formresponsedtos = self.storage.get_responses_of_form(id = form_id)
 
-        return self.presenter.get_response_for_responses_of_form(formresponsedtos = formresponsedtos)
+        return self.presenter.get_response_for_responses_of_form(formresponse_dtos = formresponsedtos)
+    
+    def get_responses_of_user(self,user_id:uuid):
+
+        """
+            ELP:
+                -validate input data
+                    -validate user_id
+                -check if user exists
+                -get responses of the user
+        """
+        user_id_not_present = not user_id
+        if user_id_not_present:
+            self.presenter.raise_exception_for_missing_userid()
+
+        try:
+            self.storage.check_user(id = user_id)
+        except InvalidUserException:
+            self.presenter.raise_exception_for_invalid_user()
+
+        formresponsedtos = self.storage.get_responses_of_user(id = user_id)
+
+        return self.presenter.get_response_for_responses_of_user(formresponse_dtos = formresponsedtos)

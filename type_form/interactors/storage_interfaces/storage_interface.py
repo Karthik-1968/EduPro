@@ -14,45 +14,41 @@ class Workspacedto:
     name:str
     is_private:bool
     max_invites:int
-    id:int = None
 
 @dataclass 
 class WorkspaceInvitedto:
-    user: Userdto
-    workspace: Workspacedto
-    id:Optional[int]
-    is_accepted:Optional[bool]
-    role:str
+    user_id: uuid
+    workspace_id: int
+    name: str
+    is_accepted: bool
+    role: str
 
 @dataclass
 class Formdto:
-    user:Userdto
-    workspace:Workspacedto
-    id:Optional[int]
+    user_id:uuid
+    workspace_id:int
     name:str
 
 @dataclass
 class Fielddto:
-    id:Optional[int]
     field_name:str
     field_type:str
-    is_required:Optional[bool]
 
 @dataclass
 class FormResponsedto:
-    user:Userdto
-    form:Formdto
-    id:Optional[int]
+    user_id:uuid
+    form_id:int
     data:str
     device:str
     status:str
 
 @dataclass
 class FormFielddto:
-    form:Formdto
-    user:Userdto
-    field:Fielddto
+    form_id:int
+    user_int:uuid
+    field_int:int
     label:str
+    is_required:bool
 
 class StorageInterface:
 
@@ -93,7 +89,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_workspace_invite(self, workspaceinvitedto:WorkspaceInvitedto)->int:
+    def create_workspace_invite(self, name:str, user_id:uuid, workspace_id:int, role:str, is_accepted:bool)->int:
         pass
     
     @abstractmethod
@@ -117,7 +113,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_form(self, formdto:Formdto)->int:
+    def create_form(self, user_id:uuid, workspace_id:int, name:str)->int:
         pass
 
     @abstractmethod
@@ -137,7 +133,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_field(self, field_dto:Fielddto)->int:
+    def create_field(self, field_name:str, field_type:str)->int:
         pass
 
     @abstractmethod
@@ -149,7 +145,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_form_response(self, formresponsedto:FormResponsedto):
+    def create_form_response(self, user_id:uuid, form_id:int, data:str, device:str, status:str)->int:
         pass
 
     @abstractmethod
@@ -165,7 +161,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def add_field_to_form(self, formfielddto:FormFielddto):
+    def add_field_to_form(self, form_id:int, user_id:uuid, field_id:int, label:str, is_required:bool):
         pass
 
     @abstractmethod
@@ -186,4 +182,12 @@ class StorageInterface:
     
     @abstractmethod
     def check_if_invites_limit_reached(self, id:int):
+        pass
+    
+    @abstractmethod
+    def get_invites_of_workspace(self, id:int)->list[WorkspaceInvitedto]:
+        pass
+    
+    @abstractmethod
+    def get_responses_of_user(self, id:uuid)->list[FormResponsedto]:
         pass
