@@ -165,15 +165,15 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_views_of_form(self, id:int)->int:
+    def get_views_count_of_form(self, id:int)->int:
         pass
 
     @abstractmethod
-    def get_submissions_of_form(self, id:int)->int:
+    def get_submissions_count_of_form(self, id:int)->int:
         pass 
 
     @abstractmethod
-    def get_form_completionrate(self, id:int)->float:
+    def get_form_completion_rate(self, id:int)->float:
         pass
 
     @abstractmethod

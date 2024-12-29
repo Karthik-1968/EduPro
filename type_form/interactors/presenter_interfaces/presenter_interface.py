@@ -154,15 +154,15 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_views_of_form(self,count_of_views:int):
+    def get_response_for_views_count_of_form(self,count_of_views:int):
         pass
 
     @abstractmethod
-    def get_response_for_submissions_of_form(self,count_of_submissions:int):
+    def get_response_for_submissions_count_of_form(self,count_of_submissions:int):
         pass
 
     @abstractmethod
-    def get_response_for_from_completionrate(self,completion_rate:float):
+    def get_response_for_form_completion_rate(self,completion_rate:float):
         pass
 
     @abstractmethod

@@ -9,7 +9,7 @@ class FormInsightsInteractor:
         self.storage = storage
         self.presenter = presenter
 
-    def get_views_of_form(self, form_id:int):
+    def count_views_of_form(self, form_id:int):
         """
             ELP:
                 -validate input data
@@ -27,13 +27,13 @@ class FormInsightsInteractor:
         except InvalidFormException:
             self.presenter.raise_exception_for_invalid_form()
 
-        count_of_views = self.storage.get_views_of_form(id = form_id)
+        count_of_views = self.storage.get_views_count_of_form(id = form_id)
 
-        return self.presenter.get_response_for_views_of_form(count_of_views = count_of_views)
+        return self.presenter.get_response_for_views_count_of_form(count_of_views = count_of_views)
 
     
 
-    def get_submissions_of_form(self, form_id:int):
+    def count_submissions_of_form(self, form_id:int):
         """
             ELP:
                 -validate input data
@@ -50,9 +50,9 @@ class FormInsightsInteractor:
         except InvalidFormException:
             self.presenter.raise_exception_for_invalid_form()
 
-        count_of_submissions = self.storage.get_submissions_of_form(id = form_id)
+        count_of_submissions = self.storage.get_submissions_count_of_form(id = form_id)
 
-        return self.presenter.get_response_for_submissions_of_form(count_of_submissions = count_of_submissions)
+        return self.presenter.get_response_for_submissions_count_of_form(count_of_submissions = count_of_submissions)
 
     
     
@@ -74,6 +74,6 @@ class FormInsightsInteractor:
         except InvalidFormException:
             self.presenter.raise_exception_for_invalid_form()
 
-        completion_rate = self.storage.get_form_completionrate(id = form_id)
+        completion_rate = self.storage.get_form_completion_rate(id = form_id)
 
-        return self.presenter.get_response_for_from_completionrate(completion_rate = completion_rate)
+        return self.presenter.get_response_for_form_completion_rate(completion_rate = completion_rate)
