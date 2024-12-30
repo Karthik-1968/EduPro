@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from type_form.interactors.storage_interfaces.storage_interface import Workspacedto,WorkspaceInvitedto,Formdto,Fielddto,FormResponsedto
+from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO,WorkspaceInviteDTO,FormDTO,FieldDTO,FormResponseDTO
 import uuid
 
 
@@ -22,7 +22,7 @@ class PresenterInterface:
         pass
     
     @abstractmethod
-    def get_response_for_create_user(self,id:uuid)->dict:
+    def get_response_for_create_user(self,user_email:str)->dict:
         pass
 
     @abstractmethod
@@ -66,7 +66,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_workspaces_of_user(self,workspacedtos:list[Workspacedto])->list[dict]:
+    def get_response_for_workspaces_of_user(self,workspacedtos:list[WorkspaceDTO])->list[dict]:
         pass
 
     @abstractmethod
@@ -74,7 +74,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_workspace_invites(self,workspaceinvitedtos:list[WorkspaceInvitedto]):
+    def get_response_for_workspace_invites(self,workspaceinvitedtos:list[WorkspaceInviteDTO])->list[dict]:
         pass
 
     @abstractmethod
@@ -94,11 +94,11 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_forms_of_workspace(self,formdtos:list[Formdto]):
+    def get_response_for_forms_of_workspace(self,formdtos:list[FormDTO])->list[dict]:
         pass
 
     @abstractmethod
-    def get_response_for_forms_of_user(self,formdtos:list[Formdto]):
+    def get_response_for_forms_of_user(self,formdtos:list[FormDTO])->list[dict]:
         pass
 
     @abstractmethod
@@ -122,7 +122,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_fields_of_form(self,fielddtos:list[Fielddto]):
+    def get_response_for_fields_of_form(self,fielddtos:list[FieldDTO])->list[dict]:
         pass
 
     @abstractmethod
@@ -142,7 +142,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_responses_of_form(self,formresponse_dtos:list[FormResponsedto])->list[dict]:
+    def get_response_for_responses_of_form(self,formresponse_dtos:list[FormResponseDTO])->list[dict]:
         pass
 
     @abstractmethod
@@ -198,5 +198,5 @@ class PresenterInterface:
         pass
     
     @abstractmethod
-    def get_response_for_responses_of_user(self,formresponse_dtos:list[FormResponsedto])->list[dict]:
+    def get_response_for_responses_of_user(self,formresponse_dtos:list[FormResponseDTO])->list[dict]:
         pass

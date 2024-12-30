@@ -5,7 +5,7 @@ import pytest
 from django_swagger_utils.drf_server.exceptions import NotFound
 from unittest.mock import create_autospec
 from type_form.interactors.form_interactor import FormInteractor
-from type_form.interactors.storage_interfaces.storage_interface import Formdto
+from type_form.interactors.storage_interfaces.storage_interface import FormDTO
 
     
 class TestGetFormsOfUser:
@@ -33,12 +33,12 @@ class TestGetFormsOfUser:
         user_id = "550e8400-e29b-41d4-a716-446655440000"
         
         expected_formdtos = [
-            Formdto(
+            FormDTO(
                 user_id = user_id,
                 workspace_id = 1,
                 name = "My form"
             ),
-            Formdto(
+            FormDTO(
                 user_id = user_id,
                 workspace_id = 2,
                 name = "My form2"

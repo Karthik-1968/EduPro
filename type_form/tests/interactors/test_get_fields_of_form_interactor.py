@@ -6,7 +6,7 @@ from type_form.interactors.storage_interfaces.storage_interface import StorageIn
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.interactors.field_interactor import FieldInteractor
 from type_form.exceptions.custom_exceptions import InvalidFormException
-from type_form.interactors.storage_interfaces.storage_interface import Fielddto
+from type_form.interactors.storage_interfaces.storage_interface import FieldDTO
 
 class TestGetFieldsOfForm:
     
@@ -32,10 +32,10 @@ class TestGetFieldsOfForm:
         
         form_id = 1
         
-        expected_fielddto= [Fielddto(field_type = "TEXT", field_name = "My field")]
+        expected_fielddto= [FieldDTO(field_type = "TEXT", field_name = "My field")]
         expected_output= [{"field_type":"TEXT","field_name":"My field"}]
         
-        self.storage.get_fields_of_form.return_value = [Fielddto(field_type = "TEXT", field_name = "My field")]
+        self.storage.get_fields_of_form.return_value = expected_fielddto
         self.presenter.get_response_for_fields_of_form.return_value = expected_output
         
         actual_output = self.interactor.get_fields_of_form(form_id = form_id)

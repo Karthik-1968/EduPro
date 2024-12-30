@@ -7,25 +7,8 @@ from type_form.interactors.storage_interfaces.storage_interface import StorageIn
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.interactors.workspace_interactor import WorkspaceInteractor
 from type_form.exceptions.custom_exceptions import InvalidUserException
-from type_form.interactors.storage_interfaces.storage_interface import Userdto,Workspacedto
-from type_form.interactors.storage_interfaces.storage_interface import Userdto, Workspacedto
+from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO
 
-class UserFactory(Factory):
-    class Meta:
-        model = Userdto
-
-    id = Faker('uuid4')
-    email = Faker('email')
-
-
-class WorkspaceFactory(Factory):
-    class Meta:
-        model = Workspacedto
-
-    user = SubFactory(UserFactory)
-    name = Faker('name')
-    is_private = Faker('boolean')
-    max_invites = Faker('random_int', min=1, max=20)
         
 class TestGetWorkspacesOfUser:
             
@@ -50,17 +33,17 @@ class TestGetWorkspacesOfUser:
         
     def test_given_userid_return_list_of_workspaces(self):
         
-        user = UserFactory()
+        user_id = "550e8400-e29b-41d4-a716-446655440000"
         
         expected_workspacedtos = [
-            Workspacedto(
-                user=user,
+            WorkspaceDTO(
+                user_id=user_id,
                 name="FirstWorkspace",
                 is_private=False,
                 max_invites=10
             ),
-            Workspacedto(
-                user=user,
+            WorkspaceDTO(
+                user_id=user_id,
                 name="SecondWorkspace",
                 is_private=True,
                 max_invites=5
@@ -88,12 +71,12 @@ class TestGetWorkspacesOfUser:
         storage.get_workspaces_of_user.return_value = expected_workspacedtos
         presenter.get_response_for_workspaces_of_user.return_value = expected_output
         
-        actual_output = interactor.get_workspaces_of_user(user_id=user.id)
+        actual_output = interactor.get_workspaces_of_user(user_id=user_id)
         
         assert expected_output == actual_output
         
-        storage.check_user.assert_called_once_with(id=user.id)
-        storage.get_workspaces_of_user.assert_called_once_with(id=user.id)
+        storage.check_user.assert_called_once_with(id=user_id)
+        storage.get_workspaces_of_user.assert_called_once_with(id=user_id)
         presenter.get_response_for_workspaces_of_user.assert_called_once_with(workspacedtos=expected_workspacedtos)
         
     def test_given_userid_with_no_workspaces_returns_empty_list(self):

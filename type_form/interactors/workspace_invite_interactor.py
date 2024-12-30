@@ -1,6 +1,5 @@
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
-from type_form.interactors.storage_interfaces.storage_interface import WorkspaceInvitedto
 import uuid
 from type_form.exceptions.custom_exceptions import InvalidUserException, InvalidWorkspaceException, AlreadyAcceptedException, \
     InvalidInvitationException, AlreadyInvitedException,MaximumInvitesLimitReachedException

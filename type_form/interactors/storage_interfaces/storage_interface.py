@@ -4,19 +4,19 @@ from dataclasses import dataclass
 from typing import Optional
 
 @dataclass
-class Userdto:
-    id:uuid
-    email:str
+class UserDTO:
+    id: uuid
+    email: str
 
 @dataclass
-class Workspacedto:
-    user:Userdto
-    name:str
-    is_private:bool
-    max_invites:int
+class WorkspaceDTO:
+    user_id: uuid
+    name: str
+    is_private: bool
+    max_invites: int
 
 @dataclass 
-class WorkspaceInvitedto:
+class WorkspaceInviteDTO:
     user_id: uuid
     workspace_id: int
     name: str
@@ -24,31 +24,58 @@ class WorkspaceInvitedto:
     role: str
 
 @dataclass
-class Formdto:
-    user_id:uuid
-    workspace_id:int
-    name:str
+class FormDTO:
+    user_id: uuid
+    workspace_id: int
+    name: str
 
 @dataclass
-class Fielddto:
-    field_name:str
-    field_type:str
+class FieldDTO:
+    field_name: str
+    field_type: str
 
 @dataclass
-class FormResponsedto:
-    user_id:uuid
-    form_id:int
-    data:str
-    device:str
-    status:str
+class FormResponseDTO:
+    user_id: uuid
+    form_id: int
+    device: str
+    status: str
 
 @dataclass
-class FormFielddto:
-    form_id:int
-    user_int:uuid
-    field_int:int
-    label:str
-    is_required:bool
+class FormFieldDTO:
+    form_id: int
+    user_int: uuid
+    field_id: int
+    label: str
+    is_required: bool
+    group_name: Optional[str] = None
+    settings_id: Optional[int] = None
+    
+@dataclass
+class FormFieldResponseDTO:
+    form_field_id: int
+    form_response_id: int
+    field_value: str
+@dataclass
+class PhoneNumberFieldSettingsDTO:
+    country: str
+    code: str
+    
+@dataclass
+class FormFieldSettingsDTO:
+    multiple_selection: bool = None
+    multiple_selection_scope: list[str] = None
+    choices: list[str] = None
+    phone_number_choices: list[PhoneNumberFieldSettingsDTO] = None
+    max_number: int = None
+    min_number: int = None
+    max_length: int = None
+    min_length: int = None
+    other_option: bool = None
+    vetical_alignment: bool = None
+    alphabetical_order: bool = None
+    placeholder: str = None
+    
 
 class StorageInterface:
 
@@ -61,7 +88,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_user(self, userdto:Userdto)->uuid:
+    def create_user(self, id:uuid, email:str)->uuid:
         pass
 
     @abstractmethod
@@ -69,11 +96,11 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_user(self, id:uuid)->Userdto:
+    def get_user(self, id:uuid)->UserDTO:
         pass
 
     @abstractmethod
-    def create_workspace(self, workspacedto:Workspacedto)->int:
+    def create_workspace(self, user_id:uuid, name:str, is_private:bool, max_invites:int)->int:
         pass
 
     @abstractmethod
@@ -85,7 +112,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_workspace(self, id:int)->Workspacedto:
+    def get_workspace(self, id:int)->WorkspaceDTO:
         pass
 
     @abstractmethod
@@ -105,7 +132,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_workspaces_of_user(self, id:uuid)->list[Workspacedto]:
+    def get_workspaces_of_user(self, id:uuid)->list[WorkspaceDTO]:
         pass
 
     @abstractmethod
@@ -117,11 +144,11 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_forms_of_workspace(self, id:int)->list[Formdto]:
+    def get_forms_of_workspace(self, id:int)->list[FormDTO]:
         pass
 
     @abstractmethod
-    def get_forms_of_user(self, id:uuid)->list[Formdto]:
+    def get_forms_of_user(self, id:uuid)->list[FormDTO]:
         pass
 
     @abstractmethod
@@ -129,7 +156,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_form(self, id:int)->Formdto:
+    def get_form(self, id:int)->FormDTO:
         pass
 
     @abstractmethod
@@ -137,7 +164,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_fields_of_form(self, id:int)->list[Fielddto]:
+    def get_fields_of_form(self, id:int)->list[FieldDTO]:
         pass
 
     @abstractmethod
@@ -149,7 +176,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_responses_of_form(self, id:int)->list[FormResponsedto]:
+    def get_responses_of_form(self, id:int)->list[FormResponseDTO]:
         pass
 
     @abstractmethod
@@ -157,7 +184,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_field(self, id:int)->Fielddto:
+    def get_field(self, id:int)->FieldDTO:
         pass
 
     @abstractmethod
@@ -185,9 +212,9 @@ class StorageInterface:
         pass
     
     @abstractmethod
-    def get_invites_of_workspace(self, id:int)->list[WorkspaceInvitedto]:
+    def get_invites_of_workspace(self, id:int)->list[WorkspaceInviteDTO]:
         pass
     
     @abstractmethod
-    def get_responses_of_user(self, id:uuid)->list[FormResponsedto]:
+    def get_responses_of_user(self, id:uuid)->list[FormResponseDTO]:
         pass

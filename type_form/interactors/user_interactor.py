@@ -2,7 +2,6 @@ from type_form.interactors.presenter_interfaces.presenter_interface import Prese
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
 from type_form.exceptions.custom_exceptions import UserAlreadyPresentException
 import uuid
-from type_form.interactors.storage_interfaces.storage_interface import Userdto
 
 class UserInteractor:
 
@@ -31,7 +30,6 @@ class UserInteractor:
         except UserAlreadyPresentException:
             presenter.raise_exception_for_user_already_present()
         
-        userdto=Userdto(id = id,email = email)
-        user_id = self.storage.create_user(userdto = userdto)
+        user_email = self.storage.create_user(id = id, email = email)
 
-        return presenter.get_response_for_create_user(id = user_id)
+        return presenter.get_response_for_create_user(user_email = user_email)

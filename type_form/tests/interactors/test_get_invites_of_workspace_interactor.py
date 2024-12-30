@@ -6,7 +6,7 @@ from type_form.interactors.storage_interfaces.storage_interface import StorageIn
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.interactors.workspace_invite_interactor import WorkspaceInviteInteractor
 from type_form.exceptions.custom_exceptions import InvalidWorkspaceException
-from type_form.interactors.storage_interfaces.storage_interface import WorkspaceInvitedto
+from type_form.interactors.storage_interfaces.storage_interface import WorkspaceInviteDTO
 
 class TestGetInvitesOfWorkspaceInteractor:
     
@@ -33,9 +33,9 @@ class TestGetInvitesOfWorkspaceInteractor:
         workspace_id = 1
         
         workspace_invite_dtos = [
-            WorkspaceInvitedto(name = "My invite 1", user_id = "550e8400-e29b-41d4-a716-446655440000", workspace_id = 1, role = "ADMIN"\
+            WorkspaceInviteDTO(name = "My invite 1", user_id = "550e8400-e29b-41d4-a716-446655440000", workspace_id = 1, role = "ADMIN"\
                 , is_accepted = False),
-            WorkspaceInvitedto(name = "My invite 2", user_id = "650e8445-e29b-41d4-a716-446655440000", workspace_id = 1, role = "CUSTOMER"\
+            WorkspaceInviteDTO(name = "My invite 2", user_id = "650e8445-e29b-41d4-a716-446655440000", workspace_id = 1, role = "CUSTOMER"\
                 , is_accepted = False)
         ]
         

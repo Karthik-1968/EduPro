@@ -6,7 +6,7 @@ from type_form.interactors.storage_interfaces.storage_interface import StorageIn
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.interactors.form_response_interactor import FormResponseInteractor
 from type_form.exceptions.custom_exceptions import InvalidUserException
-from type_form.interactors.storage_interfaces.storage_interface import FormResponsedto
+from type_form.interactors.storage_interfaces.storage_interface import FormResponseDTO
 
 class TestGetResponsesOfUserInteractor:
     
@@ -33,7 +33,7 @@ class TestGetResponsesOfUserInteractor:
         user_id = "550e8400-e29b-41d4-a716-446655440000"
         
         expected_formresponse_dto= [
-            FormResponsedto(
+            FormResponseDTO(
                 form_id = 1, 
                 user_id = "550e8400-e29b-41d4-a716-446655440000",
                 data = {"name": "John", "age": 25}, 

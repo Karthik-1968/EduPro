@@ -1,6 +1,5 @@
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
-from type_form.interactors.storage_interfaces.storage_interface import Workspacedto
 import uuid
 from type_form.exceptions.custom_exceptions import InvalidUserException, WorkspaceAlreadyExistsException
 
@@ -34,10 +33,7 @@ class WorkspaceInteractor:
         except WorkspaceAlreadyExistsException:
             self.presenter.raise_exception_for_workspace_already_exists()
 
-        userdto = self.storage.get_user(id = user_id)
-        workspacedto = Workspacedto(user = userdto,name = name,is_private = is_private, max_invites = max_invites)
-
-        workspace_id = self.storage.create_workspace(workspacedto = workspacedto)
+        workspace_id = self.storage.create_workspace(user_id=user_id, name=name, is_private=is_private, max_invites=max_invites)
         
         return self.presenter.get_response_for_create_workspace(workspace_id = workspace_id)
 
