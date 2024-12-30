@@ -1,11 +1,11 @@
 import pytest
-from django_swagger_utils.drf_server.exceptions import NotFound,BadRequest
+from django_swagger_utils.drf_server.exceptions import NotFound, BadRequest, Forbidden
 from mock import create_autospec
 
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.interactors.workspace_invite_interactor import WorkspaceInviteInteractor
-from type_form.exceptions.custom_exceptions import InvalidInvitationException,AlreadyAcceptedException
+from type_form.exceptions.custom_exceptions import InvalidInvitationException,AlreadyAcceptedException,InvitationExpiredException
     
 class TestAcceptInvitationInteractor:
     
@@ -26,6 +26,19 @@ class TestAcceptInvitationInteractor:
             
         self.storage.check_invitation.assert_called_once_with(id = invite_id)
         self.presenter.raise_exception_for_invalid_invite.assert_called_once()
+        
+    def test_invite_expired_raises_exception(self):
+        
+        invite_id = 1
+        
+        self.storage.check_if_invitation_expired.side_effect = InvitationExpiredException
+        self.presenter.raise_exception_for_invitation_expired.side_effect = Forbidden
+        
+        with pytest.raises(Forbidden):
+            self.interactor.accept_invitation(invite_id = invite_id)
+            
+        self.storage.check_if_invitation_expired.assert_called_once_with(id = invite_id)
+        self.presenter.raise_exception_for_invitation_expired.assert_called_once()
         
     def test_given_already_accepted_invite_raises_exception(self):
         

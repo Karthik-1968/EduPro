@@ -2,7 +2,7 @@ from type_form.interactors.presenter_interfaces.presenter_interface import Prese
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
 import uuid
 from type_form.exceptions.custom_exceptions import InvalidUserException, InvalidWorkspaceException, AlreadyAcceptedException, \
-    InvalidInvitationException, AlreadyInvitedException,MaximumInvitesLimitReachedException
+    InvalidInvitationException, AlreadyInvitedException,MaximumInvitesLimitReachedException, InvitationExpiredException
 
 class WorkspaceInviteInteractor:
 
@@ -11,7 +11,7 @@ class WorkspaceInviteInteractor:
         self.storage = storage
         self.presenter = presenter
 
-    def create_workspace_invite(self, name:str, user_id:uuid, workspace_id:int, role:str, is_accepted:bool = False):
+    def create_workspace_invite(self, name:str, user_id:uuid, workspace_id:int, expiry_time:str, role:str, is_accepted:bool = False):
 
         """
             ELP:
@@ -19,6 +19,7 @@ class WorkspaceInviteInteractor:
                     -validate user_id
                     -validate workspace_id
                     -validate role
+                    -validate expiry_time
                 -check if user exists
                 -check if workspace exists
                 -check if exceeded maximum invites limit for workspace
@@ -27,7 +28,7 @@ class WorkspaceInviteInteractor:
         """
         
         self.validate_input_data_for_create_workspace_invite(name =name, user_id = user_id, workspace_id = workspace_id, \
-            role = role)
+            role = role, expiry_time = expiry_time)
 
         try:
             self.storage.check_user(id = user_id)
@@ -49,11 +50,12 @@ class WorkspaceInviteInteractor:
         except AlreadyInvitedException:
             self.presenter.raise_exception_for_user_already_invited()
 
-        workspace_id = self.storage.create_workspace_invite(name = name, user_id = user_id, workspace_id = workspace_id, role = role, is_accepted = is_accepted)
+        workspace_id = self.storage.create_workspace_invite(name = name, user_id = user_id, workspace_id = workspace_id, \
+            role = role, is_accepted = is_accepted, expiry_time = expiry_time)
 
         return self.presenter.get_response_for_create_workspace_invite(id = workspace_id)       
 
-    def validate_input_data_for_create_workspace_invite(self, name:str, user_id:uuid, workspace_id:int, role:str):
+    def validate_input_data_for_create_workspace_invite(self, name:str, user_id:uuid, workspace_id:int, expiry_time:str, role:str):
         
         name_not_present = not name
         if name_not_present:
@@ -70,6 +72,10 @@ class WorkspaceInviteInteractor:
         role_not_present = not role
         if role_not_present:
             self.presenter.raise_exception_for_missing_role()
+            
+        expiry_time_not_present = not expiry_time
+        if expiry_time_not_present:
+            self.presenter.raise_exception_for_missing_expiry_time()
 
 
     def accept_invitation(self, invite_id:int):
@@ -78,6 +84,7 @@ class WorkspaceInviteInteractor:
             -validate input data
                 -validate invite_id
             -check if invitation exists
+            -check if invitation is expired
             -check if invitaion already accepted
             -accept the invitation
         """
@@ -89,6 +96,11 @@ class WorkspaceInviteInteractor:
             self.storage.check_invitation(id = invite_id)
         except InvalidInvitationException:
             self.presenter.raise_exception_for_invalid_invite()
+            
+        try:
+            self.storage.check_if_invitation_expired(id = invite_id)
+        except InvitationExpiredException:
+            self.presenter.raise_exception_for_invitation_expired()
 
         try:
             self.storage.check_if_invitation_already_accepted(id = invite_id)
@@ -105,6 +117,7 @@ class WorkspaceInviteInteractor:
             validate input data
                 validate invite_id
             check if invitation exists
+            check if invitation is expired
             reject the invitation
         """
         invite_id_not_present = not invite_id
@@ -116,6 +129,10 @@ class WorkspaceInviteInteractor:
         except InvalidInvitationException:
             self.presenter.raise_exception_for_invalid_invite()
 
+        try:
+            self.storage.check_if_invitation_expired(id = invite_id)
+        except InvitationExpiredException:
+            self.presenter.raise_exception_for_invitation_expired()
 
         self.storage.reject_invitation(id = invite_id)
 

@@ -42,3 +42,6 @@ class InvalidFormFieldException(Exception):
 
 class InvalidSettingsException(Exception):
     pass
+
+class InvitationExpiredException(Exception):
+    pass

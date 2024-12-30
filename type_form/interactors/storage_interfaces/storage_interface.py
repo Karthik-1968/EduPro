@@ -116,7 +116,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_workspace_invite(self, name:str, user_id:uuid, workspace_id:int, role:str, is_accepted:bool)->int:
+    def create_workspace_invite(self, name:str, user_id:uuid, workspace_id:int, role:str, is_accepted:bool, expiry_time:str)->int:
         pass
     
     @abstractmethod
@@ -246,4 +246,8 @@ class StorageInterface:
     
     @abstractmethod
     def add_settings_to_form_field(self, form_field_id:int, settings_id:int):
+        pass
+    
+    @abstractmethod
+    def check_if_invitation_expired(self, id:int):
         pass

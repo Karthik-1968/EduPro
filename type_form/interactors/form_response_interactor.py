@@ -8,8 +8,8 @@ class FormResponseInteractor:
 
     def __init__(self,storage:StorageInterface,presenter:PresenterInterface):
 
-        self.storage=storage
-        self.presenter=presenter
+        self.storage = storage
+        self.presenter = presenter
 
     def create_form_response(self, user_id:uuid, form_id:int, data:str, device:str, status:str):
 
@@ -64,7 +64,7 @@ class FormResponseInteractor:
             self.presenter.raise_exception_for_missing_status()
 
 
-    def get_responses_of_form(self,form_id:int):
+    def get_responses_of_form(self, form_id:int):
 
         """
             ELP:

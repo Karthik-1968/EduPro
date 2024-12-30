@@ -224,3 +224,12 @@ class PresenterInterface:
     @abstractmethod
     def raise_exception_for_missing_settings_id(self):
         pass
+    
+    @abstractmethod
+    def raise_exception_for_missing_expiry_time(self):
+        pass
+    
+    @abstractmethod
+    def raise_exception_for_invitation_expired(self):
+        pass
+    

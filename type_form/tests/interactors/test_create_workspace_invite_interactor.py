@@ -21,12 +21,13 @@ class TestCreateWorkspaceInviteInteractor:
         workspace_id = 1
         role = "ADMIN"
         name = "My workspace invite"
+        expiry_time = "2020-08-08 12:00:00"
         
         self.storage.check_user.side_effect = InvalidUserException
         self.presenter.raise_exception_for_invalid_user.side_effect = NotFound
         
         with pytest.raises(NotFound):
-            self.interactor.create_workspace_invite(name=name, user_id=user_id, workspace_id=workspace_id, \
+            self.interactor.create_workspace_invite(name=name, user_id=user_id, workspace_id=workspace_id, expiry_time=expiry_time,\
                 role=role)
             
         self.storage.check_user.assert_called_once_with(id=user_id)
@@ -38,12 +39,14 @@ class TestCreateWorkspaceInviteInteractor:
         workspace_id = 1
         role = "ADMIN"
         name = "My workspace invite"
+        expiry_time = "2020-08-08 12:00:00"
         
         self.storage.check_workspace.side_effect = InvalidWorkspaceException
         self.presenter.raise_exception_for_invalid_workspace.side_effect = NotFound
         
         with pytest.raises(NotFound):
-            self.interactor.create_workspace_invite(name=name, user_id=user_id, workspace_id=workspace_id, role=role)
+            self.interactor.create_workspace_invite(name=name, user_id=user_id, workspace_id=workspace_id, role=role, \
+                expiry_time=expiry_time)
             
         self.storage.check_workspace.assert_called_once_with(id=workspace_id)
         self.presenter.raise_exception_for_invalid_workspace.assert_called_once()
@@ -54,12 +57,14 @@ class TestCreateWorkspaceInviteInteractor:
         workspace_id = 1
         role = "ADMIN"
         name = "My workspace invite"
+        expiry_time = "2020-08-08 12:00:00"
         
         self.storage.check_if_invites_limit_reached.side_effect = MaximumInvitesLimitReachedException
         self.presenter.raise_exception_for_maximum_invites_reached.side_effect = BadRequest
         
         with pytest.raises(BadRequest):
-            self.interactor.create_workspace_invite(name=name,user_id=user_id, workspace_id=workspace_id, role=role)
+            self.interactor.create_workspace_invite(name=name,user_id=user_id, workspace_id=workspace_id, role=role, \
+                expiry_time=expiry_time)
             
         self.storage.check_if_invites_limit_reached.assert_called_once_with(id=workspace_id)
         self.presenter.raise_exception_for_maximum_invites_reached.assert_called_once()
@@ -70,13 +75,14 @@ class TestCreateWorkspaceInviteInteractor:
         workspace_id = 1
         role = "ADMIN"
         name = "My workspace invite"
+        expiry_time = "2020-08-08 12:00:00"
         
         self.storage.check_if_user_already_invited.side_effect = AlreadyInvitedException
         self.presenter.raise_exception_for_user_already_invited.side_effect = BadRequest
         
         with pytest.raises(BadRequest):
-            self.interactor.create_workspace_invite(name=name,user_id=user_id, workspace_id=workspace_id, \
-                role=role)
+            self.interactor.create_workspace_invite(name=name,user_id=user_id, workspace_id=workspace_id, role=role, \
+                expiry_time=expiry_time)
             
         self.storage.check_if_user_already_invited.assert_called_once_with(user_id=user_id, workspace_id=workspace_id)
         self.presenter.raise_exception_for_user_already_invited.assert_called_once()
@@ -88,6 +94,7 @@ class TestCreateWorkspaceInviteInteractor:
         role = "ADMIN"
         is_accepted = False
         name = "My workspace invite"
+        expiry_time = "2020-08-08 12:00:00"
         
         expected_workspaceinvite_id = 1
         expected_workspaceinvite_id_dict = {"id": expected_workspaceinvite_id}
@@ -96,11 +103,11 @@ class TestCreateWorkspaceInviteInteractor:
         self.presenter.get_response_for_create_workspace_invite.return_value = expected_workspaceinvite_id_dict
         
         actual_workspaceinvite_id_dict = self.interactor.create_workspace_invite(name=name,user_id=user_id, workspace_id=workspace_id,\
-            role=role)
+            role=role, expiry_time=expiry_time)
         
         assert actual_workspaceinvite_id_dict == expected_workspaceinvite_id_dict
         
         self.storage.create_workspace_invite.assert_called_once_with(name=name,user_id=user_id, workspace_id=workspace_id, role=role,\
-            is_accepted=is_accepted)
+            is_accepted=is_accepted, expiry_time=expiry_time)
         self.presenter.get_response_for_create_workspace_invite.assert_called_once_with(id=expected_workspaceinvite_id)
     
