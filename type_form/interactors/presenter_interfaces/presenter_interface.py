@@ -150,7 +150,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_add_field_to_form(self)->dict:
+    def get_response_for_add_field_to_form(self,id:int)->dict:
         pass
 
     @abstractmethod
@@ -191,10 +191,6 @@ class PresenterInterface:
     
     @abstractmethod
     def raise_exception_for_missing_field_name(self):
-        pass
-    
-    @abstractmethod
-    def raise_exception_for_missing_formfield_label(self):
         pass
     
     @abstractmethod

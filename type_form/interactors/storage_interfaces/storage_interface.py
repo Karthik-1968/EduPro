@@ -188,7 +188,8 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def add_field_to_form(self, form_id:int, user_id:uuid, field_id:int, label:str, is_required:bool):
+    def add_field_to_form(self, form_id:int, user_id:uuid, field_id:int, label_text:str, label_vedio:str, group_name:str,\
+        setting_id:int, is_required:bool)->int:
         pass
 
     @abstractmethod

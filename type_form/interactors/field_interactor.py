@@ -46,7 +46,8 @@ class FieldInteractor:
 
 
 
-    def add_field_to_form(self, form_id:int, user_id:uuid, field_id:int, label:str, is_required:bool=False):
+    def add_field_to_form(self, form_id:int, user_id:uuid, field_id:int, label_text:str = None, label_vedio:str = None,\
+        group_name:str = None, setting_id:int=None, is_required:bool=False):
         """
             ELP:
                 -validate input data
@@ -59,7 +60,7 @@ class FieldInteractor:
                 -check if fields exists
                 -add fields to form
         """
-        self.validate_input_data_for_add_fields(form_id = form_id, user_id = user_id, field_id = field_id, label = label)
+        self.validate_input_data_for_add_fields(form_id = form_id, user_id = user_id, field_id = field_id)
 
         try:
             self.storage.check_form(id = form_id)
@@ -76,12 +77,12 @@ class FieldInteractor:
         except InvalidFieldException:
             self.presenter.raise_exception_for_invalid_field()
 
-        self.storage.add_field_to_form(form_id = form_id, user_id = user_id, field_id = field_id, label = label, \
-            is_required = is_required)
+        form_field_id = self.storage.add_field_to_form(form_id = form_id, user_id = user_id, field_id = field_id, group_name = group_name, \
+            label_text = label_text, label_vedio = label_vedio, is_required = is_required, setting_id = setting_id)
         
-        return self.presenter.get_response_for_add_field_to_form()
+        return self.presenter.get_response_for_add_field_to_form(id = form_field_id)
         
-    def validate_input_data_for_add_fields(self, form_id:int, user_id:uuid, field_id:int, label:str):
+    def validate_input_data_for_add_fields(self, form_id:int, user_id:uuid, field_id:int):
         
         form_id_not_present = not form_id
         if form_id_not_present:
@@ -94,10 +95,6 @@ class FieldInteractor:
         field_id_not_present = not field_id
         if field_id_not_present:
             self.presenter.raise_exception_for_missing_fieldid()
-            
-        label_not_present = not label
-        if label_not_present:
-            self.presenter.raise_exception_for_missing_formfield_label()
 
 
     def get_fields_of_form(self,form_id:int):
