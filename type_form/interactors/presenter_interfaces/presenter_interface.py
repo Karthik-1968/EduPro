@@ -196,3 +196,31 @@ class PresenterInterface:
     @abstractmethod
     def get_response_for_responses_of_user(self,formresponse_dtos:list[FormResponseDTO])->list[dict]:
         pass
+    
+    @abstractmethod
+    def raise_exception_for_settings_already_exists(self):
+        pass
+    
+    @abstractmethod
+    def get_response_for_create_settings(self,id:int)->dict:
+        pass
+    
+    @abstractmethod
+    def raise_exception_for_invalid_form_field(self):
+        pass
+    
+    @abstractmethod
+    def raise_exception_for_invalid_settings(self):
+        pass
+    
+    @abstractmethod
+    def get_response_for_add_settings_to_form_field(self)->dict:
+        pass
+    
+    @abstractmethod
+    def raise_exception_for_missing_form_field_id(self):
+        pass
+    
+    @abstractmethod
+    def raise_exception_for_missing_settings_id(self):
+        pass

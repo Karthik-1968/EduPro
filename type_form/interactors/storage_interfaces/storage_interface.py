@@ -219,3 +219,31 @@ class StorageInterface:
     @abstractmethod
     def get_responses_of_user(self, id:uuid)->list[FormResponseDTO]:
         pass
+    
+    @abstractmethod
+    def check_if_settings_exists(self, multiple_selection:bool=None, multiple_selection_scope:list[str]=None, choices:list[str]=None,\
+        phone_number_choices:list[PhoneNumberFieldSettingsDTO]=None, max_number:int=None, min_number:int=None,\
+        max_length:int=None, min_length:int=None, other_option:bool=None, vetical_alignment:bool=None,\
+        alphabetical_order:bool=None, placeholder:str=None):
+        
+        pass
+    
+    @abstractmethod
+    def create_settings(self, multiple_selection:bool=None, multiple_selection_scope:list[str]=None, choices:list[str]=None,\
+        phone_number_choices:list[PhoneNumberFieldSettingsDTO]=None, max_number:int=None, min_number:int=None,\
+        max_length:int=None, min_length:int=None, other_option:bool=None, vetical_alignment:bool=None,\
+        alphabetical_order:bool=None, placeholder:str=None)->int:
+        
+        pass
+    
+    @abstractmethod
+    def check_form_field(self, form_field_id:int):
+        pass
+    
+    @abstractmethod
+    def check_settings(self, settings_id:int):
+        pass
+    
+    @abstractmethod
+    def add_settings_to_form_field(self, form_field_id:int, settings_id:int):
+        pass

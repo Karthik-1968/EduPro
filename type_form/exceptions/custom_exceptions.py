@@ -33,3 +33,12 @@ class InvalidFieldException(Exception):
 
 class MaximumInvitesLimitReachedException(Exception):
     pass
+
+class SettingsAlreadyExistsException(Exception):
+    pass
+
+class InvalidFormFieldException(Exception):
+    pass
+
+class InvalidSettingsException(Exception):
+    pass
