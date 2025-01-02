@@ -55,7 +55,7 @@ class WorkspaceInviteInteractor:
 
         return self.presenter.get_response_for_create_workspace_invite(id = workspace_id)       
 
-    def validate_input_data_for_create_workspace_invite(self, name:str, user_id:uuid, workspace_id:int, expiry_time:str, role:str):
+    def validate_input_data_for_create_workspace_invite(self, name:str, user_id:str, workspace_id:int, expiry_time:str, role:str):
         
         name_not_present = not name
         if name_not_present:

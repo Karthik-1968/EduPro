@@ -46,7 +46,7 @@ class FieldInteractor:
 
 
 
-    def add_field_to_form(self, form_id:int, user_id:uuid, field_id:int, label_text:str = None, label_vedio:str = None,\
+    def add_field_to_form(self, form_id:int, user_id:str, field_id:int, label_text:str = None, label_vedio:str = None,\
         group_name:str = None, setting_id:int=None, is_required:bool=False):
         """
             ELP:
@@ -82,7 +82,7 @@ class FieldInteractor:
         
         return self.presenter.get_response_for_add_field_to_form(id = form_field_id)
         
-    def validate_input_data_for_add_fields(self, form_id:int, user_id:uuid, field_id:int):
+    def validate_input_data_for_add_fields(self, form_id:int, user_id:str, field_id:int):
         
         form_id_not_present = not form_id
         if form_id_not_present:

@@ -21,7 +21,7 @@ class WorkspaceInteractor:
                 -check if workspace exists
                 -create workspace
         """
-        self.validate_input_data_for_create_workspace(id = user_id, name = name)
+        self.validate_input_data_for_create_workspace(user_id = user_id, name = name)
 
         try:
             self.storage.check_user(id = user_id)
@@ -37,10 +37,10 @@ class WorkspaceInteractor:
         
         return self.presenter.get_response_for_create_workspace(workspace_id = workspace_id)
 
-    def validate_input_data_for_create_workspace(self, id:uuid, name:str):
+    def validate_input_data_for_create_workspace(self, user_id:str, name:str):
         
-        id_not_present = not id
-        if id_not_present:
+        user_id_not_present = not user_id
+        if user_id_not_present:
             self.presenter.raise_exception_for_missing_userid()
         
         name_not_present = not name

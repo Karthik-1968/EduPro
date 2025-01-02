@@ -237,3 +237,74 @@ class StorageImplementation(StorageInterface):
             label_vedio = form_field.label_vedio,
             group_name = form_field.group_name
         )
+        
+    def create_form_response(self, user_id:str, data:str, form_id:int, device:str, status:str, form_field_data:str):
+        
+        form_response = FormResponse.objects.create(user_id = user_id, form_id = form_id, data = data, device = device, \
+            status = status)
+        
+        for form_field_id, form_field_value in form_field_data.items():
+            FormFieldResponse.objects.create(form_response_id = form_response.id, form_field_id = form_field_id,\
+                value = form_field_value)
+        
+        return form_response.id
+    
+    def get_responses_of_form(self, id:int)->list[FormResponseDTO]:
+        
+        form_responses = FormResponse.objects.filter(form_id = id)
+        formresponsedtos = []
+        for form_response in form_responses:
+            formresponsedto = self.convert_form_response_object_to_dto(form_response)
+            formresponsedtos.append(formresponsedto)
+        
+        return formresponsedtos
+    
+    def convert_form_response_object_to_dto(form_response):
+        
+        return FormResponseDTO(
+            user_id = form_response.user_id,
+            form_id = form_response.form_id,
+            data = form_response.data,
+            device = form_response.device,
+            status = form_response.status
+        )
+        
+    def get_responses_of_user(self, id:int)->list[FormResponseDTO]:
+        
+        form_responses = FormResponse.objects.filter(user_id = id)
+        formresponsedtos = []
+        for form_response in form_responses:
+            formresponsedto = self.convert_form_response_object_to_dto(form_response)
+            formresponsedtos.append(formresponsedto)
+        
+        return formresponsedtos
+    
+    def check_if_settings_exists(self, multiple_selection:bool, multiple_selection_scope:list[str], choices:list[str],\
+        phone_number_choices:list[PhoneNumberFieldSettingsDTO], max_number:int, min_number:int, max_length:int, min_length:int,\
+            other_option:bool, vetical_alignment:bool, alphabetical_order:bool, placeholder:str):
+        
+        if FormFieldSettings.objects.filter(multiple_selection = multiple_selection,\
+            multiple_selection_scope = multiple_selection_scope, choices = choices, phone_number_choices = phone_number_choices,\
+                max_number = max_number, min_number = min_number, max_length = max_length, min_length = min_length,\
+                    other_option = other_option, vetical_alignment = vetical_alignment, alphabetical_order = alphabetical_order,\
+                        placeholder = placeholder).exists():
+            
+            raise SettingsAlreadyExistsException
+        
+    def create_settings(self, multiple_selection:bool, multiple_selection_scope:list[str], choices:list[str],\
+        phone_number_choices:list[PhoneNumberFieldSettingsDTO], max_number:int, min_number:int, max_length:int, min_length:int,\
+            other_option:bool, vetical_alignment:bool, alphabetical_order:bool, placeholder:str):
+        
+        settings = FormFieldSettings.objects.create(multiple_selection = multiple_selection, multiple_selection_scope = multiple_selection_scope,\
+            choices = choices, phone_number_choices = phone_number_choices, max_number = max_number, min_number = min_number,\
+                max_length = max_length, min_length = min_length, other_option = other_option, vetical_alignment = vetical_alignment,\
+                    alphabetical_order = alphabetical_order, placeholder = placeholder)
+        
+        return settings.id
+    
+    def add_settings_to_form_field(self, form_field_id:int, settings_id:int):
+        
+        form_field = FormField.objects.get(id = form_field_id)
+        form_field.settings_id = settings_id
+        form_field.save()
+        

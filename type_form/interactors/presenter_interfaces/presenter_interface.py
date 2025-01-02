@@ -127,10 +127,6 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_missing_data(self):
-        pass
-
-    @abstractmethod
     def raise_exception_for_missing_device(self):
         pass
 

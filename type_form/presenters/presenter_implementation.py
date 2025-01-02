@@ -3,7 +3,7 @@ from django_swagger_utils.drf_server.exceptions import NotFound, Forbidden, BadR
 from type_form.constants.exception_messages import MISSING_EMAIL, MISSING_USERID, USER_ALREADY_PRESENT, MISSING_WORKSPACE_NAME,\
     INVALID_USER_ID, INVALID_WORKSPACE_ID, WORKSPACE_ALREADY_EXISTS, USER_ALREADY_INVITED, MAXIMUM_INVITES_REACHED, INVALID_INVITE_ID,\
         INVITATION_EXPIRED, MISSING_FORM_NAME, FORM_ALREADY_EXISTS, MISSING_FIELD_NAME, MISSING_FIELD_TYPE, FIELD_ALREADY_EXISTS,\
-            INVALID_FORM_ID, INVALID_FIELD_ID
+            INVALID_FORM_ID, INVALID_FIELD_ID, MISSING_STATUS, MISSING_DEVICE, SETTINGS_ALREADY_EXISTS
 from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO, WorkspaceInviteDTO, FormDTO, FieldDTO, \
     FormResponseDTO, FormFieldDTO, FormFieldResponseDTO, PhoneNumberFieldSettingsDTO
 
@@ -155,22 +155,54 @@ class PresenterImplementation(PresenterInterface):
         formfields = []
         for form_field in formfielddtos:
             form_field_dict = {
-                "field_name": form_field.field_name,
-                "field_type": form_field.field_type
+                "label_text": form_field.label_text,
+                "label_vedio": form_field.label_vedio,
+                "group_name": form_field.group_name,
+                "is_required": form_field.is_required
             }
             formfields.append(form_field_dict)
         
         return formfields
     
-    def get_response_for_fields_of_form_response(self, formfieldresponsedtos:list[FormFieldResponseDTO])->list[dict]:
-        formfields = []
-        for form_field in formfieldresponsedtos:
-            form_field_dict = {
-                "label_text": form_field.label_text,
-                "label_vedio": form_field.label_vedio,
-                "group_name": form_field.group_name,
-                "is_required": form_field.is_required,
+    def raise_exception_for_missing_status(self):
+        raise NotFound(*MISSING_STATUS)
+    
+    def raise_exception_for_missing_device(self):
+        raise NotFound(*MISSING_DEVICE)
+    
+    def get_response_for_responses_of_form(self, formresponse_dtos:list[FormResponseDTO])->list[dict]:
+        formresponses = []
+        for form_response in formresponse_dtos:
+            form_response_dict = {
+                "user_id": form_response.user_id,
+                "data": form_response.data,
+                "device": form_response.device,
+                "status": form_response.status
             }
-            formfields.append(form_field_dict)
+            formresponses.append(form_response_dict)
         
-        return formfields
+        return formresponses
+    
+    def get_response_for_responses_of_user(self, formresponse_dtos:list[FormResponseDTO])->list[dict]:
+        formresponses = []
+        for form_response in formresponse_dtos:
+            form_response_dict = {
+                "form_id": form_response.form_id,
+                "data": form_response.data,
+                "device": form_response.device,
+                "status": form_response.status
+            }
+            formresponses.append(form_response_dict)
+        
+        return formresponses
+    
+    def raise_exception_for_settings_already_exists(self):
+        raise BadRequest(*SETTINGS_ALREADY_EXISTS)
+    
+    def get_response_for_create_settings(self, id:int):
+        return {
+            "settings_id": id
+        }
+        
+    def get_response_for_add_settings_to_form_field(self):
+        return {"success":"settings added to form field successfully"}

@@ -10,7 +10,7 @@ class FormInteractor:
         self.storage = storage
         self.presenter = presenter 
 
-    def create_form(self, user_id:uuid, workspace_id:int, name:str):
+    def create_form(self, user_id:str, workspace_id:int, name:str):
         """
             ELP:
                 -validate input data

@@ -87,3 +87,18 @@ INVALID_FIELD_ID = (
     "Invalid field id",
     "INVALID_FIELD_ID"
 )
+
+MISSING_STATUS = (
+    "Status is missing",
+    "MISSING_STATUS"
+)
+
+MISSING_DEVICE = (
+    "Device is missing",
+    "MISSING_DEVICE"
+)
+
+SETTINGS_ALREADY_EXISTS = (
+    "Settings already exists",
+    "SETTINGS_ALREADY_EXISTS"
+)

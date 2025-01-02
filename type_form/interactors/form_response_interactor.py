@@ -11,13 +11,13 @@ class FormResponseInteractor:
         self.storage = storage
         self.presenter = presenter
 
-    def create_form_response(self, user_id:uuid, form_id:int, data:str, device:str, status:str):
+    def create_form_response(self, user_id:str, data:str, form_id:int, form_field_data:str, device:str, status:str):
 
         """ELP:
             -validate input data
                 -validate user_id
                 -validate form_id
-                -validate data
+                -validate response data
                 -validate device
                 -validate status
             -check if user exists
@@ -36,12 +36,12 @@ class FormResponseInteractor:
         except InvalidFormException:
             self.presenter.raise_exception_for_invalid_form()
 
-        formresponse_id = self.storage.create_form_response(user_id = user_id, form_id = form_id, data = data, device = device,\
-            status = status)
+        formresponse_id = self.storage.create_form_response(user_id = user_id, form_id = form_id, form_field_data = form_field_data, \
+            data = data, device = device, status = status)
         
         return self.presenter.get_response_for_create_form_response(id = formresponse_id)
 
-    def validate_input_data(self, user_id:uuid, form_id:int, data:str, device:str, status:str):
+    def validate_input_data(self, user_id:str, form_id:int, data:str, device:str, status:str):
 
         user_id_not_present = not user_id
         if user_id_not_present:

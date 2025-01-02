@@ -38,6 +38,7 @@ class FieldDTO:
 class FormResponseDTO:
     user_id: str
     form_id: int
+    data: str
     device: str
     status: str
 
@@ -173,7 +174,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_form_response(self, user_id:uuid, form_id:int, data:str, device:str, status:str)->int:
+    def create_form_response(self, user_id:str, data:str, form_id:int, device:str, status:str)->int:
         pass
 
     @abstractmethod
@@ -189,7 +190,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def add_field_to_form(self, form_id:int, user_id:uuid, field_id:int, label_text:str, label_vedio:str, group_name:str,\
+    def add_field_to_form(self, form_id:int, user_id:str, field_id:int, label_text:str, label_vedio:str, group_name:str,\
         setting_id:int, is_required:bool)->int:
         pass
 
