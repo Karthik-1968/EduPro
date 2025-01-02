@@ -108,7 +108,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def check_if_user_already_invited(self, user_id:uuid, workspace_id:int):
+    def check_if_user_already_invited(self, user_id:str, workspace_id:int):
         pass
 
     @abstractmethod
@@ -116,7 +116,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_workspace_invite(self, name:str, user_id:uuid, workspace_id:int, role:str, is_accepted:bool, expiry_time:str)->int:
+    def create_workspace_invite(self, name:str, user_id:str, workspace_id:int, role:str, is_accepted:bool, expiry_time:str)->int:
         pass
     
     @abstractmethod

@@ -30,10 +30,6 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_invalid_workspace_by_name(self):
-        pass
-
-    @abstractmethod
     def get_response_for_create_workspace(self,workspace_id:int)->dict:
         pass
 

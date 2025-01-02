@@ -10,3 +10,4 @@ class Workspace(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_private = models.BooleanField(default=False)
     max_invites = models.IntegerField(default=10)
+    invites_sent = models.IntegerField(default=0)

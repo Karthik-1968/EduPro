@@ -57,7 +57,7 @@ class TestAcceptInvitationInteractor:
         
         invite_id = 1
         
-        expected_output= {"message":"Invite accepted successfully"}
+        expected_output= {"success":"invite accepted successfully"}
         
         self.storage.accept_invitation.return_value = None
         self.presenter.get_response_for_accept_invitation.return_value = expected_output

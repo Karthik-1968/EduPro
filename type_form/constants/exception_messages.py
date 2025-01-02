@@ -32,3 +32,23 @@ INVALID_WORKSPACE_ID = (
     "Invalid workspace id",
     "INVALID_WORKSPACE_ID"
 )
+
+USER_ALREADY_PRESENT = (
+    "User already present",
+    "USER_ALREADY_PRESENT"
+)
+
+MAX_INVITES_REACHED = (
+    "Maximum invites reached",
+    "MAXIMUM_INVITES_REACHED"
+)
+
+INVALID_INVITE_ID = (
+    "Invalid invite id",
+    "INVALID_INVITE_ID"
+)
+
+INVITATION_EXPIRED = (
+    "Invitation expired",
+    "INVITATION_EXPIRED"
+)

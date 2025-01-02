@@ -44,7 +44,7 @@ class TestRejectInvitationInteractor:
         
         invite_id = 1
         
-        expected_output= {"message":"Invite rejected successfully"}
+        expected_output= {"success":"invite rejected successfully"}
         
         self.storage.reject_invitation.return_value = None
         self.presenter.get_response_for_reject_invitation.return_value = expected_output
