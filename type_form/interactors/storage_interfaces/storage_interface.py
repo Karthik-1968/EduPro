@@ -84,11 +84,11 @@ class StorageInterface:
         pass
     
     @abstractmethod
-    def check_user(self, id:uuid):
+    def check_user(self, id:str):
         pass
 
     @abstractmethod
-    def create_user(self, id:uuid, email:str)->uuid:
+    def create_user(self, id:str, email:str)->str:
         pass
 
     @abstractmethod
@@ -100,7 +100,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_workspace(self, user_id:uuid, name:str, is_private:bool, max_invites:int)->int:
+    def create_workspace(self, user_id:str, name:str, is_private:bool, max_invites:int)->int:
         pass
 
     @abstractmethod
@@ -132,7 +132,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_workspaces_of_user(self, id:uuid)->list[WorkspaceDTO]:
+    def get_workspaces_of_user(self, id:str)->list[WorkspaceDTO]:
         pass
 
     @abstractmethod
