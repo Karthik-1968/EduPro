@@ -4,5 +4,5 @@ import uuid
 
 class User(models.Model):
     
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    id = models.CharField(primary_key=True, max_length=50, default=uuid.uuid4)
     email = models.EmailField(max_length=50,unique=True,null=False,blank=False)

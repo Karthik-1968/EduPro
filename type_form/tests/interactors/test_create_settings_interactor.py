@@ -1,5 +1,5 @@
 import pytest
-from django_swagger_utils.drf_server.exceptions import NotFound,BadRequest
+from django_swagger_utils.drf_server.exceptions import BadRequest
 from mock import create_autospec
 
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
@@ -69,7 +69,7 @@ class TestCreateSettingsInteractor:
         
         actual_output = self.interactor.create_settings(multiple_selection = multiple_selection,\
             multiple_selection_scope = multiple_selection_scope,choices = choices, phone_number_choices = phone_number_choices,\
-            max_number = max_number, min_number = min_number,max_length = max_length, min_length = min_length, \
+            max_number = max_number, min_number = min_number, max_length = max_length, min_length = min_length, \
             other_option = other_option, vetical_alignment = vetical_alignment,alphabetical_order = alphabetical_order, \
                 placeholder = placeholder)
         
