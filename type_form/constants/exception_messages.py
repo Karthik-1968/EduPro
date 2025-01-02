@@ -102,3 +102,33 @@ SETTINGS_ALREADY_EXISTS = (
     "Settings already exists",
     "SETTINGS_ALREADY_EXISTS"
 )
+
+MISSING_WORKSPACE_ID = (
+    "Workspace id is missing",
+    "MISSING_WORKSPACE_ID"
+)
+
+MISSING_FORM_ID = (
+    "Form id is missing",
+    "MISSING_FORM_ID"
+)
+
+MISSING_INVITE_ID = (
+    "Invite id is missing",
+    "MISSING_INVITE_ID"
+)
+
+MISSINNG_FIELD_ID = (
+    "Field id is missing",
+    "MISSINNG_FIELD_ID"
+)
+
+MISSING_FORM_FIELD_ID = (
+    "Form field id is missing",
+    "MISSING_FORM_FIELD_ID"
+)
+
+MISSING_SETTINGS_ID = (
+    "Settings id is missing",
+    "MISSING_SETTINGS_ID"
+)

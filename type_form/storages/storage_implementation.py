@@ -243,6 +243,18 @@ class StorageImplementation(StorageInterface):
         form_response = FormResponse.objects.create(user_id = user_id, form_id = form_id, data = data, device = device, \
             status = status)
         
+        form = Form.objects.get(id = form_id)
+        if status == "submitted":
+            form.submissions_count += 1
+            form.save()
+        elif status == "in progress":
+            form.views_count += 1
+            form.save()
+            
+        completion_rate = (form.submissions_count / form.views_count) * 100
+        form.completion_rate = completion_rate
+        form.save()
+        
         for form_field_id, form_field_value in form_field_data.items():
             FormFieldResponse.objects.create(form_response_id = form_response.id, form_field_id = form_field_id,\
                 value = form_field_value)
@@ -307,4 +319,22 @@ class StorageImplementation(StorageInterface):
         form_field = FormField.objects.get(id = form_field_id)
         form_field.settings_id = settings_id
         form_field.save()
+        
+    def get_submissions_count_of_form(self, id:int)->int:
+        
+        form = Form.objects.get(id = id)
+        
+        return form.submissions_count
+    
+    def get_views_count_of_form(self, id:int)->int:
+        
+        form = Form.objects.get(id = id)
+        
+        return form.views_count
+    
+    def get_form_completion_rate(self, id:int)->float:
+        
+        form = Form.objects.get(id = id)
+        
+        return form.completion_rate
         
