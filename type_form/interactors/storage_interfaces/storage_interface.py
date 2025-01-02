@@ -5,19 +5,19 @@ from typing import Optional
 
 @dataclass
 class UserDTO:
-    id: uuid
+    id: str
     email: str
 
 @dataclass
 class WorkspaceDTO:
-    user_id: uuid
+    user_id: str
     name: str
     is_private: bool
     max_invites: int
 
 @dataclass 
 class WorkspaceInviteDTO:
-    user_id: uuid
+    user_id: str
     workspace_id: int
     name: str
     is_accepted: bool
@@ -25,7 +25,7 @@ class WorkspaceInviteDTO:
 
 @dataclass
 class FormDTO:
-    user_id: uuid
+    user_id: str
     workspace_id: int
     name: str
 
@@ -36,7 +36,7 @@ class FieldDTO:
 
 @dataclass
 class FormResponseDTO:
-    user_id: uuid
+    user_id: str
     form_id: int
     device: str
     status: str
@@ -44,12 +44,13 @@ class FormResponseDTO:
 @dataclass
 class FormFieldDTO:
     form_id: int
-    user_int: uuid
+    user_id: str
     field_id: int
-    label: str
+    label_text: Optional[str]
+    label_vedio: Optional[str]
     is_required: bool
-    group_name: Optional[str] = None
-    settings_id: Optional[int] = None
+    group_name: Optional[str]
+    settings_id: Optional[int] 
     
 @dataclass
 class FormFieldResponseDTO:
@@ -140,7 +141,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_form(self, user_id:uuid, workspace_id:int, name:str)->int:
+    def create_form(self, user_id:str, workspace_id:int, name:str)->int:
         pass
 
     @abstractmethod
@@ -164,7 +165,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_fields_of_form(self, id:int)->list[FieldDTO]:
+    def get_fields_of_form(self, id:int)->list[FormFieldDTO]:
         pass
 
     @abstractmethod

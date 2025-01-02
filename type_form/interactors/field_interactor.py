@@ -57,7 +57,7 @@ class FieldInteractor:
                     -validate label
                 -check if form exists
                 -check if user exists
-                -check if fields exists
+                -check if field exists
                 -add fields to form
         """
         self.validate_input_data_for_add_fields(form_id = form_id, user_id = user_id, field_id = field_id)
@@ -116,9 +116,9 @@ class FieldInteractor:
         except InvalidFormException:
             self.presenter.raise_exception_for_invalid_form()
 
-        fielddtos=self.storage.get_fields_of_form(id = form_id)
+        formfielddtos=self.storage.get_fields_of_form(id = form_id)
         
-        return self.presenter.get_response_for_fields_of_form(fielddtos = fielddtos)
+        return self.presenter.get_response_for_fields_of_form(formfielddtos = formfielddtos)
 
 
     

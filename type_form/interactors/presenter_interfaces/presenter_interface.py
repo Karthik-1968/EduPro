@@ -1,5 +1,6 @@
 from abc import abstractmethod
-from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO,WorkspaceInviteDTO,FormDTO,FieldDTO,FormResponseDTO
+from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO,WorkspaceInviteDTO,FormDTO,FormFieldDTO,\
+    FormResponseDTO
 import uuid
 
 
@@ -118,7 +119,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_fields_of_form(self,fielddtos:list[FieldDTO])->list[dict]:
+    def get_response_for_fields_of_form(self,formfielddtos:list[FormFieldDTO])->list[dict]:
         pass
 
     @abstractmethod

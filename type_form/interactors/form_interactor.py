@@ -42,7 +42,7 @@ class FormInteractor:
 
         return self.presenter.get_response_for_create_form(id = form_id)
 
-    def validate_input_fields_for_create_form(self, user_id:uuid, workspace_id:int, name:str):
+    def validate_input_fields_for_create_form(self, user_id:str, workspace_id:int, name:str):
 
         user_id_not_present = not user_id
         if user_id_not_present:
@@ -80,7 +80,7 @@ class FormInteractor:
 
         return self.presenter.get_response_for_forms_of_workspace(formdtos = formdtos)
 
-    def get_forms_of_user(self, user_id:uuid):
+    def get_forms_of_user(self, user_id:str):
 
         """
             ELP:

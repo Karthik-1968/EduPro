@@ -135,3 +135,105 @@ class StorageImplementation(StorageInterface):
             is_accepted = workspace_invite.is_accepted,
             expiry_time = workspace_invite.expiry_time
         )
+        
+    def check_if_form_already_exists(self, name:str):
+        
+        if Form.objects.filter(name = name).exists():
+            raise FormAlreadyExistsException
+        
+    def create_form(self, user_id:str, workspace_id:int, name:str)->int:
+        
+        form = Form.objects.create(user_id = user_id, workspace_id = workspace_id, name = name)
+        
+        return form.id
+    
+    def get_forms_of_workspace(self, id:int)->list[FormDTO]:
+        
+        forms = Form.objects.filter(workspace_id = id)
+        formdtos = []
+        for form in forms:
+            formdto = self.convert_form_object_to_dto(form)
+            formdtos.append(formdto)
+        
+        return formdtos
+    
+    def convert_form_object_to_dto(form):
+        
+        return FormDTO(
+            user_id = form.user_id,
+            workspace_id = form.workspace_id,
+            name = form.name
+        )
+        
+    def get_forms_of_user(self, id:str)->list[FormDTO]:
+        
+        forms = Form.objects.filter(user_id = id)
+        formdtos = []
+        for form in forms:
+            formdto = self.convert_form_object_to_dto(form)
+            formdtos.append(formdto)
+        
+        return formdtos
+    
+    def check_form(self, id:int):
+        
+        form_exists = Form.objects.filter(id = id).exists()
+        form_not_exists = not form_exists
+        if form_not_exists:
+            raise InvalidFormException
+        
+    def check_if_field_already_exists(self, field_type:str):
+        
+        if Field.objects.filter(field_type = field_type).exists():
+            raise FieldAlreadyExistsException
+        
+    def create_field(self, field_name:str, field_type:str)->int:
+        
+        field = Field.objects.create(field_name = field_name, field_type = field_type)
+        
+        return field.id
+    
+    def check_form(self, id:int):
+        
+        form_exists = Form.objects.filter(id = id).exists()
+        form_not_exists = not form_exists
+        if form_not_exists:
+            raise InvalidFormException
+        
+    def check_field(self, id:int):
+        
+        field_exists = Field.objects.filter(id = id).exists()
+        field_not_exists = not field_exists
+        if field_not_exists:
+            raise InvalidFieldException
+    
+    def add_field_to_form(self, form_id:int, user_id:str, field_id:int,setting_id:int, is_required:bool, label_text:str, \
+        label_vedio:str, group_name:str)->int:
+        
+        form_field = FormField.objects.create(form_id = form_id, user_id = user_id, field_id = field_id, setting_id = setting_id,\
+            is_required = is_required, label_text = label_text, label_vedio = label_vedio, group_name = group_name)
+        
+        return form_field.id
+    
+    def get_fields_of_form(self, id:int)->list[FormFieldDTO]:
+        
+        form_fields = FormField.objects.filter(form_id = id)
+        formfielddtos = []
+        for form_field in form_fields:
+            formfielddto = self.convert_form_field_object_to_dto(form_field)
+            formfielddtos.append(formfielddto)
+        
+        return formfielddtos
+    
+    def convert_form_field_object_to_dto(form_field):
+        
+        return FormFieldDTO(
+            form_id = form_field.form_id,
+            user_id = form_field.user_id,
+            field_id = form_field.field_id,
+            settings_id = form_field.setting_id,
+            is_required = form_field.is_required,
+            label_text = form_field.label_text,
+            label_vedio = form_field.label_vedio,
+            group_name = form_field.group_name
+        )
