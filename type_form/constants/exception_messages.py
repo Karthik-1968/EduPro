@@ -132,3 +132,13 @@ MISSING_SETTINGS_ID = (
     "Settings id is missing",
     "MISSING_SETTINGS_ID"
 )
+
+INVALID_FORM_FIELD_ID = (
+    "Invalid form field id",
+    "INVALID_FORM_FIELD_ID"
+)
+
+INVALID_SETTINGS_ID = (
+    "Invalid settings id",
+    "INVALID_SETTINGS_ID"
+)

@@ -226,6 +226,12 @@ class PresenterImplementation(PresenterInterface):
     def raise_exception_for_missing_settings_id(self):
         raise NotFound(*MISSING_SETTINGS_ID)
     
+    def raise_exception_for_invalid_form_field(self):
+        raise NotFound(*INVALID_FORM_FIELD_ID)
+    
+    def raise_exception_for_invalid_settings(self):
+        raise NotFound(*INVALID_SETTINGS_ID)
+    
     def get_response_for_submissions_count_of_form(self, count_of_submissions:int):
         return {
             "count_of_submissions": count_of_submissions

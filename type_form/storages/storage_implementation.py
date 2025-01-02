@@ -4,7 +4,6 @@ from type_form.exceptions.custom_exceptions import UserAlreadyPresentException, 
             MaximumInvitesLimitReachedException, SettingsAlreadyExistsException, InvalidFormFieldException,\
                 InvalidSettingsException, InvitationExpiredException
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
-from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.models import User, Workspace, Form, Field, FormResponse, FormField, FormFieldResponse, FormFieldSettings,\
     WorkspaceInvite
 from type_form.interactors.storage_interfaces.storage_interface import UserDTO, WorkspaceDTO, FormDTO, FieldDTO, FormFieldDTO, \
@@ -313,6 +312,20 @@ class StorageImplementation(StorageInterface):
                     alphabetical_order = alphabetical_order, placeholder = placeholder)
         
         return settings.id
+    
+    def check_form_field(self, form_field_id:int):
+        
+        form_field_exists = FormField.objects.filter(id = form_field_id).exists()
+        form_field_not_exists = not form_field_exists
+        if form_field_not_exists:
+            raise InvalidFormFieldException
+        
+    def check_settings(self, settings_id:int):
+        
+        settings_exists = FormFieldSettings.objects.filter(id = settings_id).exists()
+        settings_not_exists = not settings_exists
+        if settings_not_exists:
+            raise InvalidSettingsException
     
     def add_settings_to_form_field(self, form_field_id:int, settings_id:int):
         
