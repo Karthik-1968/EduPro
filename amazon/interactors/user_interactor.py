@@ -2,6 +2,7 @@ from amazon.interactors.storage_interfaces.storage_interface import StorageInter
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from amazon.exceptions.custom_exceptions import UserAlreadyExists, AddressAlreadyExists, UserDoesNotExist, AddressDoesNotExist,\
  AddressAlreadyAddedToUser, UserAddressDoesNotExist
+from amazon.interactors.order_interactor import OrderInteractor
 
 class UserInteractor:
     
@@ -305,3 +306,30 @@ class UserInteractor:
         self.storage.delete_user_address(useraddress_id=useraddress_id)
 
         return self.presenter.get_response_for_delete_user_address()
+    
+
+    def get_user_details(self,user_id:str):
+
+        """ELP
+            -validate input data
+                -validate user_id
+            -check if user_exists
+            -get user details
+        """
+
+        user_id_not_exists = not user_id
+        if user_id_not_exists:
+            self.presenter.raise_exception_for_missing_user_id()
+
+        try:
+            self.storage.check_if_user_exists(user_id=user_id)
+        except UserDoesNotExist:
+            self.presenter.raise_exception_for_user_does_not_exist()
+
+        order_details = OrderInteractor.get_orders_of_user(user_id=user_id)
+
+        user_details=self.storage.get_user_details(user_id=user_id)
+
+        return self.presenter.get_response_for_get_user_details(user_details=user_details,order_details=order_details)
+
+

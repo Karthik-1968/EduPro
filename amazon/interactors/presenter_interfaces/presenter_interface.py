@@ -350,3 +350,7 @@ class PresenterInterface:
     @abstractmethod
     def get_response_for_delete_user_address(self):
         pass
+
+    @abstractmethod
+    def get_response_for_get_user_details(self,user_details:dict,order_details:list[dict])->dict:
+        pass

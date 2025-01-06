@@ -232,4 +232,7 @@ class StorageInterface:
     def delete_user_address(self, useraddress_id:int):
         pass
 
+    @abstractmethod
+    def get_user_details(self,user_id:str)->dict:
+        pass
     
