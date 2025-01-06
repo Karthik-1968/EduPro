@@ -1,7 +1,7 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from amazon.exceptions.custom_exceptions import UserAlreadyExists, AddressAlreadyExists, UserDoesNotExist, AddressDoesNotExist,\
- AddressAlreadyAddedToUser
+ AddressAlreadyAddedToUser, UserAddressDoesNotExist
 
 class UserInteractor:
     
@@ -289,3 +289,19 @@ class UserInteractor:
         contact_number_not_present = not contact_number
         if contact_number_not_present:
             self.presenter.raise_exception_for_missing_contact_number()
+
+    
+    def delete_user_address(self,useraddress_id:int):
+
+        useraddress_id_not_present = not useraddress_id
+        if useraddress_id_not_present:
+            self.presenter.raise_exception_for_missing_useraddress_id()
+
+        try:
+            self.storage.check_if_useraddress_exists(useraddress_id=useraddress_id)
+        except UserAddressDoesNotExist:
+            self.presenter.raise_exception_for_useraddress_does_not_exist()
+
+        self.storage.delete_user_address(useraddress_id=useraddress_id)
+
+        return self.presenter.get_response_for_delete_user_address()

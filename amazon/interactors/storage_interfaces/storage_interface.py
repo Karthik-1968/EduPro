@@ -145,7 +145,19 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def check_if_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
+    def check_if_card_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
+        pass
+
+    @abstractmethod
+    def check_if_net_banking_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
+        pass
+
+    @abstractmethod
+    def check_if_upi_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
+        pass
+
+    @abstractmethod
+    def check_if_cash_on_delivery_payment_method_already_exists(self, payment_type:str):
         pass
 
     @abstractmethod
@@ -161,6 +173,10 @@ class StorageInterface:
         pass
 
     @abstractmethod
+    def create_cash_on_delivery_payment_method(self, payment_type:str)->int:
+        pass
+
+    @abstractmethod
     def check_if_order_exists(self, order_id:int):
         pass
 
@@ -173,7 +189,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def check_if_properties_exists(self, properties:list[int]):
+    def check_if_item_properties_exists(self, properties:list[int]):
         pass
 
     @abstractmethod
@@ -210,6 +226,10 @@ class StorageInterface:
 
     @abstractmethod
     def update_item_property(self, itemproperty_id:int, value:str):
+        pass
+
+    @abstractmethod
+    def delete_user_address(self, useraddress_id:int):
         pass
 
     

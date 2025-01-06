@@ -1,6 +1,7 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
-from amazon.exceptions.custom_exceptions import UserDoesNotExist, ItemDoesNotExist, AddressDoesNotExist
+from amazon.exceptions.custom_exceptions import UserDoesNotExist, ItemDoesNotExist, AddressDoesNotExist, ItemPropertyDoesNotExist,\
+OrderDoesNotExist
 from amazon.interactors.storage_interfaces.storage_interface import OrderDTO
 
 class OrderInteractor:
@@ -22,6 +23,7 @@ class OrderInteractor:
             check if user exists
             check if item exists
             check if address exists
+            check if properties exists
             create_order
         """
         self.validate_input_details_for_create_order(user_id=user_id, item_id=item_id, address_id=address_id, status=status, \
@@ -81,9 +83,9 @@ class OrderInteractor:
             self.presenter.raise_exception_for_address_does_not_exist()
 
         try:
-            self.storage.check_if_properties_exists(properties=order_dto.properties)
-        except PropertyDoesNotExist:
-            self.presenter.raise_exception_for_property_does_not_exist()
+            self.storage.check_if_item_properties_exists(properties=order_dto.properties)
+        except ItemPropertyDoesNotExist:
+            self.presenter.raise_exception_for_item_property_does_not_exist()
 
 
 

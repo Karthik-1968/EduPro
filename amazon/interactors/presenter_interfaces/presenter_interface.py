@@ -200,7 +200,19 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_payment_method_already_exists(self):
+    def raise_exception_for_card_payment_method_already_exists(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_net_banking_payment_method_already_exists(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_upi_payment_method_already_exists(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_cash_on_delivery_payment_method_already_exists(self):
         pass
 
     @abstractmethod
@@ -240,15 +252,19 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_create_card_payment_method(self, payment_id:int):
+    def get_response_for_create_card_payment_method(self, paymentmethod_id:int):
         pass
 
     @abstractmethod
-    def get_response_for_create_net_banking_payment_method(self, payment_id:int):
+    def get_response_for_create_net_banking_payment_method(self, paymentmethod_id:int):
         pass
 
     @abstractmethod
-    def get_response_for_create_upi_payment_method(self, payment_id:int):
+    def get_response_for_create_upi_payment_method(self, paymentmethod_id:int):
+        pass
+    
+    @abstractmethod
+    def get_response_for_create_cash_on_delivery_payment_method(self, paymentmethod_id:int):
         pass
 
     @abstractmethod
@@ -329,4 +345,8 @@ class PresenterInterface:
 
     @abstractmethod
     def get_response_for_update_item_property(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_delete_user_address(self):
         pass

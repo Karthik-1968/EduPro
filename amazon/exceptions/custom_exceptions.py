@@ -45,3 +45,6 @@ class OrderDoesNotExist(Exception):
 
 class ItemPropertyDoesNotExist(Exception):
     pass
+
+class UserAddressDoesNotExist(Exception):
+    pass
