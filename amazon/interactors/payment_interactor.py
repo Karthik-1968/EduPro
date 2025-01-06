@@ -1,6 +1,7 @@
 from amazon.interactors.storage_interfaces import storage_interface
 from amazon.interactors.presenters import presenter_interface
 from amazon.exceptions.custom_exceptions import PaymentMethodAlreadyExists, OrderDoesNotExist, PaymentMethodDoesNotExist
+from amazon.interactors.storages.storage_interface import PaymentMethodDTO, OrderPaymentDTO
 
 class PaymentInteractor:
 
@@ -8,28 +9,141 @@ class PaymentInteractor:
         self.storage = storage
         self.presenter = presenter
 
-    def create_payment(self, payment_type:str, card_number:str=None, card_holder_name:str=None, cvv:int=None, \
-    expiry_date:str=None, bank_name:str=None, username:str=None, password:str=None, upi_id:str=None):
+    def create_card_payment_method(self, payment_type:str, card_number:str, card_holder_name:str, cvv:int, expiry_date:str):
 
         """ELP
             check if payment method already exists
             create payment method
         """
+        self.validate_input_data_for_create_card_payment(payment_type=payment_type, card_number=card_number, \
+                card_holder_name=card_holder_name, cvv=cvv, expiry_date=expiry_date)
+        
+        paymentmethod_dto = PaymentMethodDTO(payment_type=payment_type, card_number=card_number, card_holder_name=card_holder_name, \
+                            cvv=cvv, expiry_date=expiry_date)
 
+        self.check_if_input_data_is_correct_for_create_card_payment(paymentmethod_dto=paymentmethod_dto)
+
+        paymentmethod_id = self.storage.create_card_payment_method(paymentmethod_dto=paymentmethod_dto)
+
+        return self.presenter.get_response_for_create_card_payment_method(paymentmethod_id=paymentmethod_id)
+
+    def validate_input_data_for_create_card_payment(self, payment_type:str, card_number:str, card_holder_name:str, cvv:int, \
+                                                    expiry_date:str):
+
+        payment_type_not_present = not payment_type
+        if payment_type_not_present:
+            self.presenter.raise_exception_for_missing_payment_type()
+
+        card_number_not_present = not card_number
+        if card_number_not_present:
+            self.presenter.raise_exception_for_missing_card_number()
+
+        card_holder_name_not_present = not card_holder_name
+        if card_holder_name_not_present:
+            self.presenter.raise_exception_for_missing_card_holder_name()
+
+        cvv_not_present = not cvv
+        if cvv_not_present:
+            self.presenter.raise_exception_for_missing_cvv()
+
+        expiry_date_not_present = not expiry_date
+        if expiry_date_not_present:
+            self.presenter.raise_exception_for_missing_expiry_date()
+
+    def check_if_input_data_is_correct_for_create_card_payment(self, paymentmethod_dto:PaymentMethodDTO):
+    
         try:
-            self.storage.check_if_payment_method_already_exists(payment_type=payment_type, card_number=card_number, \
-            card_holder_name=card_holder_name, cvv=cvv, expiry_date=expiry_date, bank_name=bank_name, username=username,\
-             password=password, upi_id=upi_id)
+            self.storage.check_if_payment_method_already_exists(paymentmethod_dto=paymentmethod_dto)
         except PaymentMethodAlreadyExists:
             self.presenter.raise_exception_for_payment_method_already_exists()
 
-        paymentmethod_id = self.storage.create_payment_method(payment_type=payment_type, card_number=card_number, \
-            card_holder_name=card_holder_name, cvv=cvv, expiry_date=expiry_date, bank_name=bank_name, username=username,\
-             password=password, upi_id=upi_id)
 
-        return self.presenter.get_response_for_create_payment_method(paymentmethod_id=paymentmethod_id)
 
-    def add_payment_to_order(self, order_id:int, paymentmethod_id:int, status:str, amount:int, transaction_id:str):
+
+
+    def create_net_banking_payment_method(self, payment_type:str, bank_name:str, username:str, password:str):
+
+        """ELP
+            check if payment method already exists
+            create payment method
+        """
+        self.validate_input_data_for_create_net_banking_payment(payment_type=payment_type, bank_name=bank_name, username=username,\
+                                                                 password=password)
+        
+        paymentmethod_dto = PaymentMethodDTO(payment_type=payment_type, bank_name=bank_name, username=username, password=password)
+
+        self.check_if_input_data_is_correct_for_create_net_banking_payment(paymentmethod_dto=paymentmethod_dto)
+
+        paymentmethod_id = self.storage.create_net_banking_payment_method(paymentmethod_dto=paymentmethod_dto)
+
+        return self.presenter.get_response_for_create_net_banking_payment_method(paymentmethod_id=paymentmethod_id)
+
+    def validate_input_data_for_create_net_banking_payment(self, payment_type:str, bank_name:str, username:str, password:str):
+
+        payment_type_not_present = not payment_type
+        if payment_type_not_present:
+            self.presenter.raise_exception_for_missing_payment_type()
+
+        bank_name_not_present = not bank_name
+        if bank_name_not_present:
+            self.presenter.raise_exception_for_missing_bank_name()
+
+        username_not_present = not username
+        if username_not_present:
+            self.presenter.raise_exception_for_missing_username()
+
+        password_not_present = not password
+        if password_not_present:
+            self.presenter.raise_exception_for_missing_password()
+
+    def check_if_input_data_is_correct_for_create_net_banking_payment(self, paymentmethod_dto:PaymentMethodDTO):
+
+        try:
+            self.storage.check_if_payment_method_already_exists(paymentmethod_dto=paymentmethod_dto)
+        except PaymentMethodAlreadyExists:
+            self.presenter.raise_exception_for_payment_method_already_exists()
+
+
+
+
+    def create_upi_payment_method(self, payment_type:str, upi_id:str):
+
+        """ELP
+            check if payment method already exists
+            create payment method
+        """
+        self.validate_input_data_for_create_upi_payment(payment_type=payment_type, upi_id=upi_id)
+        
+        paymentmethod_dto = PaymentMethodDTO(payment_type=payment_type, upi_id=upi_id)
+
+        self.check_if_input_data_is_correct_for_create_upi_payment(paymentmethod_dto=paymentmethod_dto)
+
+        paymentmethod_id = self.storage.create_upi_payment_method(paymentmethod_dto=paymentmethod_dto)
+
+        return self.presenter.get_response_for_create_upi_payment_method(paymentmethod_id=paymentmethod_id)
+
+    def validate_input_data_for_create_upi_payment(self, payment_type:str, upi_id:str):
+        
+        payment_type_not_present = not payment_type
+        if payment_type_not_present:
+            self.presenter.raise_exception_for_missing_payment_type()
+
+        upi_id_not_present = not upi_id
+        if upi_id_not_present:
+            self.presenter.raise_exception_for_missing_upi_id()
+
+    def check_if_input_data_is_correct_for_create_upi_payment(self, paymentmethod_dto:PaymentMethodDTO):
+
+        try:
+            self.storage.check_if_payment_method_already_exists(paymentmethod_dto=paymentmethod_dto)
+        except PaymentMethodAlreadyExists:
+            self.presenter.raise_exception_for_payment_method_already_exists()
+
+
+
+    
+
+    def add_payment_method_to_order(self, order_id:int, paymentmethod_id:int, status:str, amount:int, transaction_id:str):
 
         """ELP
             validate input details
@@ -45,18 +159,12 @@ class PaymentInteractor:
         self.validate_input_details(order_id=order_id, paymentmethod_id=paymentmethod_id, status=status, amount=amount, \
             transaction_id=transaction_id)
 
-        try:
-            self.storage.check_if_order_exists(order_id=order_id)
-        except OrderDoesNotExist:
-            self.presenter.raise_exception_for_order_does_not_exist()
+        self.check_if_input_data_is_correct_for_add_payment_to_order(order_id=order_id, paymentmethod_id=paymentmethod_id)
 
-        try:
-            self.storage.check_if_paymentmethod_exists(paymentmethod_id=paymentmethod_id)
-        except PaymentMethodDoesNotExist:
-            self.presenter.raise_exception_for_paymentmethod_does_not_exist()
+        orderpayment_dto = OrderPaymentDTO(order_id=order_id, paymentmethod_id=paymentmethod_id, status=status, amount=amount, \
+                                            transaction_id=transaction_id)
 
-        payment_id = self.storage.add_payment_method_to_order(order_id=order_id, paymentmethod_id=paymentmethod_id, status=status, amount=amount, \
-            transaction_id=transaction_id)
+        payment_id = self.storage.add_payment_method_to_order(orderpayment_dto=orderpayment_dto)
 
         return self.presenter.get_response_for_add_payment_to_order(payment_id=payment_id)
 
@@ -80,4 +188,16 @@ class PaymentInteractor:
 
         transaction_id_not_present = not transaction_id
         if transaction_id_not_present:
-            self.presenter.raise_exception_for_missing_transaction_id() 
+            self.presenter.raise_exception_for_missing_transaction_id()
+
+    def check_if_input_data_is_correct_for_add_payment_to_order(self, order_id:int, paymentmethod_id:int):
+        
+        try:
+            self.storage.check_if_order_exists(order_id=order_id)
+        except OrderDoesNotExist:
+            self.presenter.raise_exception_for_order_does_not_exist()
+
+        try:
+            self.storage.check_if_payment_method_exists(paymentmethod_id=paymentmethod_id)
+        except PaymentMethodDoesNotExist:
+            self.presenter.raise_exception_for_paymentmethod_does_not_exist()

@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from dataclasses import dataclass
+from typing import Optional
 
 @dataclass
 class CategoryDTO:
@@ -18,6 +19,27 @@ class OrderDTO:
     address_id:int
     status:str
     delivery_date:str
+    properties:list[int]
+
+@dataclass
+class PaymentMethodDTO:
+    payment_type:str
+    card_number:Optional[str]=None
+    card_holder_name:Optional[str]=None
+    cvv:Optional[str]=None
+    expiry_date:Optional[str]=None
+    bank_name:Optional[str]=None
+    username:Optional[str]=None
+    password:Optional[str]=None
+    upi_id:Optional[str]=None
+
+@dataclass
+class OrderPaymentDTO:
+    order_id:int
+    paymentmethod_id:int
+    status:str
+    amount:int
+    transaction_id:str
 
 class StorageInterface:
 
@@ -30,12 +52,12 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def check_if_address_already_exists(self, contact_number:str, address_type:str):
+    def check_if_address_already_exists(self, door_no:str, street:str, city:str, district:str, state:str, country:str, pincode:str):
         pass
 
     @abstractmethod
-    def create_address(self, street:str, city:str, district:str, state:str, country:str, pincode:str, contact_number:str, \
-    address_type:str)->int:
+    def create_address(self, door_no:str, street:str, city:str, district:str, state:str, country:str, pincode:str,\
+     contact_number:str, address_type:str)->int:
         pass
 
     @abstractmethod
@@ -71,7 +93,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_item(self, item_name:str, category_id:int)->int:
+    def create_item(self, item_name:str, category_id:int, price:float)->int:
         pass
 
     @abstractmethod
@@ -103,7 +125,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def check_if_property_already_added_to_item(self, item_id:int, property_id:int):
+    def check_if_property_already_added_to_item(self, item_id:int, property_id:int, value:str):
         pass
 
     @abstractmethod
@@ -111,7 +133,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_order(self, user_id:str, item_id:int, address_id:int, status:str, delivery_date:str)->int:
+    def create_order(self, order_dto:OrderDTO)->int:
         pass
 
     @abstractmethod
@@ -123,13 +145,19 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def check_if_payment_method_already_exists(self, payment_type:str, card_number:str, card_holder_name:str, cvv:str,\
-     expiry_date:str, bank_name:str, username:str, password:str, upi_id:str):
+    def check_if_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
         pass
 
     @abstractmethod
-    def create_payment_method(self, payment_type:str, card_number:str, card_holder_name:str, cvv:str, expiry_date:str, bank_name:str,\
-     username:str, password:str, upi_id:str)->int:
+    def create_card_payment_method(self, paymentmethod_dto:PaymentMethodDTO)->int:
+        pass
+
+    @abstractmethod
+    def create_net_banking_payment_method(self, paymentmethod_dto:PaymentMethodDTO)->int:
+        pass
+
+    @abstractmethod
+    def create_upi_payment_method(self, paymentmethod_dto:PaymentMethodDTO)->int:
         pass
 
     @abstractmethod
@@ -141,7 +169,47 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def add_payment_method_to_order(self, order_id:int, paymentmethod_id:int, status:str, amount:int, transaction_id:str)->int:
+    def add_payment_method_to_order(self, order_id:int, orderpayment_dto:OrderPaymentDTO)->int:
+        pass
+
+    @abstractmethod
+    def check_if_properties_exists(self, properties:list[int]):
+        pass
+
+    @abstractmethod
+    def delete_order(self, order_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_useraddress_exists(self, useraddress_id:int):
+        pass
+
+    @abstractmethod
+    def update_user_address(self, useraddress_id:int, address_id:int):
+        pass
+
+    @abstractmethod
+    def update_user_name(self, user_id:str, name:str):
+        pass
+
+    @abstractmethod
+    def update_user_email(self, user_id:str, email:str):
+        pass
+
+    @abstractmethod
+    def update_user_contact_number(self, user_id:str, contact_number:str):
+        pass
+
+    @abstractmethod
+    def check_if_item_property_exists(self,itemproperty_id:int):
+        pass
+
+    @abstractmethod
+    def delete_item_property(self, itemproperty_id:int):
+        pass
+
+    @abstractmethod
+    def update_item_property(self, itemproperty_id:int, value:str):
         pass
 
     

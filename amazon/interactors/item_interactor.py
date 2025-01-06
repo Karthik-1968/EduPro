@@ -1,11 +1,11 @@
-from amazon.interactors.storage_interfaces import storage_interface
-from amazon.interactors.presenter_interfaces import presenter_interface
-from amazon.exceptions.custom_exception import ItemAlreadyExists, CategoryDoesNotExist, ItemDoesNotExist, PropertyAlreadyExists,\
- PropertyDoesNotExist, PropertyAlreadyAddedToItem
+from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
+from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
+from amazon.exceptions.custom_exceptions import ItemAlreadyExists, CategoryDoesNotExist, ItemDoesNotExist, PropertyAlreadyExists,\
+ PropertyDoesNotExist, PropertyAlreadyAddedToItem, ItemPropertyDoesNotExist
 
 class ItemInteractor:
 
-    def __int__(self, storage: storage_interface, presenter: presenter_interface):
+    def __init__(self, storage: StorageInterface, presenter: PresenterInterface):
         self.storage = storage
         self.presenter = presenter
 
@@ -109,6 +109,28 @@ class ItemInteractor:
 
         self.validate_input_details_for_add_property_to_item(item_id=item_id, property_id=property_id, value=value)
 
+        self.check_if_input_data_is_correct_for_add_property_to_item(item_id=item_id, property_id=property_id, value=value)
+
+        itemproperty_id = self.storage.add_property_to_item(item_id=item_id, property_id=property_id, value=value)
+
+        return self.presenter.get_response_for_add_property_to_item(itemproperty_id=itemproperty_id)
+
+    def validate_input_details_for_add_property_to_item(self, item_id:int, property_id:int, value:str):
+
+        item_id_not_present = not item_id
+        if item_id_not_present:
+            self.presenter.raise_exception_for_missing_item_id()
+
+        property_id_not_present = not property_id
+        if property_id_not_present:
+            self.presenter.raise_exception_for_missing_property_id()
+
+        value_not_present = not value
+        if value_not_present:
+            self.presenter.raise_exception_for_missing_value()
+
+    def check_if_input_data_is_correct_for_add_property_to_item(self, item_id:int, property_id:int, value:str):
+
         try:
             self.storage.check_if_item_exists(item_id=item_id)
         except ItemDoesNotExist:
@@ -124,19 +146,55 @@ class ItemInteractor:
         except PropertyAlreadyAddedToItem:
             self.presenter.raise_exception_for_property_already_added_to_item()
 
-        itemproperty_id = self.storage.add_property_to_item(item_id=item_id, property_id=property_id, value=value)
 
-        return self.presenter.get_response_for_add_property_to_item(itemproperty_id=itemproperty_id)
+    def delete_item_property(self, itemproperty_id:int):
 
-    def validate_input_details_for_add_property_to_item(self, item_id:int, property_id:int, value:str):
+        """ELP
+            validate itemproperty_id
+            check if itemproperty exists
+            delete itemproperty
+        """
 
-        item_id_not_present = not item_id
-        if item_id_not_present:
-            self.presenter.raise_exception_for_missing_item_id()
+        itemproperty_id_not_present = not itemproperty_id
+        if itemproperty_id_not_present:
+            self.presenter.raise_exception_for_missing_item_property_id()
 
-        property_id_not_present = not property_id
-        if property_id_not_present:
-            self.presenter.raise_exception_for_missing_property_id()
+        try:
+            self.storage.check_if_item_property_exists(itemproperty_id=itemproperty_id)
+        except ItemPropertyDoesNotExist:
+            self.presenter.raise_exception_for_item_property_does_not_exist()
+
+        self.storage.delete_item_property(itemproperty_id=itemproperty_id)
+
+        self.presenter.get_response_for_delete_item_property()
+
+    
+    def update_item_property(self,itemproperty_id:int, value:str):
+
+        """ELP
+            -validate input details
+                -validate itemproperty_id
+                -validate value
+            check if itemproperty exists
+            update item property value
+        """
+
+        self.validate_input_details_for_update_item_property(itemproperty_id=itemproperty_id, value=value)
+
+        try:
+            self.storage.check_if_item_property_exists(itemproperty_id=itemproperty_id)
+        except ItemPropertyDoesNotExist:
+            self.presenter.raise_exception_for_item_property_does_not_exist()
+
+        self.storage.update_item_property(itemproperty_id=itemproperty_id, value=value)
+
+        return self.presenter.get_response_for_update_item_property()
+
+    def validate_input_details_for_update_item_property(self,itemproperty_id:int, value:str):
+
+        itemproperty_id_not_present = not itemproperty_id
+        if itemproperty_id_not_present:
+            self.presenter.raise_exception_for_missing_item_property_id()
 
         value_not_present = not value
         if value_not_present:

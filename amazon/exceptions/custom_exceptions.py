@@ -42,3 +42,6 @@ class PaymentMethodDoesNotExist(Exception):
 
 class OrderDoesNotExist(Exception):
     pass
+
+class ItemPropertyDoesNotExist(Exception):
+    pass

@@ -28,6 +28,10 @@ class PresenterInterface:
         pass
 
     @abstractmethod
+    def raise_exception_for_missing_door_no(self):
+        pass
+    
+    @abstractmethod
     def raise_exception_for_missing_street(self):
         pass
 
@@ -200,10 +204,6 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_create_payment_method(self, paymentmethod_id:int):
-        pass
-
-    @abstractmethod
     def raise_exception_for_paymentmethod_does_not_exist(self):
         pass
 
@@ -235,3 +235,98 @@ class PresenterInterface:
     def get_response_for_add_payment_to_order(self, payment_id:int):
         pass
 
+    @abstractmethod
+    def raise_exception_for_missing_properties(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_card_payment_method(self, payment_id:int):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_net_banking_payment_method(self, payment_id:int):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_upi_payment_method(self, payment_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_payment_type(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_upi_id(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_card_holder_name(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_card_number(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_expiry_date(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_cvv(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_bank_name(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_username(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_password(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_delete_order(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_useraddress_id(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_useraddress_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_update_user_address(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_update_user_name(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_update_email(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_update_user_contact_number(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_item_property_id(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_item_property_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_delete_item_property(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_update_item_property(self):
+        pass
