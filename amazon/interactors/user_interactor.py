@@ -1,7 +1,7 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
-from amazon.exceptions.custom_exceptions import UserAlreadyExists, AddressAlreadyExists, UserDoesNotExist, AddressDoesNotExist,\
- AddressAlreadyAddedToUser, UserAddressDoesNotExist
+from amazon.exceptions.custom_exceptions import UserAlreadyExistsException, AddressAlreadyExistsException, UserDoesNotExistException, \
+    AddressDoesNotExistException, AddressAlreadyAddedToUserException, UserAddressDoesNotExistException
 from amazon.interactors.order_interactor import OrderInteractor
 
 class UserInteractor:
@@ -22,17 +22,17 @@ class UserInteractor:
             check if user already exists
             create_user
         """
-        self.validate_input_details_for_create_user(id=id, name=name, email=email, contact_number=contact_number)
+        self._validate_input_details_for_create_user(id=id, name=name, email=email, contact_number=contact_number)
         try:
             self.storage.check_if_user_already_exists(email=email, contact_number=contact_number)
-        except UserAlreadyExists:
+        except UserAlreadyExistsException:
             self.presenter.raise_exception_for_user_already_exists()
 
         user_id = self.storage.create_user(id=id, name=name, email=email, contact_number=contact_number)
 
         return self.presenter.get_response_for_create_user(user_id=user_id)
 
-    def validate_input_details_for_create_user(self, id:str, name:str, email:str, contact_number:str):
+    def _validate_input_details_for_create_user(self, id:str, name:str, email:str, contact_number:str):
         
         id_not_present = not id
         if id_not_present:
@@ -68,13 +68,13 @@ class UserInteractor:
             check if address already exists
             create_address
         """
-        self.validate_input_details_for_create_address(door_no=door_no, street=street, city=city, district=district, \
+        self._validate_input_details_for_create_address(door_no=door_no, street=street, city=city, district=district, \
         state=state, country=country, pincode=pincode, contact_number=contact_number, address_type=address_type)
 
         try:
             self.storage.check_if_address_already_exists(door_no=door_no, street=street, city=city, district=district, \
             state=state, country=country, pincode=pincode)
-        except AddressAlreadyExists:
+        except AddressAlreadyExistsException:
             self.presenter.raise_exception_for_address_already_exists()
 
         address_id = self.storage.create_address(door_no=door_no, street=street, city=city, district=district, state=state, \
@@ -82,8 +82,8 @@ class UserInteractor:
 
         return self.presenter.get_response_for_create_address(address_id=address_id)
 
-    def validate_input_details_for_create_address(self, door_no:str, street:str, city:str, district:str, state:str, country:str, pincode:str, contact_number:str,\
-     address_type:str):
+    def _validate_input_details_for_create_address(self, door_no:str, street:str, city:str, district:str, state:str, country:str, \
+                                                   pincode:str, contact_number:str, address_type:str):
         
         door_no_not_present = not door_no
         if door_no_not_present:
@@ -144,17 +144,17 @@ class UserInteractor:
 
         try:
             self.storage.check_if_user_exists(user_id=user_id)
-        except UserDoesNotExist:
+        except UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
 
         try:
             self.storage.check_if_address_exists(address_id=address_id)
-        except AddressDoesNotExist:
+        except AddressDoesNotExistException:
             self.presenter.raise_exception_for_address_does_not_exist()
 
         try:
             self.storage.check_if_address_already_added_to_user(user_id=user_id, address_id=address_id)
-        except AddressAlreadyAddedToUser:
+        except AddressAlreadyAddedToUserException:
             self.presenter.raise_exception_for_address_already_added_to_user()
 
         useraddress_id = self.storage.add_address_to_user(user_id=user_id, address_id=address_id)
@@ -172,23 +172,23 @@ class UserInteractor:
             check if address exists
             update_user_address
         """
-        self.validate_input_details_for_update_user_address(useraddress_id=useraddress_id, address_id=address_id)
+        self._validate_input_details_for_update_user_address(useraddress_id=useraddress_id, address_id=address_id)
 
         try:
             self.storage.check_if_useraddress_exists(useraddress_id=useraddress_id)
-        except UserAddressDoesNotExist:
+        except UserAddressDoesNotExistException:
             self.presenter.raise_exception_for_useraddress_does_not_exist()
 
         try:
             self.storage.check_if_address_exists(address_id=address_id)
-        except AddressDoesNotExist:
+        except AddressDoesNotExistException:
             self.presenter.raise_exception_for_address_does_not_exist()
 
         self.storage.update_user_address(useraddress_id=useraddress_id, address_id=address_id)
 
         return self.presenter.get_response_for_update_user_address()
 
-    def validate_input_details_for_update_user_address(self, useraddress_id:int, address_id:int):
+    def _validate_input_details_for_update_user_address(self, useraddress_id:int, address_id:int):
         
         useraddress_id_not_present = not useraddress_id
         if useraddress_id_not_present:
@@ -199,7 +199,7 @@ class UserInteractor:
             self.presenter.raise_exception_for_missing_address_id()
 
     
-    def update_user_name(self, user_id:int, name:str):
+    def update_user_name(self, user_id:str, name:str):
         
         """ELP
             validate_input_details
@@ -208,18 +208,18 @@ class UserInteractor:
             check if user exists
             update_user_name
         """
-        self.validate_input_details_for_update_user_name(user_id=user_id, name=name)
+        self._validate_input_details_for_update_user_name(user_id=user_id, name=name)
 
         try:
             self.storage.check_if_user_exists(user_id=user_id)
-        except UserDoesNotExist:
+        except UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
 
         self.storage.update_user_name(user_id=user_id, name=name)
 
         return self.presenter.get_response_for_update_user_name()
 
-    def validate_input_details_for_update_user_name(self, user_id:int, name:str):
+    def _validate_input_details_for_update_user_name(self, user_id:str, name:str):
 
         user_id_not_present = not user_id
         if user_id_not_present:
@@ -230,7 +230,7 @@ class UserInteractor:
             self.presenter.raise_exception_for_missing_user_name()
 
 
-    def update_user_email(self, user_id:int, email:str):
+    def update_user_email(self, user_id:str, email:str):
         
         """ELP
             validate_input_details
@@ -239,18 +239,18 @@ class UserInteractor:
             check if user exists
             update_user_email
         """
-        self.validate_input_details_for_update_user_email(user_id=user_id, email=email)
+        self._validate_input_details_for_update_user_email(user_id=user_id, email=email)
 
         try:
             self.storage.check_if_user_exists(user_id=user_id)
-        except UserDoesNotExist:
+        except UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
 
         self.storage.update_user_email(user_id=user_id, email=email)
 
         return self.presenter.get_response_for_update_user_email()
 
-    def validate_input_details_for_update_user_email(self, user_id:int, email:str):
+    def _validate_input_details_for_update_user_email(self, user_id:str, email:str):
 
         user_id_not_present = not user_id
         if user_id_not_present:
@@ -261,7 +261,7 @@ class UserInteractor:
             self.presenter.raise_exception_for_missing_email()
 
 
-    def update_user_contact_number(self, user_id:int, contact_number:str):
+    def update_user_contact_number(self, user_id:str, contact_number:str):
         
         """ELP
             validate_input_details
@@ -270,18 +270,18 @@ class UserInteractor:
             check if user exists
             update_contact_number
         """
-        self.validate_input_details_for_update_contact_number(user_id=user_id, contact_number=contact_number)
+        self._validate_input_details_for_update_contact_number(user_id=user_id, contact_number=contact_number)
 
         try:
             self.storage.check_if_user_exists(user_id=user_id)
-        except UserDoesNotExist:
+        except UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
 
         self.storage.update_user_contact_number(user_id=user_id, contact_number=contact_number)
 
         return self.presenter.get_response_for_update_user_contact_number()
 
-    def validate_input_details_for_update_contact_number(self, user_id:int, contact_number:str):
+    def _validate_input_details_for_update_contact_number(self, user_id:str, contact_number:str):
 
         user_id_not_present = not user_id
         if user_id_not_present:
@@ -292,7 +292,7 @@ class UserInteractor:
             self.presenter.raise_exception_for_missing_contact_number()
 
     
-    def delete_user_address(self,useraddress_id:int):
+    def delete_user_address(self, useraddress_id:int):
 
         useraddress_id_not_present = not useraddress_id
         if useraddress_id_not_present:
@@ -300,7 +300,7 @@ class UserInteractor:
 
         try:
             self.storage.check_if_useraddress_exists(useraddress_id=useraddress_id)
-        except UserAddressDoesNotExist:
+        except UserAddressDoesNotExistException:
             self.presenter.raise_exception_for_useraddress_does_not_exist()
 
         self.storage.delete_user_address(useraddress_id=useraddress_id)
@@ -308,7 +308,7 @@ class UserInteractor:
         return self.presenter.get_response_for_delete_user_address()
     
 
-    def get_user_details(self,user_id:str):
+    def get_user_details(self, user_id:str):
 
         """ELP
             -validate input data
@@ -323,7 +323,7 @@ class UserInteractor:
 
         try:
             self.storage.check_if_user_exists(user_id=user_id)
-        except UserDoesNotExist:
+        except UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
 
         order_details = OrderInteractor.get_orders_of_user(user_id=user_id)

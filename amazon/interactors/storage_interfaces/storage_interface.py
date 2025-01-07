@@ -11,6 +11,8 @@ class ItemDTO:
     category_id:int
     item_name:str
     price:float
+    number_of_left_in_stock:int
+    views:int
 
 @dataclass
 class OrderDTO:
@@ -24,6 +26,7 @@ class OrderDTO:
 @dataclass
 class PaymentMethodDTO:
     payment_type:str
+    card_name:Optional[str]=None
     card_number:Optional[str]=None
     card_holder_name:Optional[str]=None
     cvv:Optional[str]=None
@@ -41,6 +44,19 @@ class OrderPaymentDTO:
     amount:int
     transaction_id:str
 
+@dataclass
+class EmiDTO:
+    emi_type:str
+    processing_fee:Optional[float]
+    minimum_purchase_value:Optional[float]
+    discount:Optional[float]
+    number_of_months:int
+    interest_in_rupees:float
+    interest_in_percentage:float
+    total_amount:float
+    card_name:Optional[str]=None
+    debit_card_name:Optional[str]=None
+
 class StorageInterface:
 
     @abstractmethod
@@ -57,7 +73,7 @@ class StorageInterface:
 
     @abstractmethod
     def create_address(self, door_no:str, street:str, city:str, district:str, state:str, country:str, pincode:str,\
-     contact_number:str, address_type:str)->int:
+                                contact_number:str, address_type:str)->int:
         pass
 
     @abstractmethod
@@ -93,7 +109,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_item(self, item_name:str, category_id:int, price:float)->int:
+    def create_item(self, item_name:str, category_id:int, price:float, number_of_left_in_stock:int)->int:
         pass
 
     @abstractmethod
@@ -235,4 +251,75 @@ class StorageInterface:
     @abstractmethod
     def get_user_details(self,user_id:str)->dict:
         pass
+
+    @abstractmethod
+    def add_view_to_item(self, user_id:str, item_id:int)->int:
+        pass
+
+    @abstractmethod
+    def get_item_details(self, item_id:int)->ItemDTO:
+        pass
     
+    @abstractmethod
+    def check_if_cart_already_created_for_user(self, user_id:str):
+        pass
+
+    @abstractmethod
+    def create_cart(self, user_id:str, name:str)->int:
+        pass
+
+    @abstractmethod
+    def add_item_to_cart(self, cart_id:int, item_id:int, properties:list[int]):
+        pass
+
+    @abstractmethod
+    def create_rating_for_item(self, item_id:int)->int:
+        pass
+
+    @abstractmethod
+    def add_rating_to_item(self, item_id:int, rating:int):
+        pass
+
+    @abstractmethod
+    def check_if_item_is_rated(self, item_id:int):
+        pass
+
+    @abstractmethod
+    def get_item_rating(self, item_id:int)->float:
+        pass
+
+    @abstractmethod
+    def check_if_emi_already_exists(self, emi_dto:EmiDTO):
+        pass
+
+    @abstractmethod
+    def create_debit_card_emi(self, emi_dto:EmiDTO)->int:
+        pass
+
+    @abstractmethod
+    def create_no_cost_emi(self, emi_dto:EmiDTO)->int:
+        pass
+
+    @abstractmethod
+    def check_if_emi_exists(self, emi_id:int):
+        pass
+
+    @abstractmethod
+    def add_emi_to_item(self, item_id:int, emi_id:int)->int:
+        pass
+
+    @abstractmethod
+    def check_if_warranty_already_exists(self, warranty_name:str, warranty_amount:float, number_of_months:int):
+        pass
+
+    @abstractmethod
+    def create_warrenty(self, warranty_name:str, warranty_amount:float, number_of_months:int):
+        pass
+
+    @abstractmethod
+    def check_if_warranty_exists(self, warranty_id:int):
+        pass
+
+    @abstractmethod
+    def add_warranty_to_item(self, item_id:int, warranty_id:int):
+        pass

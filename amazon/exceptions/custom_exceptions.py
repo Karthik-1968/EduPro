@@ -1,50 +1,74 @@
-class UserAlreadyExists(Exception):
+class UserAlreadyExistsException(Exception):
     pass
 
-class AddressAlreadyExists(Exception):
+class AddressAlreadyExistsException(Exception):
     pass
 
-class UserDoesNotExist(Exception):
+class UserDoesNotExistException(Exception):
     pass
 
-class AddressDoesNotExist(Exception):
+class AddressDoesNotExistException(Exception):
     pass
 
-class AddressAlreadyAddedToUser(Exception):
+class AddressAlreadyAddedToUserException(Exception):
     pass
 
-class CategoryAlreadyExists(Exception):
+class CategoryAlreadyExistsException(Exception):
     pass
 
-class ItemAlreadyExists(Exception):
+class ItemAlreadyExistsException(Exception):
     pass
 
-class CategoryDoesNotExist(Exception):
+class CategoryDoesNotExistException(Exception):
     pass
 
-class ItemDoesNotExist(Exception):
+class ItemDoesNotExistException(Exception):
     pass
 
-class PropertyAlreadyExists(Exception):
+class PropertyAlreadyExistsException(Exception):
     pass
 
-class PropertyDoesNotExist(Exception):
+class PropertyDoesNotExistException(Exception):
     pass
 
-class PropertyAlreadyAddedToItem(Exception):
+class PropertyAlreadyAddedToItemException(Exception):
     pass
 
-class PaymentMethodAlreadyExists(Exception):
+class PaymentMethodAlreadyExistsException(Exception):
     pass
 
-class PaymentMethodDoesNotExist(Exception):
+class PaymentMethodDoesNotExistException(Exception):
     pass
 
-class OrderDoesNotExist(Exception):
+class OrderDoesNotExistException(Exception):
     pass
 
-class ItemPropertyDoesNotExist(Exception):
+class ItemPropertyDoesNotExistException(Exception):
     pass
 
-class UserAddressDoesNotExist(Exception):
+class UserAddressDoesNotExistException(Exception):
+    pass
+
+class OutOfStockException(Exception):
+    pass
+
+class CartAlreadyCreatedException(Exception):
+    pass
+
+class CartDoesNotExistException(Exception):
+    pass
+
+class ItemIsNotRatedException(Exception):
+    pass
+
+class EmiAlreadyExistsException(Exception):
+    pass
+
+class EmiDoesNotExistException(Exception):
+    pass
+
+class WarrantyAlreadyExistsException(Exception):
+    pass
+
+class WarrantyDoesNotExistException(Exception):
     pass

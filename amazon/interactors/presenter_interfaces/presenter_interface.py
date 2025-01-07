@@ -354,3 +354,147 @@ class PresenterInterface:
     @abstractmethod
     def get_response_for_get_user_details(self,user_details:dict,order_details:list[dict])->dict:
         pass
+
+    @abstractmethod
+    def get_response_for_update_user_email(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_number_of_left_in_stock(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_out_of_stock(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_view_to_item(self, no_of_views:int):
+        pass
+
+    @abstractmethod
+    def get_response_for_get_item_details(self, item_dto:ItemDTO)->dict:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_cart_name(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_cart_already_created(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_cart(self, cart_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_cart_id(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_item_to_cart(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_rating_for_item(self, item_rating_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_rating(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_rating_to_item(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_item_not_rated(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_get_item_rating(self, item_rating:float):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_card_name(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_emi_type(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_debit_card_name(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_number_of_months(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_interest_in_rupees(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_interest_in_percentage(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_total_amount(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_emi_already_exists(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_debit_card_emi(self, emi_id:int):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_no_cost_emi(self, emi_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_emi_id(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_emi_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_emi_to_item(self, item_emi_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_warranty_name(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_warranty_amount(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_number_of_months(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_warrenty_already_exists(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_warranty(self, warranty_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_missing_warranty_id(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_warranty_does_not_exists(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_warranty_to_items(self, item_warranty_id:int):
+        pass
