@@ -4,12 +4,14 @@ from amazon.exceptions.custom_exceptions import EmiAlreadyExistsException, ItemD
 from typing import Optional
 from amazon.interactors.storage_interfaces.storage_interface import EmiDTO
 
+
 class ItemEmiInteractor:
 
     def __init__(self, storage:StorageInterface, presenter:PresenterInterface):
 
         self.storage = storage
         self.presenter = presenter
+
 
     def create_debit_card_emi(self, emi_type:str, debit_card_name:str, minimum_purchase_value:Optional[float], number_of_months:int, \
                               interest_in_rupees:float, interest_in_percentage:float, total_amount:float, processing_fee:Optional[float],

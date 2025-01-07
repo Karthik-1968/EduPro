@@ -3,13 +3,15 @@ from amazon.interactors.presenter_interfaces.presenter_interface import Presente
 from amazon.exceptions.custom_exceptions import ItemAlreadyExistsException, CategoryDoesNotExistException, ItemDoesNotExistException, \
     PropertyAlreadyExistsException, PropertyDoesNotExistException, PropertyAlreadyAddedToItemException, \
         ItemPropertyDoesNotExistException, UserDoesNotExistException, CartAlreadyCreatedException, CartDoesNotExistException, \
-            ItemIsNotRatedException
+            ItemIsNotRatedException, WarrantyDoesNotExistException
+from typing import Optional
 
 class ItemInteractor:
 
     def __init__(self, storage: StorageInterface, presenter: PresenterInterface):
         self.storage = storage
         self.presenter = presenter
+
 
     def create_item(self, item_name:str, category_id:int, price:float, number_of_left_in_stock:int):
         
@@ -302,7 +304,7 @@ class ItemInteractor:
             self.presenter.raise_exception_for_cart_already_created()
 
 
-    def add_item_to_cart(self, cart_id:int, item_id:int, properties:list[int]):
+    def add_item_to_cart(self, cart_id:int, item_id:int, warranty_id:Optional[int], properties:list[int]):
 
         """ELP
             -validate input details
@@ -315,11 +317,13 @@ class ItemInteractor:
 
         self._validate_input_details_for_add_item_to_cart(cart_id=cart_id, item_id=item_id, properties=properties)
 
-        self._check_if_input_data_is_correct_for_add_item_to_cart(cart_id=cart_id, item_id=item_id, properties=properties)
+        self._check_if_input_data_is_correct_for_add_item_to_cart(cart_id=cart_id, item_id=item_id, warranty_id=warranty_id,\
+                                                                   properties=properties)
 
-        self.storage.add_item_to_cart(cart_id=cart_id, item_id=item_id, properties=properties)
+        item_cart_id = self.storage.add_item_to_cart(cart_id=cart_id, item_id=item_id, warranty_id=warranty_id, \
+                                                     properties=properties)
 
-        return self.presenter.get_response_for_add_item_to_cart()
+        return self.presenter.get_response_for_add_item_to_cart(item_cart_id=item_cart_id)
 
     def _validate_input_details_for_add_item_to_cart(self, cart_id:int, item_id:int, properties:list[int]):
 
@@ -335,7 +339,8 @@ class ItemInteractor:
         if properties_not_present:
             self.presenter.raise_exception_for_missing_properties()
 
-    def _check_if_input_data_is_correct_for_add_item_to_cart(self, cart_id:int, item_id:int, properties:list[int]):
+    def _check_if_input_data_is_correct_for_add_item_to_cart(self, cart_id:int, item_id:int, warranty_id:Optional[int], 
+                                                             properties:list[int]):
 
         try:
             self.storage.check_if_cart_exists(cart_id=cart_id)
@@ -351,6 +356,12 @@ class ItemInteractor:
             self.storage.check_if_item_properties_exists(properties=properties)
         except PropertyDoesNotExistException:
             self.presenter.raise_exception_for_property_does_not_exist()
+
+        if warranty_id is not None:
+            try:
+                self.storage.check_if_warranty_exists(warranty_id=warranty_id)
+            except WarrantyDoesNotExistException:
+                self.presenter.raise_exception_for_warranty_does_not_exists()
 
     
     def create_rating_for_item(self, item_id:int):

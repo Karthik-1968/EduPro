@@ -43,6 +43,7 @@ class OrderPaymentDTO:
     status:str
     amount:int
     transaction_id:str
+    gift_card_or_promo_code:str
 
 @dataclass
 class EmiDTO:
@@ -269,7 +270,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def add_item_to_cart(self, cart_id:int, item_id:int, properties:list[int]):
+    def add_item_to_cart(self, cart_id:int, item_id:int, warranty_id:Optional[int], properties:list[int]):
         pass
 
     @abstractmethod

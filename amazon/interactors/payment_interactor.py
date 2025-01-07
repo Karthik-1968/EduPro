@@ -3,6 +3,8 @@ from amazon.interactors.presenter_interfaces.presenter_interface import Presente
 from amazon.exceptions.custom_exceptions import PaymentMethodAlreadyExistsException, OrderDoesNotExistException, \
     PaymentMethodDoesNotExistException
 from amazon.interactors.storage_interfaces.storage_interface import PaymentMethodDTO, OrderPaymentDTO
+from typing import Optional
+
 
 class PaymentInteractor:
 
@@ -143,6 +145,14 @@ class PaymentInteractor:
         except PaymentMethodAlreadyExistsException:
             self.presenter.raise_exception_for_upi_payment_method_already_exists()
 
+    def create_cash_on_delivery_payment_method_wrapper(self, payment_type: str):
+
+        try:
+            paymentmethod_id = self.create_cash_on_delivery_payment_method(payment_type=payment_type)
+        except PaymentMethodAlreadyExistsException:
+            self.presenter.raise_exception_for_cash_on_delivery_payment_method_already_exists()
+        else:
+            return self.presenter.get_response_for_create_cash_on_delivery_payment_method(paymentmethod_id=paymentmethod_id)
 
     def create_cash_on_delivery_payment_method(self,payment_type:str):
 
@@ -155,17 +165,16 @@ class PaymentInteractor:
         if payment_type_not_exists:
             self.presenter.raise_exception_for_missing_payment_type()
 
-        try:
-            self.storage.check_if_cash_on_delivery_payment_method_already_exists(payment_type=payment_type)
-        except PaymentMethodAlreadyExistsException:
-            self.presenter.raise_exception_for_cash_on_delivery_payment_method_already_exists()
+        self.storage.check_if_cash_on_delivery_payment_method_already_exists(payment_type=payment_type)
+            
 
-        paymentmethod_id = self.storage.create_cash_on_delivery_payment_method(payment_type=payment_type)
+        return self.storage.create_cash_on_delivery_payment_method(payment_type=payment_type)
 
-        return self.presenter.get_response_for_create_cash_on_delivery_payment_method(paymentmethod_id=paymentmethod_id)
+        
 
     
-    def add_payment_method_to_order(self, order_id:int, paymentmethod_id:int, status:str, amount:int, transaction_id:str):
+    def add_payment_method_to_order(self, order_id:int, paymentmethod_id:int, status:str, amount:int, transaction_id:str,\
+                                     gift_card_or_promo_code:Optional[str]):
 
         """ELP
             validate input details
@@ -184,7 +193,7 @@ class PaymentInteractor:
         self._check_if_input_data_is_correct_for_add_payment_to_order(order_id=order_id, paymentmethod_id=paymentmethod_id)
 
         orderpayment_dto = OrderPaymentDTO(order_id=order_id, paymentmethod_id=paymentmethod_id, status=status, amount=amount, \
-                                            transaction_id=transaction_id)
+                                            transaction_id=transaction_id, gift_card_or_promo_code=gift_card_or_promo_code)
 
         payment_id = self.storage.add_payment_method_to_order(orderpayment_dto=orderpayment_dto)
 
