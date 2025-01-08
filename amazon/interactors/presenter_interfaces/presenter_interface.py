@@ -610,3 +610,11 @@ class PresenterInterface:
     @abstractmethod
     def get_response_for_add_item_exchange_properties_to_order(self):
         pass
+
+    @abstractmethod
+    def raise_exception_for_item_does_not_exist_in_cart(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_delete_item_from_cart(self):
+        pass

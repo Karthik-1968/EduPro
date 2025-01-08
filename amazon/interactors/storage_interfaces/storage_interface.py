@@ -253,15 +253,15 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def check_if_item_property_exists(self,itemproperty_id:int):
+    def check_if_item_property_exists(self,item_property_id:int):
         pass
 
     @abstractmethod
-    def delete_item_property(self, itemproperty_id:int):
+    def delete_item_property(self, item_property_id:int):
         pass
 
     @abstractmethod
-    def update_item_property(self, itemproperty_id:int, value:str):
+    def update_item_property(self, item_property_id:int, value:str):
         pass
 
     @abstractmethod
@@ -463,4 +463,12 @@ class StorageInterface:
 
     @abstractmethod
     def add_item_exchange_properties_to_order(self, order_id:int, item_exchange_properties:list[int]):
+        pass
+
+    @abstractmethod
+    def check_if_item_is_in_cart(self, item_id:int, cart_id:int):
+        pass
+
+    @abstractmethod
+    def delete_item_from_cart(self, item_id:int, cart_id:int):
         pass

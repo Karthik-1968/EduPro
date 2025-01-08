@@ -102,3 +102,6 @@ class ItemExchangePropertyDoesNotExistException(Exception):
 
 class ItemWarrantyDoesNotExistException(Exception):
     pass
+
+class ItemDoesNotExistInCartException(Exception):
+    pass

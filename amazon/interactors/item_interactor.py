@@ -3,7 +3,8 @@ from amazon.interactors.presenter_interfaces.presenter_interface import Presente
 from amazon.exceptions.custom_exceptions import ItemAlreadyExistsException, CategoryDoesNotExistException, ItemDoesNotExistException, \
     PropertyAlreadyExistsException, PropertyDoesNotExistException, PropertyAlreadyAddedToItemException, \
         ItemPropertyDoesNotExistException, UserDoesNotExistException, CartAlreadyCreatedException, CartDoesNotExistException, \
-            ItemIsNotRatedException, ItemWarrantyDoesNotExistException, ItemExchangePropertyDoesNotExistException
+            ItemIsNotRatedException, ItemWarrantyDoesNotExistException, ItemExchangePropertyDoesNotExistException, \
+                ItemDoesNotExistInCartException
 from typing import Optional
 
 class ItemInteractor:
@@ -202,7 +203,7 @@ class ItemInteractor:
             self.presenter.raise_exception_for_property_already_added_to_item()
 
 
-    def delete_item_property(self, itemproperty_id:int):
+    def delete_item_property(self, item_property_id:int):
 
         """ELP
             validate itemproperty_id
@@ -210,21 +211,21 @@ class ItemInteractor:
             delete itemproperty
         """
 
-        itemproperty_id_not_present = not itemproperty_id
-        if itemproperty_id_not_present:
+        item_property_id_not_present = not item_property_id
+        if item_property_id_not_present:
             self.presenter.raise_exception_for_missing_item_property_id()
 
         try:
-            self.storage.check_if_item_property_exists(itemproperty_id=itemproperty_id)
+            self.storage.check_if_item_property_exists(item_property_id=item_property_id)
         except ItemPropertyDoesNotExistException:
             self.presenter.raise_exception_for_item_property_does_not_exist()
 
-        self.storage.delete_item_property(itemproperty_id=itemproperty_id)
+        self.storage.delete_item_property(item_property_id=item_property_id)
 
         self.presenter.get_response_for_delete_item_property()
 
     
-    def update_item_property(self,itemproperty_id:int, value:str):
+    def update_item_property(self, item_property_id:int, value:str):
 
         """ELP
             -validate input details
@@ -234,21 +235,21 @@ class ItemInteractor:
             update item property value
         """
 
-        self._validate_input_details_for_update_item_property(itemproperty_id=itemproperty_id, value=value)
+        self._validate_input_details_for_update_item_property(item_property_id=item_property_id, value=value)
 
         try:
-            self.storage.check_if_item_property_exists(itemproperty_id=itemproperty_id)
+            self.storage.check_if_item_property_exists(item_property_id=item_property_id)
         except ItemPropertyDoesNotExistException:
             self.presenter.raise_exception_for_item_property_does_not_exist()
 
-        self.storage.update_item_property(itemproperty_id=itemproperty_id, value=value)
+        self.storage.update_item_property(item_property_id=item_property_id, value=value)
 
         return self.presenter.get_response_for_update_item_property()
 
-    def _validate_input_details_for_update_item_property(self,itemproperty_id:int, value:str):
+    def _validate_input_details_for_update_item_property(self,item_property_id:int, value:str):
 
-        itemproperty_id_not_present = not itemproperty_id
-        if itemproperty_id_not_present:
+        item_property_id_not_present = not item_property_id
+        if item_property_id_not_present:
             self.presenter.raise_exception_for_missing_item_property_id()
 
         value_not_present = not value
@@ -262,7 +263,7 @@ class ItemInteractor:
         """
         self.storage.add_view_to_item(user_id=user_id,item_id=item_id)
 
-    def create_items_cart(self, user_id:str, name:str):
+    def create_cart(self, user_id:str, name:str):
 
         """ELP
             -validate input details
@@ -354,7 +355,7 @@ class ItemInteractor:
 
         try:
             self.storage.check_if_item_properties_exists(item_properties=item_properties)
-        except PropertyDoesNotExistException:
+        except ItemPropertyDoesNotExistException:
             self.presenter.raise_exception_for_item_property_does_not_exist()
 
         if item_warranty_id is not None:
@@ -452,3 +453,36 @@ class ItemInteractor:
         item_rating = self.storage.get_item_rating(item_id=item_id)
 
         return self.presenter.get_response_for_get_item_rating(item_rating=item_rating)
+    
+
+    def delete_item_from_cart_by_item_id(self, cart_id:int, item_id:int):
+
+        """ELP
+            -check if cart exists
+            -check if item exists
+            -check if item is in cart
+            -delete item from cart
+        """
+
+        self._check_if_input_data_is_correct_for_delete_item_from_cart_by_item_id(cart_id=cart_id, item_id=item_id)
+
+        self.storage.delete_item_from_cart(cart_id=cart_id, item_id=item_id)
+
+        return self.presenter.get_response_for_delete_item_from_cart()
+    
+    def _check_if_input_data_is_correct_for_delete_item_from_cart_by_item_id(self, cart_id:int, item_id:int):
+
+        try:
+            self.storage.check_if_cart_exists(cart_id=cart_id)
+        except CartDoesNotExistException:
+            self.presenter.raise_exception_for_cart_does_not_exist()
+
+        try:
+            self.storage.check_if_item_exists(item_id=item_id)
+        except ItemDoesNotExistException:
+            self.presenter.raise_exception_for_item_does_not_exist()
+
+        try:
+            self.storage.check_if_item_is_in_cart(cart_id=cart_id, item_id=item_id)
+        except ItemDoesNotExistInCartException:
+            self.presenter.raise_exception_for_item_does_not_exist_in_cart()
