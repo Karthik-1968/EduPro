@@ -13,13 +13,13 @@ class ItemEmiInteractor:
         self.presenter = presenter
 
 
-    def create_debit_card_emi(self, emi_type:str, debit_card_name:str, minimum_purchase_value:Optional[float], number_of_months:int, \
+    def create_debit_card_emi(self, emi_type:str, card_name:str, minimum_purchase_value:Optional[float], number_of_months:int, \
                               interest_in_rupees:float, interest_in_percentage:float, total_amount:float, processing_fee:Optional[float],
                               discount:Optional[float]):
         """ELP
             -validate input details
                 -validate emi_type
-                -validate debit_card_name
+                -validate card_name
                 -validate minimum_purchase_value
                 -validate number_of_months
                 -validate interest_in_rupees
@@ -28,7 +28,7 @@ class ItemEmiInteractor:
             -check if emi exists
             create debit card emi
         """
-        emi_dto = EmiDTO(emi_type=emi_type, debit_card_name=debit_card_name, minimum_purchase_value=minimum_purchase_value,\
+        emi_dto = EmiDTO(emi_type=emi_type, card_name=card_name, minimum_purchase_value=minimum_purchase_value,\
                          number_of_months=number_of_months, interest_in_rupees=interest_in_rupees, interest_in_percentage=interest_in_percentage,\
                             total_amount=total_amount, processing_fee=processing_fee, discount=discount)
         
@@ -49,9 +49,9 @@ class ItemEmiInteractor:
         if emi_type_not_present:
             self.presenter.raise_exception_for_missing_emi_type()
 
-        debit_card_name_not_present = not emi_dto.debit_card_name
-        if debit_card_name_not_present:
-            self.presenter.raise_exception_for_missing_debit_card_name()
+        card_name_not_present = not emi_dto.card_name
+        if card_name_not_present:
+            self.presenter.raise_exception_for_missing_card_name()
 
         number_of_months_not_present = not emi_dto.number_of_months
         if number_of_months_not_present:
@@ -126,6 +126,29 @@ class ItemEmiInteractor:
         total_amount_not_present = not emi_dto.total_amount
         if total_amount_not_present:
             self.presenter.raise_exception_for_missing_total_amount()
+
+
+    def create_other_emi_type(self, emi_type:str, card_name:str, minimum_purchase_value:Optional[float], number_of_months:int, \
+                              interest_in_rupees:float, interest_in_percentage:float, total_amount:float, \
+                                processing_fee:Optional[float], discount:Optional[float]):
+        
+        """ELP
+            -check if emi exists
+            -create other emi type
+        """
+        emi_dto = EmiDTO(emi_type=emi_type, card_name=card_name, minimum_purchase_value=minimum_purchase_value, \
+                            number_of_months=number_of_months, interest_in_rupees=interest_in_rupees, \
+                                interest_in_percentage=interest_in_percentage, total_amount=total_amount, \
+                                    processing_fee=processing_fee, discount=discount)
+        
+        try:
+            self.storage.check_if_emi_already_exists(emi_dto=emi_dto)
+        except EmiAlreadyExistsException:
+            self.presenter.raise_exception_for_emi_already_exists()
+
+        emi_id = self.storage.create_other_emi_type(emi_dto=emi_dto)
+
+        return self.presenter.get_response_for_create_other_emi_type(emi_id=emi_id)
 
     
     def add_emi_to_item(self, item_id:int, emi_id:int):

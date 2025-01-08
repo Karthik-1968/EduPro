@@ -145,6 +145,7 @@ class PaymentInteractor:
         except PaymentMethodAlreadyExistsException:
             self.presenter.raise_exception_for_upi_payment_method_already_exists()
 
+
     def create_cash_on_delivery_payment_method_wrapper(self, payment_type: str):
 
         try:
@@ -166,13 +167,10 @@ class PaymentInteractor:
             self.presenter.raise_exception_for_missing_payment_type()
 
         self.storage.check_if_cash_on_delivery_payment_method_already_exists(payment_type=payment_type)
-            
 
         return self.storage.create_cash_on_delivery_payment_method(payment_type=payment_type)
 
         
-
-    
     def add_payment_method_to_order(self, order_id:int, paymentmethod_id:int, status:str, amount:int, transaction_id:str,\
                                      gift_card_or_promo_code:Optional[str]):
 

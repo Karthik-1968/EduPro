@@ -188,7 +188,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_create_order(self, order_id:int):
+    def get_response_for_create_order_for_item(self, order_id:int):
         pass
 
     @abstractmethod
@@ -497,4 +497,88 @@ class PresenterInterface:
 
     @abstractmethod
     def get_response_for_add_warranty_to_items(self, item_warranty_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_cart_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_order_for_cart(self, order_id:int):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_emi_to_order(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_delivery_avalibility(self, delivery_avalibility_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_delivery_availability_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_delivery_availability_to_order(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_delivery_availability_already_exists():
+        pass
+
+    @abstractmethod
+    def get_response_for_create_other_emi_type(self, emi_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_offer_already_exists(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_bank_offer(self, offer_id:int):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_no_cost_emi_offer(self, offer_id:int):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_coupon_offer(self, offer_id:int):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_partner_offer(self, offer_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_exchange_property_already_exists(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_exchange_property(self, exchange_property_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_exchange_value_already_exists(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_exchange_value(self, exchange_value_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_exchange_value_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_exchange_property_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_exchange_properties_to_exchange_value(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_exchange_properties_to_item(self):
         pass

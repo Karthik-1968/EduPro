@@ -72,3 +72,24 @@ class WarrantyAlreadyExistsException(Exception):
 
 class WarrantyDoesNotExistException(Exception):
     pass
+
+class DeliveryAvailabilityAlreadyExistsException(Exception):
+    pass
+
+class DeliveryAvailabilityDoesNotExistException(Exception):
+    pass
+
+class OfferAlreadyExistsException(Exception):
+    pass
+
+class ExchangePropertyAlreadyExistsException(Exception):
+    pass
+
+class ExchangeValueAlreadyExistsException(Exception):
+    pass
+
+class ExchangeValueDoesNotExistException(Exception):
+    pass
+
+class ExchangePropertyDoesNotExistException(Exception):
+    pass

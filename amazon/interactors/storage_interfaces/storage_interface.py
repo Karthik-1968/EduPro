@@ -17,11 +17,16 @@ class ItemDTO:
 @dataclass
 class OrderDTO:
     user_id:str
-    item_id:int
     address_id:int
     status:str
     delivery_date:str
-    properties:list[int]
+    delivery_address:str
+    delivery_charges:Optional[float]
+    receiving_person_name:Optional[str]
+    warranty_id:Optional[int]=None
+    properties:Optional[list[int]]=None
+    item_id:Optional[int]=None
+    cart_id:Optional[int]=None
 
 @dataclass
 class PaymentMethodDTO:
@@ -55,8 +60,22 @@ class EmiDTO:
     interest_in_rupees:float
     interest_in_percentage:float
     total_amount:float
-    card_name:Optional[str]=None
-    debit_card_name:Optional[str]=None
+    card_name:str
+
+@dataclass
+class OfferDTO:
+    offer_type:str
+    offer_name:Optional[str]
+    card_name:str
+    discount_in_rupees:int
+    discount_in_percentage:float
+    minimum_purchase_value:Optional[float]
+    minimum_months_emi:Optional[int]
+    start_date:str
+    end_date:str
+    terms_and_conditions:str
+    coupon_code:Optional[str]=None
+    minimum_number_of_items:Optional[int]=None
 
 class StorageInterface:
 
@@ -150,7 +169,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_order(self, order_dto:OrderDTO)->int:
+    def create_order_for_item(self, order_dto:OrderDTO)->int:
         pass
 
     @abstractmethod
@@ -323,4 +342,92 @@ class StorageInterface:
 
     @abstractmethod
     def add_warranty_to_item(self, item_id:int, warranty_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_cart_exists(self, cart_id:int):
+        pass
+
+    @abstractmethod
+    def create_order_for_cart(self, order_dto:OrderDTO)->int:
+        pass
+
+    @abstractmethod
+    def add_emi_to_order(self, order_id:int, emi_id:int):
+        pass
+
+    @abstractmethod
+    def create_delivery_availability(self, can_receive_on_saturday:bool, can_receive_on_sunday:bool)->int:
+        pass
+
+    @abstractmethod
+    def check_if_delivery_availability_exists(self, delivery_availability_id:int):
+        pass
+
+    @abstractmethod
+    def add_delivery_availability_to_order(self, order_id:int, delivery_availability_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_delivery_availability_already_exists(self, can_receive_on_saturday:bool, can_receive_on_sunday:bool):
+        pass
+
+    @abstractmethod
+    def create_other_emi_type(self, emi_dto:EmiDTO)->int:
+        pass
+
+    @abstractmethod
+    def check_if_offer_already_exists(self, offer_dto:OfferDTO):
+        pass
+
+    @abstractmethod
+    def create_bank_offer(self, offer_dto:OfferDTO)->int:
+        pass
+
+    @abstractmethod
+    def create_no_cost_emi_offer(self, offer_type:str)->int:
+        pass
+
+    @abstractmethod
+    def create_coupon_offer(self, offer_dto:OfferDTO)->int:
+        pass
+
+    @abstractmethod
+    def create_payment_offer(self, offer_dto:OfferDTO)->int:
+        pass
+
+    @abstractmethod
+    def check_if_exchange_property_already_exists(self, property_name:str, property_value:str):
+        pass
+
+    @abstractmethod
+    def create_exchange_property(self, property_name:str, property_value:str)->int:
+        pass
+
+    @abstractmethod
+    def check_if_exchange_property_exists(self, exchange_property_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_exchange_value_already_exists(self, exchange_discount:float, service_charge:float):
+        pass
+
+    @abstractmethod
+    def create_exchange_value(self, exchange_discount:float, service_charge:float)->int:
+        pass
+
+    @abstractmethod
+    def check_if_exchange_value_exists(self, exchange_value_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_exchange_properties_exists(self, exchange_property_ids:list[int]):
+        pass
+
+    @abstractmethod
+    def add_exchange_properties_to_exchange_value(self, exchange_value_id:int, exchange_property_ids:list[int]):
+        pass
+
+    @abstractmethod
+    def add_exchange_properties_to_item(self, item_id:int, exchange_property_ids:list[int]):
         pass
