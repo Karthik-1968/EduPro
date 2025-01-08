@@ -93,3 +93,12 @@ class ExchangeValueDoesNotExistException(Exception):
 
 class ExchangePropertyDoesNotExistException(Exception):
     pass
+
+class OfferDoesNotExistException(Exception):
+    pass
+
+class ItemExchangePropertyDoesNotExistException(Exception):
+    pass
+
+class ItemWarrantyDoesNotExistException(Exception):
+    pass

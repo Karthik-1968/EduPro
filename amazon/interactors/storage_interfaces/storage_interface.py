@@ -20,11 +20,10 @@ class OrderDTO:
     address_id:int
     status:str
     delivery_date:str
-    delivery_address:str
     delivery_charges:Optional[float]
     receiving_person_name:Optional[str]
-    warranty_id:Optional[int]=None
-    properties:Optional[list[int]]=None
+    item_warranty_id:Optional[int]=None
+    item_properties:Optional[list[int]]=None
     item_id:Optional[int]=None
     cart_id:Optional[int]=None
 
@@ -36,6 +35,7 @@ class PaymentMethodDTO:
     card_holder_name:Optional[str]=None
     cvv:Optional[str]=None
     expiry_date:Optional[str]=None
+    card_type:Optional[str]=None
     bank_name:Optional[str]=None
     username:Optional[str]=None
     password:Optional[str]=None
@@ -193,7 +193,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def check_if_cash_on_delivery_payment_method_already_exists(self, payment_type:str):
+    def check_if_cash_on_delivery_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
         pass
 
     @abstractmethod
@@ -209,7 +209,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_cash_on_delivery_payment_method(self, payment_type:str)->int:
+    def create_cash_on_delivery_payment_method(self, paymentmethod_dto:PaymentMethodDTO)->int:
         pass
 
     @abstractmethod
@@ -221,11 +221,11 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def add_payment_method_to_order(self, order_id:int, orderpayment_dto:OrderPaymentDTO)->int:
+    def add_payment_method_to_order(self, orderpayment_dto:OrderPaymentDTO)->int:
         pass
 
     @abstractmethod
-    def check_if_item_properties_exists(self, properties:list[int]):
+    def check_if_item_properties_exists(self, item_properties:list[int]):
         pass
 
     @abstractmethod
@@ -289,7 +289,8 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def add_item_to_cart(self, cart_id:int, item_id:int, warranty_id:Optional[int], properties:list[int]):
+    def add_item_to_cart(self, cart_id:int, item_id:int, item_warranty_id:Optional[int], item_properties:list[int], \
+                         item_exchange_property_ids:Optional[list[int]]):
         pass
 
     @abstractmethod
@@ -429,5 +430,37 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def add_exchange_properties_to_item(self, item_id:int, exchange_property_ids:list[int]):
+    def add_exchange_properties_to_item(self, item_id:int, exchange_property_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_offer_exists(self, offer_id:int):
+        pass
+
+    @abstractmethod
+    def add_offer_to_item(self, item_id:int, offer_id:int):
+        pass
+
+    @abstractmethod
+    def add_offer_to_order(self, order_id:int, offer_id:int):
+        pass
+
+    @abstractmethod
+    def add_exchange_properties_to_order(self, order_id:int, exchange_property_ids:list[int]):
+        pass
+
+    @abstractmethod
+    def check_if_number_of_left_in_stock_is_greater_than_zero(self, item_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_item_warranty_exists(self, item_warranty_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_item_exchange_properties_exists(self, item_exchange_properties:list[int]):
+        pass
+
+    @abstractmethod
+    def add_item_exchange_properties_to_order(self, order_id:int, item_exchange_properties:list[int]):
         pass

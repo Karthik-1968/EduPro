@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.storage_interface import StorageInter
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from amazon.exceptions.custom_exceptions import OfferAlreadyExistsException, ExchangePropertyAlreadyExistsException,\
     ExchangeValueAlreadyExistsException, ExchangeValueDoesNotExistException, ExchangePropertyDoesNotExistException, \
-        ItemDoesNotExistException
+        ItemDoesNotExistException, OfferDoesNotExistException
 from typing import Optional
 from amazon.interactors.storage_interfaces.storage_interface import OfferDTO
 
@@ -148,12 +148,13 @@ class ItemOfferInteractor:
         except ExchangePropertyDoesNotExistException:
             self.presenter.raise_exception_for_exchange_property_does_not_exist()
         
-        self.storage.add_exchange_properties_to_exchange_value(exchange_value_id=exchange_value_id, exchange_property_ids=exchange_property_ids)
+        self.storage.add_exchange_properties_to_exchange_value(exchange_value_id=exchange_value_id, \
+                                                               exchange_property_ids=exchange_property_ids)
 
         return self.presenter.get_response_for_add_exchange_properties_to_exchange_value()
     
 
-    def add_exchange_properties_to_item(self, item_id:int, exchange_property_ids:list[int]):
+    def add_exchange_property_to_item(self, item_id:int, exchange_property_id:int):
 
         """ELP
             -check if item exists
@@ -167,10 +168,33 @@ class ItemOfferInteractor:
             self.presenter.raise_exception_for_item_does_not_exist()
 
         try:
-            self.storage.check_if_exchange_properties_exists(exchange_property_ids=exchange_property_ids)
+            self.storage.check_if_exchange_property_exists(exchange_property_id=exchange_property_id)
         except ExchangePropertyDoesNotExistException:
             self.presenter.raise_exception_for_exchange_property_does_not_exist()
         
-        self.storage.add_exchange_properties_to_item(item_id=item_id, exchange_property_ids=exchange_property_ids)
+        item_exchange_property_id = self.storage.add_exchange_properties_to_item(item_id=item_id, exchange_property_id=exchange_property_id)
 
-        return self.presenter.get_response_for_add_exchange_properties_to_item()
+        return self.presenter.get_response_for_add_exchange_properties_to_item(item_exchange_property_id=item_exchange_property_id)
+    
+
+    def add_offer_to_item(self, item_id:int, offer_id:int):
+
+        """ELP
+            -check if item exists
+            -check if offer exists
+            -add offer to item
+        """
+        
+        try:
+            self.storage.check_if_item_exists(item_id=item_id)
+        except ItemDoesNotExistException:
+            self.presenter.raise_exception_for_item_does_not_exist()
+
+        try:
+            self.storage.check_if_offer_exists(offer_id=offer_id)
+        except OfferDoesNotExistException:
+            self.presenter.raise_exception_for_offer_does_not_exist()
+        
+        item_offer_id = self.storage.add_offer_to_item(item_id=item_id, offer_id=offer_id)
+
+        return self.presenter.get_response_for_add_offer_to_item(item_offer_id=item_offer_id)

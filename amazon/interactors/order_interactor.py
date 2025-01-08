@@ -1,8 +1,9 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
-from amazon.exceptions.custom_exceptions import UserDoesNotExistException, ItemDoesNotExistException, AddressDoesNotExistException, \
+from amazon.exceptions.custom_exceptions import UserDoesNotExistException, ItemDoesNotExistException, AddressDoesNotExistException,\
     ItemPropertyDoesNotExistException, OrderDoesNotExistException, OutOfStockException, CartDoesNotExistException,\
-        EmiDoesNotExistException, DeliveryAvailabilityDoesNotExistException, DeliveryAvailabilityAlreadyExistsException
+        EmiDoesNotExistException, DeliveryAvailabilityDoesNotExistException, DeliveryAvailabilityAlreadyExistsException, \
+            OfferDoesNotExistException, ItemExchangePropertyDoesNotExistException, ItemWarrantyDoesNotExistException
 from amazon.interactors.storage_interfaces.storage_interface import OrderDTO
 from typing import Optional
 
@@ -15,9 +16,9 @@ class OrderInteractor:
         self.presenter = presenter
 
 
-    def create_order_for_item(self, user_id:str, item_id:int, address_id:int, status:str, delivery_date:str, delivery_address:str,\
-                      properties:list[int], delivery_charges:Optional[float], receiving_person_name:Optional[str],\
-                          warranty_id:Optional[int]):
+    def create_order_for_item(self, user_id:str, item_id:int, address_id:int, status:str, delivery_date:str,\
+                      item_properties:list[int], delivery_charges:Optional[float], receiving_person_name:Optional[str],\
+                          item_warranty_id:Optional[int]):
 
         """ELP
             validate_input_details
@@ -34,12 +35,12 @@ class OrderInteractor:
             check if number of left in stock is greater than zero
             create_order
         """
-        self._validate_input_details_for_create_order_for_item(user_id=user_id, item_id=item_id, address_id=address_id, status=status, \
-        delivery_date=delivery_date, properties=properties)
+        self._validate_input_details_for_create_order_for_item(user_id=user_id, item_id=item_id, address_id=address_id, 
+                                                        status=status, delivery_date=delivery_date, properties=item_properties)
 
         order_dto = OrderDTO(user_id=user_id, item_id=item_id, address_id=address_id, status=status, delivery_date=delivery_date,\
-                             properties=properties, delivery_address=delivery_address, delivery_charges=delivery_charges, \
-                                receiving_person_name=receiving_person_name, warranty_id=warranty_id)
+                             item_properties=item_properties, delivery_charges=delivery_charges, \
+                                receiving_person_name=receiving_person_name, item_warranty_id=item_warranty_id)
 
         self._check_if_input_data_is_correct_for_create_for_item(order_dto = order_dto)
 
@@ -47,8 +48,8 @@ class OrderInteractor:
 
         return self.presenter.get_response_for_create_order_for_item(order_id=order_id)
 
-    def _validate_input_details_for_create_order_for_item(self, user_id:str, item_id:int, address_id:int, status:str, delivery_date:str, \
-                                                        properties:list[int]):
+    def _validate_input_details_for_create_order_for_item(self, user_id:str, item_id:int, address_id:int, status:str, \
+                                                          delivery_date:str, properties:list[int]):
         
         user_id_not_present = not user_id
         if user_id_not_present:
@@ -92,7 +93,7 @@ class OrderInteractor:
             self.presenter.raise_exception_for_address_does_not_exist()
 
         try:
-            self.storage.check_if_item_properties_exists(properties=order_dto.properties)
+            self.storage.check_if_item_properties_exists(item_properties=order_dto.item_properties)
         except ItemPropertyDoesNotExistException:
             self.presenter.raise_exception_for_item_property_does_not_exist()
 
@@ -101,8 +102,14 @@ class OrderInteractor:
         except OutOfStockException:
             self.presenter.raise_exception_for_out_of_stock()
 
+        if order_dto.item_warranty_id:
+            try:
+                self.storage.check_if_item_warranty_exists(item_warranty_id=order_dto.item_warranty_id)
+            except ItemWarrantyDoesNotExistException:
+                self.presenter.raise_exception_for_item_warranty_does_not_exist()
 
-    def create_order_for_cart(self, user_id:str, cart_id:int, address_id:int, status:str, delivery_date:str, delivery_address:str,\
+
+    def create_order_for_cart(self, user_id:str, cart_id:int, address_id:int, status:str, delivery_date:str,\
                               delivery_charges:Optional[float], receiving_person_name:Optional[str]):
         
         """ELP
@@ -112,7 +119,7 @@ class OrderInteractor:
             -create_order_for_cart
         """
         order_dto = OrderDTO(user_id=user_id, cart_id=cart_id, address_id=address_id, status=status, delivery_date=delivery_date,\
-                             delivery_address=delivery_address, delivery_charges=delivery_charges, receiving_person_name=receiving_person_name)
+                            delivery_charges=delivery_charges, receiving_person_name=receiving_person_name)
         
         self._check_if_input_data_is_correct_for_create_order_for_cart(order_dto=order_dto)
 
@@ -227,7 +234,7 @@ class OrderInteractor:
             self.presenter.raise_exception_for_emi_does_not_exist()
 
     
-    def create_delivery_availability(self, can_receive_on_saturday:str, can_receive__on_sunday:str):
+    def create_delivery_availability(self, can_receive_on_saturday:str, can_receive_on_sunday:str):
 
         """ELP
             -check if delivery availability exists
@@ -236,17 +243,17 @@ class OrderInteractor:
 
         try:
             self.storage.check_if_delivery_availability_already_exists(can_receive_on_saturday=can_receive_on_saturday,\
-                                                                can_receive__on_sunday=can_receive__on_sunday)
+                                                                can_receive__on_sunday=can_receive_on_sunday)
         except DeliveryAvailabilityAlreadyExistsException:
             self.presenter.raise_exception_for_delivery_availability_already_exists()
         
         delivery_availability_id = self.storage.create_delivery_availability(can_receive_on_saturday=can_receive_on_saturday,\
-                                                                            can_receive__on_sunday=can_receive__on_sunday)
+                                                                            can_receive__on_sunday=can_receive_on_sunday)
 
         return self.presenter.get_response_for_create_delivery_availability(delivery_availability_id=delivery_availability_id)
     
 
-    def add_delivery_availabilit_to_order(self, order_id:int, delivery_availability_id:int):
+    def add_delivery_availability_to_order(self, order_id:int, delivery_availability_id:int):
 
         """ELP
             -check if order exists
@@ -254,7 +261,8 @@ class OrderInteractor:
             -add delivery availability to order
         """
 
-        self._check_if_input_data_is_correct_for_add_delivery_availability_to_order(order_id=order_id, delivery_availability_id=delivery_availability_id)
+        self._check_if_input_data_is_correct_for_add_delivery_availability_to_order(order_id=order_id, \
+                                                                            delivery_availability_id=delivery_availability_id)
 
         self.storage.add_delivery_availability_to_order(order_id=order_id, delivery_availability_id=delivery_availability_id)
 
@@ -271,3 +279,49 @@ class OrderInteractor:
             self.storage.check_if_delivery_availability_exists(delivery_availability_id=delivery_availability_id)
         except DeliveryAvailabilityDoesNotExistException:
             self.presenter.raise_exception_for_delivery_availability_does_not_exist()
+
+    
+    def add_offer_to_order(self, order_id:int, offer_id:int):
+
+        """ELP
+            -check if order exists
+            -check if offers exists
+            -add offers to order
+        """
+
+        try:
+            self.storage.check_if_order_exists(order_id=order_id)
+        except OrderDoesNotExistException:
+            self.presenter.raise_exception_for_order_does_not_exist()
+
+        try:
+            self.storage.check_if_offer_exists(offer_id=offer_id)
+        except OfferDoesNotExistException:
+            self.presenter.raise_exception_for_offer_does_not_exist()
+
+        self.storage.add_offer_to_order(order_id=order_id, offer_id=offer_id)
+
+        return self.presenter.get_response_for_add_offer_to_order()
+    
+
+    def add_item_exchange_properties_to_order(self, order_id:int, item_exchange_property_ids:list[int]):
+
+        """ELP
+            -check if order exists
+            -check if all exchange properties exists
+            -add properties to order
+        """
+
+        try:
+            self.storage.check_if_order_exists(order_id=order_id)
+        except OrderDoesNotExistException:
+            self.presenter.raise_exception_for_order_does_not_exist()
+
+        try:
+            self.storage.check_if_item_exchange_properties_exists(item_exchange_property_ids=item_exchange_property_ids)
+        except ItemExchangePropertyDoesNotExistException:
+            self.presenter.raise_exception_for_item_exchange_property_does_not_exist()
+
+        self.storage.add_item_exchange_properties_to_order(order_id=order_id, item_exchange_property_ids=item_exchange_property_ids)
+
+        return self.presenter.get_response_for_add_item_exchange_properties_to_order()

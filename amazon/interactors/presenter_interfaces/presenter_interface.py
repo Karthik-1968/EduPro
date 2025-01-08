@@ -216,7 +216,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_paymentmethod_does_not_exist(self):
+    def raise_exception_for_payment_method_does_not_exist(self):
         pass
 
     @abstractmethod
@@ -244,7 +244,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_add_payment_to_order(self, payment_id:int):
+    def get_response_for_add_payment_method_to_order(self, payment_id:int):
         pass
 
     @abstractmethod
@@ -580,5 +580,33 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_add_exchange_properties_to_item(self):
+    def get_response_for_add_exchange_properties_to_item(self, item_exchange_property_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_offer_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_offer_to_item(self, item_offer_id:int):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_offer_to_order(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_exchange_properties_to_order(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_item_warranty_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_item_exchange_property_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_item_exchange_properties_to_order(self):
         pass
