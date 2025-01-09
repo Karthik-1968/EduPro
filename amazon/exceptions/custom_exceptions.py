@@ -114,3 +114,6 @@ class WhishlistDoesNotExistException(Exception):
 
 class ItemDoesNotExistInWhishlistException(Exception):
     pass
+
+class UserHasNotViewedAnyItemException(Exception): 
+    pass

@@ -12,9 +12,10 @@ from .payment import Payment
 from .whishlist import Whishlist
 from .paymentmethod import PaymentMethod
 from .property import Property
+from .itemviews import ItemView
 
 __all__ = [User, Address, Item, ItemProperty, Cart, Order, ItemsCart, UserAddress, Category, ItemsWhishlist, Payment, Whishlist, \
-           PaymentMethod, Property]
+           PaymentMethod, Property, ItemView]
 
 # class DummyModel(AbstractDateTimeModel):
 #     """

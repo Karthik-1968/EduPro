@@ -646,3 +646,23 @@ class PresenterInterface:
     @abstractmethod
     def get_response_for_delete_item_from_whishlist(self):
         pass
+
+    @abstractmethod
+    def get_response_for_list_best_selling_items(self, best_selling_items:list[int])->list[dict]:
+        pass
+
+    @abstractmethod
+    def get_response_for_list_of_top_rated_items(self, top_rated_items:list[int])->list[dict]:
+        pass
+
+    @abstractmethod
+    def get_response_for_recently_viewed_item_by_user(self, recently_viewed_item:int)->dict:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_user_has_not_viewed_any_item(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_recommendations_for_multiple_users(self, recommendations:list[int])->list[dict]:
+        pass

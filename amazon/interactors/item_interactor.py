@@ -2,11 +2,8 @@ from amazon.interactors.storage_interfaces.storage_interface import StorageInter
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from amazon.exceptions.custom_exceptions import ItemAlreadyExistsException, CategoryDoesNotExistException, ItemDoesNotExistException, \
     PropertyAlreadyExistsException, PropertyDoesNotExistException, PropertyAlreadyAddedToItemException, \
-        ItemPropertyDoesNotExistException, UserDoesNotExistException, CartAlreadyCreatedException, CartDoesNotExistException, \
-            ItemIsNotRatedException, ItemWarrantyDoesNotExistException, ItemExchangePropertyDoesNotExistException, \
-                ItemDoesNotExistInCartException, WhishlistAlreadyCreatedException, WhishlistDoesNotExistException, \
-                    ItemDoesNotExistInWhishlistException
-from typing import Optional
+        ItemPropertyDoesNotExistException, UserDoesNotExistException
+from amazon.interactors.storage_interfaces.storage_interface import ItemDTO
 
 class ItemInteractor:
 
@@ -26,35 +23,40 @@ class ItemInteractor:
             check if item already exists
             create_item
         """
-        self._validate_input_details_for_create_item(item_name=item_name, category_id=category_id, price=price, \
-                                                     number_of_left_in_stock=number_of_left_in_stock)
+        item_dto = ItemDTO(item_name=item_name, category_id=category_id, price=price, number_of_left_in_stock=number_of_left_in_stock, \
+                           number_of_purchases_in_last_month=number_of_purchases_in_last_month)
+        
+        self._validate_input_details_for_create_item(item_dto=item_dto)
+        
+        try:
+            self.storage.check_if_category_exists(category_id=category_id)
+        except CategoryDoesNotExistException:
+            self.presenter.raise_exception_for_category_does_not_exist()
 
         try:
             self.storage.check_if_item_already_exists(item_name=item_name)
         except ItemAlreadyExistsException:
             self.presenter.raise_exception_for_item_already_exists()
 
-        item_id = self.storage.create_item(item_name=item_name, category_id=category_id, price=price,\
-                                           number_of_left_in_stock=number_of_left_in_stock, \
-                                            number_of_purchases_in_last_month=number_of_purchases_in_last_month)
+        item_id = self.storage.create_item(item_dto=item_dto)
 
         return self.presenter.get_response_for_create_item(item_id=item_id)
 
-    def _validate_input_details_for_create_item(self, item_name:str, category_id:int, price:float, number_of_left_in_stock:int):
+    def _validate_input_details_for_create_item(self, item_dto:ItemDTO):
         
-        item_name_not_present = not item_name
+        item_name_not_present = not item_dto.item_name
         if item_name_not_present:
             self.presenter.raise_exception_for_missing_item_name()
 
-        category_id_not_present = not category_id
+        category_id_not_present = not item_dto.category_id
         if category_id_not_present:
             self.presenter.raise_exception_for_missing_category_id()
 
-        price_not_present = not price
+        price_not_present = not item_dto.price
         if price_not_present:
             self.presenter.raise_exception_for_missing_price()
 
-        number_of_left_in_stock_not_present = not number_of_left_in_stock
+        number_of_left_in_stock_not_present = not item_dto.number_of_left_in_stock
         if number_of_left_in_stock_not_present:
             self.presenter.raise_exception_for_missing_number_of_left_in_stock()
 
@@ -264,346 +266,3 @@ class ItemInteractor:
             add view to item
         """
         self.storage.add_view_to_item(user_id=user_id,item_id=item_id)
-
-    def create_cart(self, user_id:str, name:str):
-
-        """ELP
-            -validate input details
-                -validate user_id
-                -validate name
-            -check if user exists
-            -check if user already has cart
-            -create cart to user
-        """
-
-        self._validate_input_details_for_create_items_cart(user_id=user_id, name=name)
-
-        self._check_if_input_data_is_correct_for_create_items_cart(user_id=user_id)
-
-        cart_id = self.storage.create_cart(user_id=user_id, name=name)
-
-        return self.presenter.get_response_for_create_cart(cart_id=cart_id)
-
-    def _validate_input_details_for_create_items_cart(self, user_id:str, name:str):
-
-        user_id_not_present = not user_id
-        if user_id_not_present:
-            self.presenter.raise_exception_for_missing_user_id()
-
-        cart_name_not_present = not name
-        if cart_name_not_present:
-            self.presenter.raise_exception_for_missing_cart_name()
-
-    def _check_if_input_data_is_correct_for_create_items_cart(self, user_id:str):
-
-        try:
-            self.storage.check_if_user_exists(user_id=user_id)
-        except UserDoesNotExistException:
-            self.presenter.raise_exception_for_user_does_not_exist()
-
-        try:
-            self.storage.check_if_cart_already_created_for_user(user_id=user_id)
-        except CartAlreadyCreatedException:
-            self.presenter.raise_exception_for_cart_already_created()
-
-
-    def add_item_to_cart(self, cart_id:int, item_id:int, item_warranty_id:Optional[int], item_exchange_property_ids:Optional[list[int]], item_properties:list[int]):
-
-        """ELP
-            -validate input details
-                -validate cart_id
-                -validate item_id
-            -check if cart exists
-            -check if item exists
-            -add item to cart
-        """
-
-        self._validate_input_details_for_add_item_to_cart(cart_id=cart_id, item_id=item_id, item_properties=item_properties)
-
-        self._check_if_input_data_is_correct_for_add_item_to_cart(cart_id=cart_id, item_id=item_id, item_warranty_id=item_warranty_id,\
-                                                                item_exchange_property_ids=item_exchange_property_ids, item_properties=item_properties)
-
-        self.storage.add_item_to_cart(cart_id=cart_id, item_id=item_id, item_warranty_id=item_warranty_id, \
-                                                     item_properties=item_properties, item_exchange_property_ids=item_exchange_property_ids)
-
-        return self.presenter.get_response_for_add_item_to_cart()
-
-    def _validate_input_details_for_add_item_to_cart(self, cart_id:int, item_id:int, item_properties:list[int]):
-
-        cart_id_not_present = not cart_id
-        if cart_id_not_present:
-            self.presenter.raise_exception_for_missing_cart_id()
-
-        item_id_not_present = not item_id
-        if item_id_not_present:
-            self.presenter.raise_exception_for_missing_item_id()
-
-        properties_not_present = not item_properties
-        if properties_not_present:
-            self.presenter.raise_exception_for_missing_properties()
-
-    def _check_if_input_data_is_correct_for_add_item_to_cart(self, cart_id:int, item_id:int, item_warranty_id:Optional[int], 
-                                                             item_properties:list[int], item_exchange_property_ids:Optional[list[int]]):
-
-        try:
-            self.storage.check_if_cart_exists(cart_id=cart_id)
-        except CartDoesNotExistException:
-            self.presenter.raise_exception_for_cart_does_not_exist()
-
-        try:
-            self.storage.check_if_item_exists(item_id=item_id)
-        except ItemDoesNotExistException:
-            self.presenter.raise_exception_for_item_does_not_exist()
-
-        try:
-            self.storage.check_if_item_properties_exists(item_properties=item_properties)
-        except ItemPropertyDoesNotExistException:
-            self.presenter.raise_exception_for_item_property_does_not_exist()
-
-        if item_warranty_id is not None:
-            try:
-                self.storage.check_if_item_warranty_exists(item_warranty_id=item_warranty_id)
-            except ItemWarrantyDoesNotExistException:
-                self.presenter.raise_exception_for_item_warranty_does_not_exist()
-
-        if item_exchange_property_ids is not None:
-            try:
-                self.storage.check_if_item_exchange_properties_exists(item_exchange_property_ids=item_exchange_property_ids)
-            except ItemExchangePropertyDoesNotExistException:
-                self.presenter.raise_exception_for_item_exchange_property_does_not_exist()
-
-    
-    def create_rating_for_item(self, item_id:int):
-
-        """ELP
-            -validate input details
-                -validate item_id
-            -check if item exists
-            -create item rating
-        """
-
-        item_id_not_exist = not item_id
-        if item_id_not_exist:
-            self.presenter.raise_exception_for_missing_item_id()
-
-        try:
-            self.storage.check_if_item_exists(item_id=item_id)
-        except ItemDoesNotExistException:
-            self.presenter.raise_exception_for_item_does_not_exist()
-
-        item_rating_id = self.storage.create_rating_for_item(item_id=item_id)
-
-        return self.presenter.get_response_for_create_rating_for_item(item_rating_id=item_rating_id)
-    
-    
-    def add_rating_to_item(self, item_id:int, rating:int):
-
-        """ELP
-            -validate input details
-                -validate item_id
-                -validate rating
-            -check if item exists
-            -add rating to item
-        """
-
-        self._validate_input_details_for_add_rating_to_item(item_id=item_id, rating=rating)
-
-        try:
-            self.storage.check_if_item_exists(item_id=item_id)
-        except ItemDoesNotExistException:
-            self.presenter.raise_exception_for_item_does_not_exist()
-
-        self.storage.add_rating_to_item(item_id=item_id, rating=rating)
-
-        return self.presenter.get_response_for_add_rating_to_item()
-
-    def _validate_input_details_for_add_rating_to_item(self, item_id:int, rating:int):
-
-        item_id_not_exist = not item_id
-        if item_id_not_exist:
-            self.presenter.raise_exception_for_missing_item_id()
-
-        rating_not_exist = not rating
-        if rating_not_exist:
-            self.presenter.raise_exception_for_missing_rating()
-
-    
-    def get_rating_of_item(self, item_id:int):
-
-        """ELP
-            -validate input details
-                -validate item_id
-            -check if item exists
-            -check if item has rating
-            -get rating of item
-        """
-
-        item_id_not_present = not item_id
-        if item_id_not_present:
-            self.presenter.raise_exception_for_missing_item_id()
-
-        try:
-            self.storage.check_if_item_exists(item_id=item_id)
-        except ItemDoesNotExistException:
-            self.presenter.raise_exception_for_item_does_not_exist()
-
-        try:
-            self.storage.check_if_item_is_rated(item_id=item_id)
-        except ItemIsNotRatedException:
-            self.presenter.raise_exception_for_item_not_rated()
-
-        item_rating = self.storage.get_item_rating(item_id=item_id)
-
-        return self.presenter.get_response_for_get_item_rating(item_rating=item_rating)
-    
-
-    def delete_item_from_cart_by_item_id(self, cart_id:int, item_id:int):
-
-        """ELP
-            -check if cart exists
-            -check if item exists
-            -check if item is in cart
-            -delete item from cart
-        """
-
-        self._check_if_input_data_is_correct_for_delete_item_from_cart_by_item_id(cart_id=cart_id, item_id=item_id)
-
-        self.storage.delete_item_from_cart(cart_id=cart_id, item_id=item_id)
-
-        return self.presenter.get_response_for_delete_item_from_cart()
-    
-    def _check_if_input_data_is_correct_for_delete_item_from_cart_by_item_id(self, cart_id:int, item_id:int):
-
-        try:
-            self.storage.check_if_cart_exists(cart_id=cart_id)
-        except CartDoesNotExistException:
-            self.presenter.raise_exception_for_cart_does_not_exist()
-
-        try:
-            self.storage.check_if_item_exists(item_id=item_id)
-        except ItemDoesNotExistException:
-            self.presenter.raise_exception_for_item_does_not_exist()
-
-        try:
-            self.storage.check_if_item_is_in_cart(cart_id=cart_id, item_id=item_id)
-        except ItemDoesNotExistInCartException:
-            self.presenter.raise_exception_for_item_does_not_exist_in_cart()
-
-
-    def create_whishlist_for_user_wrapper(self, user_id:str, name:str):
-
-        try:
-            whishlist_id = self.create_whishlist_for_user(user_id=user_id, name=name)
-        except UserDoesNotExistException:
-            self.presenter.raise_exception_for_user_does_not_exist()
-        except WhishlistAlreadyCreatedException:
-            self.presenter.raise_exception_for_whishlist_already_created()
-        else:
-            return self.presenter.get_response_for_create_whishlist_for_user(whishlist_id=whishlist_id)
-
-    def create_whishlist_for_user(self, user_id:str, name:str):
-
-        """ELP
-            -check if user exists
-            -check if user already has whishlist
-            -create whishlist for user
-        """
-        self._check_if_input_data_is_correct_for_create_whishlist_for_user(user_id=user_id)
-
-        return self.storage.create_whishlist_for_user(user_id=user_id, name=name)
-    
-    def _check_if_input_data_is_correct_for_create_whishlist_for_user(self, user_id:str):
-
-        self.storage.check_if_user_exists(user_id=user_id)
-
-        self.storage.check_if_whishlist_already_created_for_user(user_id=user_id)
-
-
-    def add_item_to_whishlist_wrapper(self, whishlist_id:int, item_id:int):
-        
-        try:
-            self.add_item_to_whishlist(whishlist_id=whishlist_id, item_id=item_id)
-        except WhishlistDoesNotExistException:
-            self.presenter.raise_exception_for_whishlist_does_not_exist()
-        except ItemDoesNotExistException:
-            self.presenter.raise_exception_for_item_does_not_exist()
-        except ItemPropertyDoesNotExistException:
-            self.presenter.raise_exception_for_item_property_does_not_exist()
-        else:
-            return self.presenter.get_response_for_add_item_to_whishlist()
-
-    def add_item_to_whishlist(self, whishlist_id:int, item_id:int, item_properties:list[int]):
-        
-        """ELP
-            -check if whishlist exists
-            -check if item exists
-            -check if item properties exists
-            -add item to whishlist
-        """
-
-        self._check_if_input_data_is_correct_for_add_item_to_whishlist(whishlist_id=whishlist_id, item_id=item_id, item_properties=item_properties)
-
-        return self.storage.add_item_to_whishlist(whishlist_id=whishlist_id, item_id=item_id, item_properties=item_properties)
-    
-    def _check_if_input_data_is_correct_for_add_item_to_whishlist(self, whishlist_id:int, item_id:int, item_properties:list[int]):
-        
-        self.storage.check_if_whishlist_exists(whishlist_id=whishlist_id)
-
-        self.storage.check_if_item_exists(item_id=item_id)
-
-        self.storage.check_if_item_properties_exists(item_properties=item_properties)
-
-
-    def delete_item_from_whishlist_by_item_id_wrapper(self, whishlist_id:int, item_id:int):
-        
-        try:
-            self.delete_item_from_whishlist_by_item_id(whishlist_id=whishlist_id, item_id=item_id)
-        except WhishlistDoesNotExistException:
-            self.presenter.raise_exception_for_whishlist_does_not_exist()
-        except ItemDoesNotExistException:
-            self.presenter.raise_exception_for_item_does_not_exist()
-        except ItemDoesNotExistInWhishlistException:
-            self.presenter.raise_exception_for_item_does_not_exist_in_whishlist()
-        else:
-            return self.presenter.get_response_for_delete_item_from_whishlist()
-
-    def delete_item_from_whishlist_by_item_id(self, whishlist_id:int, item_id:int):
-        
-        """ELP
-            -check if whishlist exists
-            -check if item 
-            -check if item is in whishlist
-            -delete item from whishlist
-        """
-
-        self._check_if_input_data_is_correct_for_delete_item_from_whishlist_by_item_id(whishlist_id=whishlist_id, item_id=item_id)
-
-        return self.storage.delete_item_from_whishlist(whishlist_id=whishlist_id, item_id=item_id)
-    
-    def _check_if_input_data_is_correct_for_delete_item_from_whishlist_by_item_id(self, whishlist_id:int, item_id:int):
-        
-        self.storage.check_if_whishlist_exists(whishlist_id=whishlist_id)
-
-        self.storage.check_if_item_exists(item_id=item_id)
-
-        self.storage.check_if_item_is_in_whishlist(whishlist_id=whishlist_id, item_id=item_id)
-
-
-    def get_recommendations_for_user_wrapper(self, user_id:str):
-        
-        try:
-            recommendations = self.get_recommendations_for_user(user_id=user_id)
-        except UserDoesNotExistException:
-            self.presenter.raise_exception_for_user_does_not_exist()
-        else:
-            return self.presenter.get_response_for_get_recommendations_for_user(recommendations=recommendations)
-        
-    def get_recommendations_for_user(self, user_id:str):
-
-        """ELP
-            -check if user exists
-            -get recommendations for user
-        """
-        self.storage.check_if_user_exists(user_id=user_id)
-
-        return self.storage.get_recommendations_for_user(user_id=user_id)

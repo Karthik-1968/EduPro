@@ -3,6 +3,25 @@ from dataclasses import dataclass
 from typing import Optional
 
 @dataclass
+class UserDTO:
+    id:str
+    name:str
+    email:str
+    contact_number:str
+
+@dataclass
+class AddressDTO:
+    door_no:str
+    street:str
+    city:str
+    district:str
+    state:str
+    country:str
+    pincode:str
+    contact_number:str
+    address_type:str
+
+@dataclass
 class CategoryDTO:
     category_name:str
 
@@ -77,6 +96,14 @@ class OfferDTO:
     coupon_code:Optional[str]=None
     minimum_number_of_items:Optional[int]=None
 
+@dataclass
+class ItemsCartDTO:
+    cart_id:int
+    item_id:int
+    item_properties:list[int]
+    item_warranty_id:Optional[int]
+    item_exchange_properties:Optional[list[int]]
+
 class StorageInterface:
 
     @abstractmethod
@@ -84,16 +111,15 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_user(self, id:str, name:str, email:str, contact_number:str)->str:
+    def create_user(self, user_dto:UserDTO)->str:
         pass
 
     @abstractmethod
-    def check_if_address_already_exists(self, door_no:str, street:str, city:str, district:str, state:str, country:str, pincode:str):
+    def check_if_address_already_exists(self, address_dto:AddressDTO):
         pass
 
     @abstractmethod
-    def create_address(self, door_no:str, street:str, city:str, district:str, state:str, country:str, pincode:str,\
-                                contact_number:str, address_type:str)->int:
+    def create_address(self, address_dto:AddressDTO)->int:
         pass
 
     @abstractmethod
@@ -101,15 +127,15 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def check_if_address_exists(self, address_id:str):
+    def check_if_address_exists(self, address_id:int):
         pass
 
     @abstractmethod
-    def check_if_address_already_added_to_user(self, user_id:str, address_id:str):
+    def check_if_address_already_added_to_user(self, user_id:str, address_id:int):
         pass
 
     @abstractmethod
-    def add_address_to_user(self, user_id:str, address_id:str)->int:
+    def add_address_to_user(self, user_id:str, address_id:int)->int:
         pass
 
     @abstractmethod
@@ -129,7 +155,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_item(self, item_name:str, category_id:int, price:float, number_of_left_in_stock:int, number_of_purchases_in_last_month:int)->int:
+    def create_item(self, item_dto:ItemDTO)->int:
         pass
 
     @abstractmethod
@@ -289,8 +315,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def add_item_to_cart(self, cart_id:int, item_id:int, item_warranty_id:Optional[int], item_properties:list[int], \
-                         item_exchange_property_ids:Optional[list[int]]):
+    def add_item_to_cart(self, itemscart_dto:ItemsCartDTO)->int:
         pass
 
     @abstractmethod
@@ -499,4 +524,20 @@ class StorageInterface:
 
     @abstractmethod
     def delete_item_from_whishlist(self, item_id:int, whishlist_id:int):
+        pass
+
+    @abstractmethod
+    def get_list_best_selling_items(self)->list[int]:
+        pass
+
+    @abstractmethod
+    def get_list_of_top_rated_items(self)->list[int]:
+        pass
+
+    @abstractmethod
+    def get_recently_viewed_item_by_user(self, user_id:str)->int:
+        pass
+
+    @abstractmethod
+    def check_if_user_viewed_any_item(self, user_id:str):
         pass
