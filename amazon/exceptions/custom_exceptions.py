@@ -105,3 +105,12 @@ class ItemWarrantyDoesNotExistException(Exception):
 
 class ItemDoesNotExistInCartException(Exception):
     pass
+
+class WhishlistAlreadyCreatedException(Exception):
+    pass
+
+class WhishlistDoesNotExistException(Exception):
+    pass
+
+class ItemDoesNotExistInWhishlistException(Exception):
+    pass

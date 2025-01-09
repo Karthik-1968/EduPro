@@ -24,7 +24,8 @@ from django_swagger_utils.drf_server.utils.general.import_app_settings import \
 THIRD_PARTY_APPS = []
 APPS = [
     "edu_core",
-    "type_form"
+    "type_form",
+    "amazon"
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS

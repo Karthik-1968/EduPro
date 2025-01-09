@@ -228,7 +228,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_missing_paymentmethod_id(self):
+    def raise_exception_for_missing_payment_method_id(self):
         pass
 
     @abstractmethod
@@ -617,4 +617,32 @@ class PresenterInterface:
 
     @abstractmethod
     def get_response_for_delete_item_from_cart(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_whishlist_already_created(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_whishlist_for_user(self, whishlist_id:int):
+        pass
+
+    @abstractmethod
+    def get_response_for_get_recommendations_for_user(self, recommendations:list[int])->list[dict]:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_whishlist_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_item_to_whishlist(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_item_does_not_exist_in_whishlist(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_delete_item_from_whishlist(self):
         pass

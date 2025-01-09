@@ -13,7 +13,7 @@ class PaymentInteractor:
         self.presenter = presenter
 
 
-    def create_card_payment_method(self, payment_type:str, card_name:str, card_number:str, card_holder_name:str, cvv:int, \
+    def create_card_payment_method(self, payment_type:str, card_name:str, card_number:str, card_holder_name:str, cvv:str, \
                                    expiry_date:str, card_type:str):
 
         """ELP
@@ -33,7 +33,7 @@ class PaymentInteractor:
 
         return self.presenter.get_response_for_create_card_payment_method(paymentmethod_id=paymentmethod_id)
 
-    def _validate_input_data_for_create_card_payment(self, payment_type:str, card_name, card_number:str, card_holder_name:str, cvv:int, \
+    def _validate_input_data_for_create_card_payment(self, payment_type:str, card_name, card_number:str, card_holder_name:str, cvv:str, \
                                                     expiry_date:str):
 
         payment_type_not_present = not payment_type
@@ -173,9 +173,22 @@ class PaymentInteractor:
 
         return self.storage.create_cash_on_delivery_payment_method(paymentmethod_dto=paymentmethod_dto)
 
-        
-    def add_payment_method_to_order(self, order_id:int, paymentmethod_id:int, status:str, amount:float, transaction_id:str,\
-                                     gift_card_or_promo_code:Optional[str]):
+    def add_payment_method_to_order_wrapper(self, order_id:int, payment_method_id:int, payment_status:str, amount:float, transaction_id:str,\
+                                            gift_card_or_promo_code:Optional[str]):
+
+        orderpayment_dto = OrderPaymentDTO(order_id=order_id, payment_method_id=payment_method_id, payment_status=payment_status, \
+                            amount=amount, transaction_id=transaction_id, gift_card_or_promo_code=gift_card_or_promo_code)
+
+        try:
+            payment_id = self.add_payment_method_to_order(orderpayment_dto=orderpayment_dto)
+        except OrderDoesNotExistException:
+            self.presenter.raise_exception_for_order_does_not_exist()
+        except PaymentMethodDoesNotExistException:
+            self.presenter.raise_exception_for_payment_method_does_not_exist()
+        else:
+            return self.presenter.get_response_for_add_payment_method_to_order(payment_id=payment_id)
+
+    def add_payment_method_to_order(self, orderpayment_dto: OrderPaymentDTO):
 
         """ELP
             validate input details
@@ -188,48 +201,36 @@ class PaymentInteractor:
             check if paymentmethod exists
             add payment to order
         """    
-        self._validate_input_details(order_id=order_id, paymentmethod_id=paymentmethod_id, status=status, amount=amount, \
-            transaction_id=transaction_id)
+        self._validate_input_details_for_add_payment_to_order(orderpayment_dto=orderpayment_dto)
 
-        self._check_if_input_data_is_correct_for_add_payment_to_order(order_id=order_id, paymentmethod_id=paymentmethod_id)
+        self._check_if_input_data_is_correct_for_add_payment_to_order(orderpayment_dto=orderpayment_dto)
 
-        orderpayment_dto = OrderPaymentDTO(order_id=order_id, paymentmethod_id=paymentmethod_id, status=status, amount=amount, \
-                                            transaction_id=transaction_id, gift_card_or_promo_code=gift_card_or_promo_code)
+        return self.storage.add_payment_method_to_order(orderpayment_dto=orderpayment_dto)
 
-        payment_id = self.storage.add_payment_method_to_order(orderpayment_dto=orderpayment_dto)
+    def _validate_input_details_for_add_payment_to_order(self, orderpayment_dto: OrderPaymentDTO):
 
-        return self.presenter.get_response_for_add_payment_method_to_order(payment_id=payment_id)
-
-    def _validate_input_details(self, order_id:int, paymentmethod_id:int, status:str, amount:float, transaction_id:str):
-
-        order_id_not_present = not order_id
+        order_id_not_present = not orderpayment_dto.order_id
         if order_id_not_present:
             self.presenter.raise_exception_for_missing_order_id()
 
-        paymentmethod_id_not_present = not paymentmethod_id
-        if paymentmethod_id_not_present:
-            self.presenter.raise_exception_for_missing_paymentmethod_id()
+        payment_method_id_not_present = not orderpayment_dto.payment_method_id
+        if payment_method_id_not_present:
+            self.presenter.raise_exception_for_missing_payment_method_id()
 
-        status_not_present = not status
-        if status_not_present:
+        payment_status_not_present = not orderpayment_dto.payment_status
+        if payment_status_not_present:
             self.presenter.raise_exception_for_missing_payment_status()
 
-        amount_not_present = not amount
+        amount_not_present = not orderpayment_dto.amount
         if amount_not_present:
             self.presenter.raise_exception_for_missing_amount()
 
-        transaction_id_not_present = not transaction_id
+        transaction_id_not_present = not orderpayment_dto.transaction_id
         if transaction_id_not_present:
             self.presenter.raise_exception_for_missing_transaction_id()
 
-    def _check_if_input_data_is_correct_for_add_payment_to_order(self, order_id:int, paymentmethod_id:int):
+    def _check_if_input_data_is_correct_for_add_payment_to_order(self, orderpayment_dto: OrderPaymentDTO):
         
-        try:
-            self.storage.check_if_order_exists(order_id=order_id)
-        except OrderDoesNotExistException:
-            self.presenter.raise_exception_for_order_does_not_exist()
+        self.storage.check_if_order_exists(order_id=orderpayment_dto.order_id)
 
-        try:
-            self.storage.check_if_payment_method_exists(paymentmethod_id=paymentmethod_id)
-        except PaymentMethodDoesNotExistException:
-            self.presenter.raise_exception_for_payment_method_does_not_exist()
+        self.storage.check_if_payment_method_exists(payment_method_id=orderpayment_dto.payment_method_id)

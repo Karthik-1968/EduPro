@@ -18,7 +18,7 @@ class ItemDTO:
 class OrderDTO:
     user_id:str
     address_id:int
-    status:str
+    order_status:str
     delivery_date:str
     delivery_charges:Optional[float]
     receiving_person_name:Optional[str]
@@ -44,11 +44,11 @@ class PaymentMethodDTO:
 @dataclass
 class OrderPaymentDTO:
     order_id:int
-    paymentmethod_id:int
-    status:str
+    payment_method_id:int
+    payment_status:str
     amount:int
     transaction_id:str
-    gift_card_or_promo_code:str
+    gift_card_or_promo_code:Optional[str]
 
 @dataclass
 class EmiDTO:
@@ -129,7 +129,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_item(self, item_name:str, category_id:int, price:float, number_of_left_in_stock:int)->int:
+    def create_item(self, item_name:str, category_id:int, price:float, number_of_left_in_stock:int, number_of_purchases_in_last_month:int)->int:
         pass
 
     @abstractmethod
@@ -217,7 +217,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def check_if_payment_method_exists(self, paymentmethod_id:int):
+    def check_if_payment_method_exists(self, payment_method_id:int):
         pass
 
     @abstractmethod
@@ -471,4 +471,32 @@ class StorageInterface:
 
     @abstractmethod
     def delete_item_from_cart(self, item_id:int, cart_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_whishlist_already_created_for_user(self, user_id:str):
+        pass
+
+    @abstractmethod
+    def create_whishlist_for_user(self, user_id:str, name:str)->int:
+        pass
+
+    @abstractmethod
+    def get_recommendations_for_user(self, user_id:str)->list[int]:
+        pass
+
+    @abstractmethod
+    def check_if_whishlist_exists(self, whishlist_id:int):
+        pass
+
+    @abstractmethod
+    def add_item_to_whishlist(self, whishlist_id:int, item_id:int, item_properties:list[int]):
+        pass
+
+    @abstractmethod
+    def check_if_item_is_in_whishlist(self, item_id:int, whishlist_id:int):
+        pass
+
+    @abstractmethod
+    def delete_item_from_whishlist(self, item_id:int, whishlist_id:int):
         pass
