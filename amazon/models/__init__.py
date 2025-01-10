@@ -21,7 +21,7 @@ from .exchangeproperty import ExchangeProperty
 from .itememi import ItemEmi
 from .itemoffer import ItemOffer
 from .itemexchangeproperty import ItemExchangeProperty
-from .delivery_availability import DeliveryAvailability
+from .deliveryavailability import DeliveryAvailability
 from .rating import Rating
 from .exchangevalue import ExchangeValue
 from .refund import Refund

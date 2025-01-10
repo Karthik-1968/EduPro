@@ -5,7 +5,7 @@ from .item import Item
 from .itemproperty import ItemProperty
 from .itemwarranty import ItemWarranty
 from .cart import Cart
-from .delivery_availability import DeliveryAvailability
+from .deliveryavailability import DeliveryAvailability
 from .deliveryservice import DeliveryService
 
 
