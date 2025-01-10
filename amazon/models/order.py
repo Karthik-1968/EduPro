@@ -6,6 +6,8 @@ from .itemproperty import ItemProperty
 from .itemwarranty import ItemWarranty
 from .cart import Cart
 from .delivery_availability import DeliveryAvailability
+from .deliveryservice import DeliveryService
+
 
 class Order(models.Model):
 
@@ -19,6 +21,7 @@ class Order(models.Model):
     itemproperties = models.ManyToManyField(ItemProperty, related_name="orders", null=True, blank=True)
     delivery_charges = models.FloatField(null=True, blank=True)
     receiving_person_name = models.CharField(max_length=100, null=True, blank=True)
+    delivered_by = models.ForeignKey(DeliveryService, on_delete=models.CASCADE, related_name="orders", null=True, blank=True)
     itemwarranty = models.ForeignKey(ItemWarranty, on_delete=models.CASCADE, related_name="orders", null=True, blank=True)
     delivery_availability = models.ForeignKey(DeliveryAvailability, on_delete=models.CASCADE, related_name="orders", null=True, blank=True)
     
