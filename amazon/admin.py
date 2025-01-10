@@ -1,1 +1,31 @@
-# your django admin
+from django.contrib import admin
+from amazon.models import User, Address, Item, ItemProperty, Cart, Order, ItemsCart, UserAddress, Category, ItemsWhishlist, Payment, Whishlist, \
+           PaymentMethod, Property, ItemView, Emi, ItemWarranty, Offer, Warranty, ExchangeProperty, ItemEmi, ItemOffer, \
+            ItemExchangeProperty, DeliveryAvailability, Rating, ExchangeValue
+
+admin.site.register(User)
+admin.site.register(Address)
+admin.site.register(Item)
+admin.site.register(ItemProperty)
+admin.site.register(Cart)
+admin.site.register(Order)
+admin.site.register(ItemsCart)
+admin.site.register(UserAddress)
+admin.site.register(Category)
+admin.site.register(ItemsWhishlist)
+admin.site.register(Payment)
+admin.site.register(Whishlist)
+admin.site.register(PaymentMethod)
+admin.site.register(Property)
+admin.site.register(ItemView)
+admin.site.register(Emi)
+admin.site.register(ItemWarranty)
+admin.site.register(Offer)
+admin.site.register(Warranty)
+admin.site.register(ExchangeProperty)
+admin.site.register(ItemEmi)
+admin.site.register(ItemOffer)
+admin.site.register(ItemExchangeProperty)
+admin.site.register(DeliveryAvailability)
+admin.site.register(Rating)
+admin.site.register(ExchangeValue)

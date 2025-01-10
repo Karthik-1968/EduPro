@@ -26,7 +26,6 @@ class ItemPerformanceInteractor:
         """ELP
             -get list of top rated items
         """
-
         top_rated_items = self.storage.get_list_of_top_rated_items()
 
         return self.presenter.get_response_for_list_of_top_rated_items(top_rated_items=top_rated_items)

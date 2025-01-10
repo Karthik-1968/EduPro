@@ -13,9 +13,21 @@ from .whishlist import Whishlist
 from .paymentmethod import PaymentMethod
 from .property import Property
 from .itemviews import ItemView
+from .emi import Emi
+from .itemwarranty import ItemWarranty
+from .offer import Offer
+from .warranty import Warranty
+from .exchangeproperty import ExchangeProperty
+from .itememi import ItemEmi
+from .itemoffer import ItemOffer
+from .itemexchangeproperty import ItemExchangeProperty
+from .delivery_availability import DeliveryAvailability
+from .rating import Rating
+from .exchangevalue import ExchangeValue
 
 __all__ = [User, Address, Item, ItemProperty, Cart, Order, ItemsCart, UserAddress, Category, ItemsWhishlist, Payment, Whishlist, \
-           PaymentMethod, Property, ItemView]
+           PaymentMethod, Property, ItemView, Emi, ItemWarranty, Offer, Warranty, ExchangeProperty, ItemEmi, ItemOffer, \
+            ItemExchangeProperty, DeliveryAvailability, Rating, ExchangeValue]
 
 # class DummyModel(AbstractDateTimeModel):
 #     """

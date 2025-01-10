@@ -1,6 +1,5 @@
 from django.db import models
 from .category import Category
-from .property import Property
 
 class Item(models.Model):
 
@@ -10,4 +9,3 @@ class Item(models.Model):
     number_of_left_in_stock = models.IntegerField()
     number_of_purchases_in_last_month = models.IntegerField()
     views = models.IntegerField(default=0)
-    properties = models.ManyToManyField(Property, related_name="items")

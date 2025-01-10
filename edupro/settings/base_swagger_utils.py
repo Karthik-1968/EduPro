@@ -71,7 +71,8 @@ SWAGGER_UTILS = {
     },
     "APPS": {
         "edu_core": {"dsu_version": "1.0"},
-        "type_form": {"dsu_version": "1.0"}
+        "type_form": {"dsu_version": "1.0"},
+        "amazon": {"dsu_version": "1.0"}
     },
     "HOST": os.environ.get('APIGATEWAY_ENDPOINT', '127.0.0.1:8000'),
 }
