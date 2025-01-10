@@ -10,25 +10,34 @@ class ItemPerformanceInteractor:
         self.storage = storage
         self.presenter = presenter
 
+
+    def get_list_best_selling_items_wrapper(self):
+        
+        best_selling_items_dtos = self.get_list_best_selling_items()
+
+        return self.presenter.get_response_for_list_best_selling_items(best_selling_items_dtos=best_selling_items_dtos)
+
     def get_list_best_selling_items(self):
 
         """ELP
             -get list of best selling items
         """
 
-        best_selling_items = self.storage.get_list_best_selling_items()
+        return self.storage.get_list_best_selling_items()
 
-        return self.presenter.get_response_for_list_best_selling_items(best_selling_items=best_selling_items)
     
+    def get_list_of_top_rated_items_wrapper(self):
+        
+        top_rated_items_dtos = self.get_list_of_top_rated_items()
 
+        return self.presenter.get_response_for_list_of_top_rated_items(top_rated_items_dtos=top_rated_items_dtos)
+    
     def get_list_of_top_rated_items(self):
         
         """ELP
             -get list of top rated items
         """
-        top_rated_items = self.storage.get_list_of_top_rated_items()
-
-        return self.presenter.get_response_for_list_of_top_rated_items(top_rated_items=top_rated_items)
+        return self.storage.get_list_of_top_rated_items()
     
 
     def get_recently_viewed_item_by_user_wrapper(self, user_id:str):

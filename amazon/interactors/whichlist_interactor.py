@@ -113,11 +113,11 @@ class WhichListInteractor:
     def get_recommendations_for_user_wrapper(self, user_id:str):
         
         try:
-            recommendations = self.get_recommendations_for_user(user_id=user_id)
+            recommendations_dtos = self.get_recommendations_for_user(user_id=user_id)
         except UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
         else:
-            return self.presenter.get_response_for_get_recommendations_for_user(recommendations=recommendations)
+            return self.presenter.get_response_for_get_recommendations_for_user(recommendations_dtos=recommendations_dtos)
         
     def get_recommendations_for_user(self, user_id:str):
 

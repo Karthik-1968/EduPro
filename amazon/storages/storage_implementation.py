@@ -1,9 +1,10 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.models import User, Address, UserAddress, Category, Item, Property, ItemProperty, Cart, ItemsCart, Order, Whishlist, \
-    ItemsWhishlist, PaymentMethod, Payment, ItemView, Rating
+    ItemsWhishlist, PaymentMethod, Payment, ItemView, Rating, Refund
 from amazon.exceptions import custom_exceptions
 from amazon.interactors.storage_interfaces.storage_interface import UserDTO, AddressDTO, CategoryDTO, ItemDTO, ItemsCartDTO,\
-    OrderDTO, PaymentMethodDTO, OrderPaymentDTO, RatingDTO
+    OrderDTO, PaymentMethodDTO, OrderPaymentDTO, RatingDTO, ItemIdDTO, RefundDTO
+from django.db.models import Avg
 
 class StorageImplementation(StorageInterface):
 
@@ -454,7 +455,16 @@ class StorageImplementation(StorageInterface):
             for item in items:
                 recommendations.append(item.id)
 
-        return list(set(recommendations))
+        unique_recommendations = list(set(recommendations))
+
+        recommendations_dtos = []
+
+        for item in unique_recommendations:
+            item_id_dto = ItemIdDTO(
+                item_id=item
+            )
+            recommendations_dtos.append(item_id_dto)
+        return recommendations_dtos
     
     def get_item_details(self, item_id:int)->ItemDTO:
 
@@ -477,20 +487,26 @@ class StorageImplementation(StorageInterface):
     def get_list_best_selling_items(self)->list[int]:
         
         items = Item.objects.all().order_by('-number_of_purchases_in_last_month')[:100]
-        best_selling_items = []
+        best_selling_items_dtos = []
         for item in items:
-            best_selling_items.append(item.id)
+            item_id_dto = ItemIdDTO(
+                item_id=item.id
+            )
+            best_selling_items_dtos.append(item_id_dto)
 
-        return best_selling_items
+        return best_selling_items_dtos
     
-    def get_list_of_top_rated_items(self)->list[int]:
+    def get_list_of_top_rated_items(self)->list[ItemIdDTO]:
         
-        items = Item.objects.all().order_by('-rating')[:100]
-        top_rated_items = []
+        top_rated_items_dtos = []
+        items = Item.objects.annotate(avg_rating=Avg('ratings__rating')).order_by('-avg_rating')[:100]
         for item in items:
-            top_rated_items.append(item.id)
-
-        return top_rated_items
+            item_id_dto = ItemIdDTO(
+                item_id=item.id
+            )
+            top_rated_items_dtos.append(item_id_dto)
+        
+        return top_rated_items_dtos
     
     def check_if_user_viewed_any_item(self, user_id:str):
 
@@ -546,3 +562,34 @@ class StorageImplementation(StorageInterface):
         )
 
         return rating_dto
+    
+    def create_refund_request(self, refund_dto:RefundDTO)->int:
+
+        refund = Refund.objects.create(
+            user_id=refund_dto.user_id,
+            order_id=refund_dto.order_id,
+            amount=refund_dto.amount,
+            refund_status=refund_dto.refund_status,
+            payment_date=refund_dto.payment_date,
+            reason=refund_dto.reason
+        )
+
+        return refund.id
+    
+    def check_if_refund_exists(self, refund_id:int):
+        
+        refund = Refund.objects.filter(id=refund_id).exists()
+        refund_not_exists = not refund
+
+        if refund_not_exists:
+            raise custom_exceptions.RefundDoesNotExistException
+        
+    
+    def update_refund_status_after_refunded(self, refund_id:int):
+        
+        refund = Refund.objects.get(id=refund_id)
+        refund.refund_status = "Refunded"
+        refund.save()
+
+        refund.order.order_status = "Refunded"
+        refund.order.save()

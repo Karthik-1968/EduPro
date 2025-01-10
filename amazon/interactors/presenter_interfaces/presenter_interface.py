@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from amazon.interactors.storage_interfaces.storage_interface import CategoryDTO, ItemDTO, OrderDTO, RatingDTO
+from amazon.interactors.storage_interfaces.storage_interface import CategoryDTO, ItemDTO, OrderDTO, RatingDTO, ItemIdDTO
 
 class PresenterInterface:
 
@@ -652,7 +652,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_list_of_top_rated_items(self, top_rated_items:list[int])->list[dict]:
+    def get_response_for_list_of_top_rated_items(self, top_rated_items:list[ItemIdDTO])->list[dict]:
         pass
 
     @abstractmethod
@@ -664,9 +664,21 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_recommendations_for_multiple_users(self, recommendations:list[int])->list[dict]:
+    def get_response_for_recommendations_for_multiple_users(self, recommendations_dtos:list[ItemDTO]])->list[dict]:
         pass
 
     @abstractmethod
     def raise_exception_for_user_already_rated_item(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_refund_request(self, refund_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_refund_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_update_refund_status_after_refunded(self):
         pass

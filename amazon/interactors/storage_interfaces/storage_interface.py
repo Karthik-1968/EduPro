@@ -109,6 +109,19 @@ class RatingDTO:
     user_id:str
     rating:int
 
+@dataclass
+class ItemIdDTO:
+    item_id:int
+
+@dataclass
+class RefundDTO:
+    user_id:str
+    order_id:int
+    amount:float
+    refund_status:str
+    payment_date:int
+    reason:str
+
 class StorageInterface:
 
     @abstractmethod
@@ -512,7 +525,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_recommendations_for_user(self, user_id:str)->list[int]:
+    def get_recommendations_for_user(self, user_id:str)->list[ItemIdDTO]:
         pass
 
     @abstractmethod
@@ -532,11 +545,11 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_list_best_selling_items(self)->list[int]:
+    def get_list_best_selling_items(self)->list[ItemIdDTO]:
         pass
 
     @abstractmethod
-    def get_list_of_top_rated_items(self)->list[int]:
+    def get_list_of_top_rated_items(self)->list[ItemIdDTO]:
         pass
 
     @abstractmethod
@@ -549,4 +562,16 @@ class StorageInterface:
 
     @abstractmethod
     def check_if_user_already_rated_item(self, item_id:int, user_id:str):
+        pass
+
+    @abstractmethod
+    def create_refund_request(self, refund_dto:RefundDTO)->int:
+        pass
+
+    @abstractmethod
+    def check_if_refund_exists(self, refund_id:int):
+        pass
+
+    @abstractmethod
+    def update_refund_status_after_refunded(self, refund_id:int):
         pass

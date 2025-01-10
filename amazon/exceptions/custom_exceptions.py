@@ -120,3 +120,6 @@ class UserHasNotViewedAnyItemException(Exception):
 
 class UserAlreadyRatedItemException(Exception):
     pass
+
+class RefundDoesNotExistException(Exception):
+    pass
