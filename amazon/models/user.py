@@ -8,4 +8,3 @@ class User(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True)
     contact_number = models.CharField(max_length=10, unique=True)
-    address = models.ManyToManyField('Address', related_name='user_address')

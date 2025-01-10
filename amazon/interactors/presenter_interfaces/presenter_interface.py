@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from amazon.interactors.storage_interfaces.storage_interface import CategoryDTO, ItemDTO, OrderDTO
+from amazon.interactors.storage_interfaces.storage_interface import CategoryDTO, ItemDTO, OrderDTO, RatingDTO
 
 class PresenterInterface:
 
@@ -396,7 +396,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_create_rating_for_item(self, item_rating_id:int):
+    def get_response_for_rate_an_item(self, item_rating_id:int):
         pass
 
     @abstractmethod
@@ -412,7 +412,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_get_item_rating(self, item_rating:float):
+    def get_response_for_ratings_of_an_item(self, rating_dtos:list[RatingDTO])->list[dict]:
         pass
 
     @abstractmethod
@@ -665,4 +665,8 @@ class PresenterInterface:
 
     @abstractmethod
     def get_response_for_recommendations_for_multiple_users(self, recommendations:list[int])->list[dict]:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_user_already_rated_item(self):
         pass

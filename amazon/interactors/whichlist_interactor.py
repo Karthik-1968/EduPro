@@ -6,7 +6,7 @@ from amazon.exceptions.custom_exceptions import ItemDoesNotExistException, ItemP
 
 class WhichListInteractor:
 
-    def __int__(self, storage: StorageInterface, presenter: PresenterInterface):
+    def __init__(self, storage: StorageInterface, presenter: PresenterInterface):
         self.storage = storage
         self.presenter = presenter
 

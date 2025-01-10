@@ -140,33 +140,6 @@ class Migration(migrations.Migration):
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
         migrations.CreateModel(
-            name="Rating",
-            fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("five_stars_rating", models.IntegerField(default=0)),
-                ("four_stars_rating", models.IntegerField(default=0)),
-                ("three_stars_rating", models.IntegerField(default=0)),
-                ("two_stars_rating", models.IntegerField(default=0)),
-                ("one_star_rating", models.IntegerField(default=0)),
-                (
-                    "item",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="ratings",
-                        to="amazon.item",
-                    ),
-                ),
-            ],
-        ),
-        migrations.CreateModel(
             name="ItemWarranty",
             fields=[
                 (

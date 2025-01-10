@@ -117,3 +117,6 @@ class ItemDoesNotExistInWhishlistException(Exception):
 
 class UserHasNotViewedAnyItemException(Exception): 
     pass
+
+class UserAlreadyRatedItemException(Exception):
+    pass

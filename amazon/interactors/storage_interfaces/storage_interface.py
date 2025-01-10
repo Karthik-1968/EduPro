@@ -104,6 +104,11 @@ class ItemsCartDTO:
     item_warranty_id:Optional[int]
     item_exchange_properties:Optional[list[int]]
 
+@dataclass
+class RatingDTO:
+    user_id:str
+    rating:int
+
 class StorageInterface:
 
     @abstractmethod
@@ -319,7 +324,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_rating_for_item(self, item_id:int)->int:
+    def rate_an_item(self, item_id:int, user_id:str, rating:str)->int:
         pass
 
     @abstractmethod
@@ -331,7 +336,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_item_rating(self, item_id:int)->float:
+    def get_ratings_of_an_item(self, item_id:int)->list[RatingDTO]:
         pass
 
     @abstractmethod
@@ -540,4 +545,8 @@ class StorageInterface:
 
     @abstractmethod
     def check_if_user_viewed_any_item(self, user_id:str):
+        pass
+
+    @abstractmethod
+    def check_if_user_already_rated_item(self, item_id:int, user_id:str):
         pass

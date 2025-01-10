@@ -10,7 +10,7 @@ from .delivery_availability import DeliveryAvailability
 class Order(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    Item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True, blank=True)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True, blank=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True)
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
     order_status = models.CharField(max_length=255)

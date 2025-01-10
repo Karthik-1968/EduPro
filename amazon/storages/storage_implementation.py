@@ -1,9 +1,9 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.models import User, Address, UserAddress, Category, Item, Property, ItemProperty, Cart, ItemsCart, Order, Whishlist, \
-    ItemsWhishlist, PaymentMethod, Payment, ItemView
+    ItemsWhishlist, PaymentMethod, Payment, ItemView, Rating
 from amazon.exceptions import custom_exceptions
 from amazon.interactors.storage_interfaces.storage_interface import UserDTO, AddressDTO, CategoryDTO, ItemDTO, ItemsCartDTO,\
-    OrderDTO, PaymentMethodDTO, OrderPaymentDTO
+    OrderDTO, PaymentMethodDTO, OrderPaymentDTO, RatingDTO
 
 class StorageImplementation(StorageInterface):
 
@@ -241,7 +241,7 @@ class StorageImplementation(StorageInterface):
             user_id=order_dto.user_id,
             item_id=order_dto.item_id,
             address_id=order_dto.address_id,
-            order_status=order_dto.order_status
+            order_status=order_dto.order_status,
             delivary_date=order_dto.delivary_date
         )
 
@@ -335,7 +335,7 @@ class StorageImplementation(StorageInterface):
             card_number=paymentmethod_dto.card_number,
             card_holder_name=paymentmethod_dto.card_holder_name,
             cvv=paymentmethod_dto.cvv,
-            expiry_date=paymentmethod_dto.expiry_date
+            expiry_date=paymentmethod_dto.expiry_date,
             card_type=paymentmethod_dto.card_type
         )
 
@@ -412,12 +412,12 @@ class StorageImplementation(StorageInterface):
         if paymentmethod_not_exists:
             raise custom_exceptions.PaymentMethodDoesNotExistException
         
-    def add_payment_method_to_order(self, orderpayment_dto:OrderPaymentDTO)->:
+    def add_payment_method_to_order(self, orderpayment_dto:OrderPaymentDTO)->int:
         
         payment = Payment.objects.create(
             order_id=orderpayment_dto.order_id,
             payment_method_id=orderpayment_dto.payment_method_id,
-            amount=orderpayment_dto.amount
+            amount=orderpayment_dto.amount,
             payment_status=orderpayment_dto.payment_status,
             transaction_id=orderpayment_dto.transaction_id
         )
@@ -454,7 +454,7 @@ class StorageImplementation(StorageInterface):
             for item in items:
                 recommendations.append(item.id)
 
-        return recommendations
+        return list(set(recommendations))
     
     def get_item_details(self, item_id:int)->ItemDTO:
 
@@ -504,3 +504,45 @@ class StorageImplementation(StorageInterface):
         item = ItemView.objects.filter(user_id=user_id).order_by('-viewed_at').values_list('item_id', flat=True)[:1]
         
         return item
+    
+    def rate_an_item(self, item_id:int, user_id:str, rating:str)->int:
+
+        item_rating = Rating.objects.create(item_id=item_id, user_id=user_id, rating=rating)
+
+        return item_rating.id
+    
+    def check_if_item_is_rated(self, item_id:int):
+
+        item_rating = Rating.objects.filter(item_id=item_id).exists()
+        item_rating_not_exists = not item_rating
+
+        if item_rating_not_exists:
+            raise custom_exceptions.ItemIsNotRatedException
+
+    def check_if_user_already_rated_item(self, item_id:int, user_id:str):
+
+        item_rating = Rating.objects.filter(item_id=item_id, user_id=user_id).exists()
+        item_rating_exists = item_rating
+
+        if item_rating_exists:
+            raise custom_exceptions.UserAlreadyRatedItemException
+        
+    def get_ratings_of_an_item(self, item_id:int)->list[RatingDTO]:
+
+        ratings = Rating.objects.filter(item_id=item_id)
+        rating_dtos = []
+
+        for rating in ratings:
+            rating_dto = self._convert_rating_object_to_dto(rating)
+            rating_dtos.append(rating_dto)
+        
+        return rating_dtos
+    
+    def _convert_rating_object_to_dto(rating)->RatingDTO:
+        
+        rating_dto = RatingDTO(
+            user_id=rating.user_id,
+            rating=rating.rating
+        )
+
+        return rating_dto
