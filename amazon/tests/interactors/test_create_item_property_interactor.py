@@ -1,7 +1,7 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from amazon.exceptions.custom_exceptions import PropertyAlreadyExists 
-from amazon.interactors.item_interactor import ItemInteractor
+from amazon.interactors.item_interactors.item_interactor import ItemInteractor
 from mock import create_autospec
 from django.core.exceptions import BadRequest
 import pytest

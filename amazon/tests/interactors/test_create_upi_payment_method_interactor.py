@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.storage_interface import StorageInter
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from amazon.exceptions.custom_exceptions import PaymentMethodAlreadyExistsException
 from django_swagger_utils.drf_server.exceptions import BadRequest
-from amazon.interactors.storage_interfaces.storage_interface import PaymentMethodDTO
+from amazon.interactors.storage_interfaces.dtos import PaymentMethodDTO
 from amazon.interactors.payment_interactor import PaymentInteractor
 from mock import create_autospec
 import pytest

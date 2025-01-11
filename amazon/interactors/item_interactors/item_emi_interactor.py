@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.storage_interface import StorageInter
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from amazon.exceptions.custom_exceptions import EmiAlreadyExistsException, ItemDoesNotExistException, EmiDoesNotExistException
 from typing import Optional
-from amazon.interactors.storage_interfaces.storage_interface import EmiDTO
+from amazon.interactors.storage_interfaces.dtos import EmiDTO
 
 
 class ItemEmiInteractor:
@@ -13,9 +13,7 @@ class ItemEmiInteractor:
         self.presenter = presenter
 
 
-    def create_debit_card_emi(self, emi_type:str, card_name:str, minimum_purchase_value:Optional[float], number_of_months:int, \
-                              interest_in_rupees:float, interest_in_percentage:float, total_amount:float, processing_fee:Optional[float],
-                              discount:Optional[float]):
+    def create_debit_card_emi(self, emi_dto:EmiDTO):
         """ELP
             -validate input details
                 -validate emi_type
@@ -28,10 +26,6 @@ class ItemEmiInteractor:
             -check if emi exists
             create debit card emi
         """
-        emi_dto = EmiDTO(emi_type=emi_type, card_name=card_name, minimum_purchase_value=minimum_purchase_value,\
-                         number_of_months=number_of_months, interest_in_rupees=interest_in_rupees, interest_in_percentage=interest_in_percentage,\
-                            total_amount=total_amount, processing_fee=processing_fee, discount=discount)
-        
         self._validate_input_details_for_debit_card_emi(emi_dto=emi_dto)
 
         try:
@@ -69,9 +63,7 @@ class ItemEmiInteractor:
         if total_amount_not_present:
             self.presenter.raise_exception_for_missing_total_amount()
 
-    def create_no_cost_emi(self, emi_type:str, card_name:str, minimum_purchase_value:Optional[float], number_of_months:int, \
-                              interest_in_rupees:float, interest_in_percentage:float, total_amount:float, \
-                                processing_fee:Optional[float], discount:float):
+    def create_no_cost_emi(self, emi_dto:EmiDTO):
 
         """ELP
             -validate input details
@@ -85,10 +77,6 @@ class ItemEmiInteractor:
             -check if emi exists
             -create no cost emi
         """
-        emi_dto = EmiDTO(emi_type=emi_type, card_name=card_name, minimum_purchase_value=minimum_purchase_value,\
-                            number_of_months=number_of_months, interest_in_rupees=interest_in_rupees, \
-                                interest_in_percentage=interest_in_percentage, total_amount=total_amount, \
-                                    processing_fee=processing_fee, discount=discount)
         
         self._validate_input_details_for_no_cost_emi(emi_dto=emi_dto)
 
@@ -128,19 +116,12 @@ class ItemEmiInteractor:
             self.presenter.raise_exception_for_missing_total_amount()
 
 
-    def create_other_emi_type(self, emi_type:str, card_name:str, minimum_purchase_value:Optional[float], number_of_months:int, \
-                              interest_in_rupees:float, interest_in_percentage:float, total_amount:float, \
-                                processing_fee:Optional[float], discount:Optional[float]):
+    def create_other_emi_type(self, emi_dto:EmiDTO):
         
         """ELP
             -check if emi exists
             -create other emi type
         """
-        emi_dto = EmiDTO(emi_type=emi_type, card_name=card_name, minimum_purchase_value=minimum_purchase_value, \
-                            number_of_months=number_of_months, interest_in_rupees=interest_in_rupees, \
-                                interest_in_percentage=interest_in_percentage, total_amount=total_amount, \
-                                    processing_fee=processing_fee, discount=discount)
-        
         try:
             self.storage.check_if_emi_already_exists(emi_dto=emi_dto)
         except EmiAlreadyExistsException:

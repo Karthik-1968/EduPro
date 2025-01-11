@@ -1,9 +1,7 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
-from amazon.exceptions.custom_exceptions import ItemAlreadyExistsException, CategoryDoesNotExistException, ItemDoesNotExistException, \
-    PropertyAlreadyExistsException, PropertyDoesNotExistException, PropertyAlreadyAddedToItemException, \
-        ItemPropertyDoesNotExistException, UserDoesNotExistException
-from amazon.interactors.storage_interfaces.storage_interface import ItemDTO
+from amazon.exceptions import custom_exceptions
+from amazon.interactors.storage_interfaces.dtos import ItemDTO
 
 class ItemInteractor:
 
@@ -12,7 +10,7 @@ class ItemInteractor:
         self.presenter = presenter
 
 
-    def create_item(self, item_name:str, category_id:int, price:float, number_of_left_in_stock:int, number_of_purchases_in_last_month:int):
+    def create_item(self, item_dto:ItemDTO):
         
         """ELP
             validate_input_details
@@ -23,19 +21,17 @@ class ItemInteractor:
             check if item already exists
             create_item
         """
-        item_dto = ItemDTO(item_name=item_name, category_id=category_id, price=price, number_of_left_in_stock=number_of_left_in_stock, \
-                           number_of_purchases_in_last_month=number_of_purchases_in_last_month)
         
         self._validate_input_details_for_create_item(item_dto=item_dto)
         
         try:
-            self.storage.check_if_category_exists(category_id=category_id)
-        except CategoryDoesNotExistException:
+            self.storage.check_if_category_exists(category_id=item_dto.category_id)
+        except custom_exceptions.CategoryDoesNotExistException:
             self.presenter.raise_exception_for_category_does_not_exist()
 
         try:
-            self.storage.check_if_item_already_exists(item_name=item_name)
-        except ItemAlreadyExistsException:
+            self.storage.check_if_item_already_exists(item_name=item_dto.item_name)
+        except custom_exceptions.ItemAlreadyExistsException:
             self.presenter.raise_exception_for_item_already_exists()
 
         item_id = self.storage.create_item(item_dto=item_dto)
@@ -94,12 +90,12 @@ class ItemInteractor:
 
         try:
             self.storage.check_if_user_exists(user_id=user_id)
-        except UserDoesNotExistException:
+        except custom_exceptions.UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
 
         try:
             self.storage.check_if_item_exists(item_id=item_id)
-        except ItemDoesNotExistException:
+        except custom_exceptions.ItemDoesNotExistException:
             self.presenter.raise_exception_for_item_does_not_exist()
 
 
@@ -125,7 +121,7 @@ class ItemInteractor:
 
         try:
             self.storage.check_if_category_exists(category_id=category_id)
-        except CategoryDoesNotExistException:
+        except custom_exceptions.CategoryDoesNotExistException:
             self.presenter.raise_exception_for_category_does_not_exist()
 
         item_dtos = self.storage.get_list_of_items_by_category(category_id=category_id)
@@ -147,7 +143,7 @@ class ItemInteractor:
 
         try:
             self.storage.check_if_property_already_exists(property_name=property_name)
-        except PropertyAlreadyExistsException:
+        except custom_exceptions.PropertyAlreadyExistsException:
             self.presenter.raise_exception_for_property_already_exists()
 
         property_id = self.storage.create_property(property_name=property_name)
@@ -193,17 +189,17 @@ class ItemInteractor:
 
         try:
             self.storage.check_if_item_exists(item_id=item_id)
-        except ItemDoesNotExistException:
+        except custom_exceptions.ItemDoesNotExistException:
             self.presenter.raise_exception_for_item_does_not_exist()
 
         try:
             self.storage.check_if_property_exists(property_id=property_id)
-        except PropertyDoesNotExistException:
+        except custom_exceptions.PropertyDoesNotExistException:
             self.presenter.raise_exception_for_property_does_not_exist()
 
         try:
             self.storage.check_if_property_already_added_to_item(item_id=item_id, property_id=property_id, value=value)
-        except PropertyAlreadyAddedToItemException:
+        except custom_exceptions.PropertyAlreadyAddedToItemException:
             self.presenter.raise_exception_for_property_already_added_to_item()
 
 
@@ -221,7 +217,7 @@ class ItemInteractor:
 
         try:
             self.storage.check_if_item_property_exists(item_property_id=item_property_id)
-        except ItemPropertyDoesNotExistException:
+        except custom_exceptions.ItemPropertyDoesNotExistException:
             self.presenter.raise_exception_for_item_property_does_not_exist()
 
         self.storage.delete_item_property(item_property_id=item_property_id)
@@ -243,7 +239,7 @@ class ItemInteractor:
 
         try:
             self.storage.check_if_item_property_exists(item_property_id=item_property_id)
-        except ItemPropertyDoesNotExistException:
+        except custom_exceptions.ItemPropertyDoesNotExistException:
             self.presenter.raise_exception_for_item_property_does_not_exist()
 
         self.storage.update_item_property(item_property_id=item_property_id, value=value)

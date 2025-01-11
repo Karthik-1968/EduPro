@@ -1,126 +1,7 @@
 from abc import abstractmethod
-from dataclasses import dataclass
 from typing import Optional
-
-@dataclass
-class UserDTO:
-    id:str
-    name:str
-    email:str
-    contact_number:str
-
-@dataclass
-class AddressDTO:
-    door_no:str
-    street:str
-    city:str
-    district:str
-    state:str
-    country:str
-    pincode:str
-    contact_number:str
-    address_type:str
-
-@dataclass
-class CategoryDTO:
-    category_name:str
-
-@dataclass
-class ItemDTO:
-    category_id:int
-    item_name:str
-    price:float
-    number_of_left_in_stock:int
-    views:int
-
-@dataclass
-class OrderDTO:
-    user_id:str
-    address_id:int
-    order_status:str
-    delivery_date:str
-    delivery_charges:Optional[float]
-    receiving_person_name:Optional[str]
-    item_warranty_id:Optional[int]=None
-    item_properties:Optional[list[int]]=None
-    item_id:Optional[int]=None
-    cart_id:Optional[int]=None
-
-@dataclass
-class PaymentMethodDTO:
-    payment_type:str
-    card_name:Optional[str]=None
-    card_number:Optional[str]=None
-    card_holder_name:Optional[str]=None
-    cvv:Optional[str]=None
-    expiry_date:Optional[str]=None
-    card_type:Optional[str]=None
-    bank_name:Optional[str]=None
-    username:Optional[str]=None
-    password:Optional[str]=None
-    upi_id:Optional[str]=None
-
-@dataclass
-class OrderPaymentDTO:
-    order_id:int
-    payment_method_id:int
-    payment_status:str
-    amount:int
-    transaction_id:str
-    gift_card_or_promo_code:Optional[str]
-
-@dataclass
-class EmiDTO:
-    emi_type:str
-    processing_fee:Optional[float]
-    minimum_purchase_value:Optional[float]
-    discount:Optional[float]
-    number_of_months:int
-    interest_in_rupees:float
-    interest_in_percentage:float
-    total_amount:float
-    card_name:str
-
-@dataclass
-class OfferDTO:
-    offer_type:str
-    offer_name:Optional[str]
-    card_name:str
-    discount_in_rupees:int
-    discount_in_percentage:float
-    minimum_purchase_value:Optional[float]
-    minimum_months_emi:Optional[int]
-    start_date:str
-    end_date:str
-    terms_and_conditions:str
-    coupon_code:Optional[str]=None
-    minimum_number_of_items:Optional[int]=None
-
-@dataclass
-class ItemsCartDTO:
-    cart_id:int
-    item_id:int
-    item_properties:list[int]
-    item_warranty_id:Optional[int]
-    item_exchange_properties:Optional[list[int]]
-
-@dataclass
-class RatingDTO:
-    user_id:str
-    rating:int
-
-@dataclass
-class ItemIdDTO:
-    item_id:int
-
-@dataclass
-class RefundDTO:
-    user_id:str
-    order_id:int
-    amount:float
-    refund_status:str
-    payment_date:int
-    reason:str
+from amazon.interactors.storage_interfaces.dtos import UserDTO, AddressDTO, CategoryDTO, ItemDTO, OrderDTO, CardPaymentMethodDTO, \
+    NetBankingPaymentMethodDTO, RatingDTO, EmiDTO, OfferDTO, ItemsCartDTO, ItemIdDTO, RefundDTO   
 
 class StorageInterface:
 
@@ -225,35 +106,35 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def check_if_card_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
+    def check_if_card_payment_method_already_exists(self, cardpaymentmethod_dto:CardPaymentMethodDTO):
         pass
 
     @abstractmethod
-    def check_if_net_banking_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
+    def check_if_net_banking_payment_method_already_exists(self, netbankingpaymentmethod_dto:NetBankingPaymentMethodDTO):
         pass
 
     @abstractmethod
-    def check_if_upi_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
+    def check_if_upi_payment_method_already_exists(self, payment_type:str, upi_id:str):
         pass
 
     @abstractmethod
-    def check_if_cash_on_delivery_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
+    def check_if_cash_on_delivery_payment_method_already_exists(self, payment_type:str):
         pass
 
     @abstractmethod
-    def create_card_payment_method(self, paymentmethod_dto:PaymentMethodDTO)->int:
+    def create_card_payment_method(self, cardpaymentmethod_dto:CardPaymentMethodDTO)->int:
         pass
 
     @abstractmethod
-    def create_net_banking_payment_method(self, paymentmethod_dto:PaymentMethodDTO)->int:
+    def create_net_banking_payment_method(self, netbankingpaymentmethod_dto:NetBankingPaymentMethodDTO)->int:
         pass
 
     @abstractmethod
-    def create_upi_payment_method(self, paymentmethod_dto:PaymentMethodDTO)->int:
+    def create_upi_payment_method(self, payment_type:str, upi_id:str)->int:
         pass
 
     @abstractmethod
-    def create_cash_on_delivery_payment_method(self, paymentmethod_dto:PaymentMethodDTO)->int:
+    def create_cash_on_delivery_payment_method(self, payment_type:str)->int:
         pass
 
     @abstractmethod

@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.storage_interface import StorageInter
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from amazon.exceptions.custom_exceptions import CartAlreadyCreatedException, UserDoesNotExistException
 from django_swagger_utils.drf_server.exceptions import BadRequest, NotFound
-from amazon.interactors.item_interactor import ItemInteractor
+from amazon.interactors.item_interactors.item_interactor import ItemInteractor
 from mock import create_autospec
 import pytest
 

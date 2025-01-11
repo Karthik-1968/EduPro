@@ -1,7 +1,7 @@
 import pytest
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
-from amazon.exceptions.custom_exceptions import UserAlreadyExists
+from amazon.exceptions.custom_exceptions import UserAlreadyExistsException
 from django_swagger_utils.drf_server.exceptions import BadRequest
 from amazon.interactors.user_interactor import UserInteractor
 from mock import create_autospec

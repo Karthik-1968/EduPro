@@ -3,7 +3,7 @@ from amazon.interactors.presenter_interfaces.presenter_interface import Presente
 from amazon.exceptions.custom_exceptions import ItemDoesNotExist, PropertyDoesNotExist, PropertyAlreadyAddedToItem
 from mock import create_autospec
 from django_swagger_utils.drf_server.exceptions import NotFound, BadRequest
-from amazon.interactors.item_interactor import ItemInteractor
+from amazon.interactors.item_interactors.item_interactor import ItemInteractor
 import pytest
 
 class TestAddPropertyToItemInteractor:

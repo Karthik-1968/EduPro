@@ -1,7 +1,7 @@
 from amazon.models import User, Address, Item, ItemProperty, Cart, Order, ItemsCart, UserAddress, Category, ItemsWhishlist, Payment, Whishlist, \
               PaymentMethod, Property, ItemView, Emi, ItemWarranty, Offer, Warranty, ExchangeProperty, ItemEmi, ItemOffer, \
                 ItemExchangeProperty, DeliveryAvailability, Rating, ExchangeValue
-from amazon.interactors.item_performance_interactor import ItemPerformanceInteractor
+from amazon.interactors.item_interactors.item_performance_interactor import ItemPerformanceInteractor
 from amazon.storages.storage_implementation import StorageImplementation
 from amazon.presenters.presenter_implementation import PresenterImplementation
 

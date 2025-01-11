@@ -1,7 +1,6 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
-from amazon.exceptions.custom_exceptions import AddressAlreadyExistsException, UserDoesNotExistException, \
-    AddressDoesNotExistException, AddressAlreadyAddedToUserException, UserAddressDoesNotExistException
+from amazon.exceptions import custom_exceptions
 from amazon.interactors.storage_interfaces.storage_interface import AddressDTO
 
 
@@ -12,8 +11,7 @@ class AddressInteractor:
         self.presenter = presenter
 
     
-    def create_address(self, door_no:str, street:str, city:str, district:str, state:str, country:str, pincode:str, contact_number:str, \
-                        address_type:str):
+    def create_address(self, address_dto:AddressDTO):
 
         """ELP
             validate_input_details
@@ -29,14 +27,11 @@ class AddressInteractor:
             check if address already exists
             create_address
         """
-        address_dto = AddressDTO(door_no=door_no, street=street, city=city, district=district, state=state, country=country, pincode=pincode, \
-                                    contact_number=contact_number, address_type=address_type)
-        
         self._validate_input_details_for_create_address(address_dto=address_dto)
 
         try:
             self.storage.check_if_address_already_exists(address_dto=address_dto)
-        except AddressAlreadyExistsException:
+        except custom_exceptions.AddressAlreadyExistsException:
             self.presenter.raise_exception_for_address_already_exists()
 
         address_id = self.storage.create_address(address_dto=address_dto)
@@ -104,17 +99,17 @@ class AddressInteractor:
 
         try:
             self.storage.check_if_user_exists(user_id=user_id)
-        except UserDoesNotExistException:
+        except custom_exceptions.UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
 
         try:
             self.storage.check_if_address_exists(address_id=address_id)
-        except AddressDoesNotExistException:
+        except custom_exceptions.AddressDoesNotExistException:
             self.presenter.raise_exception_for_address_does_not_exist()
 
         try:
             self.storage.check_if_address_already_added_to_user(user_id=user_id, address_id=address_id)
-        except AddressAlreadyAddedToUserException:
+        except custom_exceptions.AddressAlreadyAddedToUserException:
             self.presenter.raise_exception_for_address_already_added_to_user()
 
         useraddress_id = self.storage.add_address_to_user(user_id=user_id, address_id=address_id)
@@ -136,12 +131,12 @@ class AddressInteractor:
 
         try:
             self.storage.check_if_useraddress_exists(useraddress_id=useraddress_id)
-        except UserAddressDoesNotExistException:
+        except custom_exceptions.UserAddressDoesNotExistException:
             self.presenter.raise_exception_for_useraddress_does_not_exist()
 
         try:
             self.storage.check_if_address_exists(address_id=address_id)
-        except AddressDoesNotExistException:
+        except custom_exceptions.AddressDoesNotExistException:
             self.presenter.raise_exception_for_address_does_not_exist()
 
         self.storage.update_user_address(useraddress_id=useraddress_id, address_id=address_id)
@@ -172,7 +167,7 @@ class AddressInteractor:
 
         try:
             self.storage.check_if_user_exists(user_id=user_id)
-        except UserDoesNotExistException:
+        except custom_exceptions.UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
 
         self.storage.update_user_name(user_id=user_id, name=name)
@@ -203,7 +198,7 @@ class AddressInteractor:
 
         try:
             self.storage.check_if_user_exists(user_id=user_id)
-        except UserDoesNotExistException:
+        except custom_exceptions.UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
 
         self.storage.update_user_email(user_id=user_id, email=email)
@@ -234,7 +229,7 @@ class AddressInteractor:
 
         try:
             self.storage.check_if_user_exists(user_id=user_id)
-        except UserDoesNotExistException:
+        except custom_exceptions.UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
 
         self.storage.update_user_contact_number(user_id=user_id, contact_number=contact_number)
@@ -260,7 +255,7 @@ class AddressInteractor:
 
         try:
             self.storage.check_if_useraddress_exists(useraddress_id=useraddress_id)
-        except UserAddressDoesNotExistException:
+        except custom_exceptions.UserAddressDoesNotExistException:
             self.presenter.raise_exception_for_useraddress_does_not_exist()
 
         self.storage.delete_user_address(useraddress_id=useraddress_id)

@@ -2,8 +2,8 @@ from amazon.interactors.storage_interfaces.storage_interface import StorageInter
 from amazon.models import User, Address, UserAddress, Category, Item, Property, ItemProperty, Cart, ItemsCart, Order, Whishlist, \
     ItemsWhishlist, PaymentMethod, Payment, ItemView, Rating, Refund
 from amazon.exceptions import custom_exceptions
-from amazon.interactors.storage_interfaces.storage_interface import UserDTO, AddressDTO, CategoryDTO, ItemDTO, ItemsCartDTO,\
-    OrderDTO, PaymentMethodDTO, OrderPaymentDTO, RatingDTO, ItemIdDTO, RefundDTO
+from amazon.interactors.storage_interfaces.dtos import UserDTO, AddressDTO, CategoryDTO, ItemDTO, ItemsCartDTO,\
+    OrderDTO, CardPaymentMethodDTO, NetBankingPaymentMethodDTO, OrderPaymentDTO, RatingDTO, ItemIdDTO, RefundDTO
 from django.db.models import Avg
 
 class StorageImplementation(StorageInterface):
@@ -328,73 +328,73 @@ class StorageImplementation(StorageInterface):
         for item_property in item_properties:
             self.check_if_item_property_exists(item_property)
 
-    def create_card_payment_method(self, paymentmethod_dto:PaymentMethodDTO)->int:
+    def create_card_payment_method(self, cardpaymentmethod_dto:CardPaymentMethodDTO)->int:
         
         paymentmethod = PaymentMethod.objects.create(
-            payment_type=paymentmethod_dto.payment_type,
-            card_name=paymentmethod_dto.card_name,
-            card_number=paymentmethod_dto.card_number,
-            card_holder_name=paymentmethod_dto.card_holder_name,
-            cvv=paymentmethod_dto.cvv,
-            expiry_date=paymentmethod_dto.expiry_date,
-            card_type=paymentmethod_dto.card_type
+            payment_type = cardpaymentmethod_dto.payment_type,
+            card_name = cardpaymentmethod_dto.card_name,
+            card_number = cardpaymentmethod_dto.card_number,
+            card_holder_name = cardpaymentmethod_dto.card_holder_name,
+            cvv = cardpaymentmethod_dto.cvv,
+            expiry_date = cardpaymentmethod_dto.expiry_date,
+            card_type = cardpaymentmethod_dto.card_type
         )
 
         return paymentmethod.id
     
 
-    def create_net_banking_payment_method(self, paymentmethod_dto:PaymentMethodDTO)->int:
+    def create_net_banking_payment_method(self, netbankingpaymentmethod_dto:NetBankingPaymentMethodDTO)->int:
         
         paymentmethod = PaymentMethod.objects.create(
-            payment_type=paymentmethod_dto.payment_type,
-            bank_name=paymentmethod_dto.bank_name,
-            username=paymentmethod_dto.username,
-            password=paymentmethod_dto.password
+            payment_type=netbankingpaymentmethod_dto.payment_type,
+            bank_name=netbankingpaymentmethod_dto.bank_name,
+            username=netbankingpaymentmethod_dto.username,
+            password=netbankingpaymentmethod_dto.password
         )
 
         return paymentmethod.id
     
 
-    def create_upi_payment_method(self, paymentmethod_dto:PaymentMethodDTO)->int:
+    def create_upi_payment_method(self, payment_type:str, upi_id:str)->int:
 
         paymentmethod = PaymentMethod.objects.create(
-            payment_type=paymentmethod_dto.payment_type,
-            upi_id=paymentmethod_dto.upi_id
+            payment_type=payment_type,
+            upi_id=upi_id
         )
 
         return paymentmethod.id
     
-    def create_cash_on_delivery_payment_method(self, paymentmethod_dto:PaymentMethodDTO)->int:
+    def create_cash_on_delivery_payment_method(self, payment_type:str)->int:
 
         paymentmethod = PaymentMethod.objects.create(
-            payment_type=paymentmethod_dto.payment_type
+            payment_type=payment_type
         )
 
         return paymentmethod.id
     
-    def check_if_card_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
+    def check_if_card_payment_method_already_exists(self, cardpaymentmethod_dto:CardPaymentMethodDTO):
 
-        if PaymentMethod.objects.filter(payment_type=paymentmethod_dto.payment_type, card_name=paymentmethod_dto.card_name,\
-                                        card_number=paymentmethod_dto.card_number, \
-                                         card_holder_name=paymentmethod_dto.card_holder_name, \
-                                             cvv=paymentmethod_dto.cvv, expiry_date=paymentmethod_dto.expiry_date, \
-                                                 card_type=paymentmethod_dto.card_type).exists():
+        if PaymentMethod.objects.filter(payment_type=cardpaymentmethod_dto.payment_type, card_name=cardpaymentmethod_dto.card_name,\
+                                        card_number=cardpaymentmethod_dto.card_number, \
+                                         card_holder_name=cardpaymentmethod_dto.card_holder_name, \
+                                             cvv=cardpaymentmethod_dto.cvv, expiry_date=cardpaymentmethod_dto.expiry_date, \
+                                                 card_type=cardpaymentmethod_dto.card_type).exists():
             raise custom_exceptions.PaymentMethodAlreadyExistsException
         
-    def check_if_net_banking_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
+    def check_if_net_banking_payment_method_already_exists(self, netbankingpaymentmethod_dto:NetBankingPaymentMethodDTO):
 
-        if PaymentMethod.objects.filter(payment_type=paymentmethod_dto.payment_type, bank_name=paymentmethod_dto.bank_name, \
-                                        username=paymentmethod_dto.username, password=paymentmethod_dto.password).exists():
+        if PaymentMethod.objects.filter(payment_type=netbankingpaymentmethod_dto.payment_type, bank_name=netbankingpaymentmethod_dto.bank_name, \
+                                        username=netbankingpaymentmethod_dto.username, password=netbankingpaymentmethod_dto.password).exists():
             raise custom_exceptions.PaymentMethodAlreadyExistsException
         
-    def check_if_upi_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
+    def check_if_upi_payment_method_already_exists(self, payment_type:str, upi_id:str):
 
-        if PaymentMethod.objects.filter(payment_type=paymentmethod_dto.payment_type, upi_id=paymentmethod_dto.upi_id).exists():
+        if PaymentMethod.objects.filter(payment_type=payment_type, upi_id=upi_id).exists():
             raise custom_exceptions.PaymentMethodAlreadyExistsException
         
-    def check_if_cash_on_delivery_payment_method_already_exists(self, paymentmethod_dto:PaymentMethodDTO):
+    def check_if_cash_on_delivery_payment_method_already_exists(self, payment_type:str):
 
-        if PaymentMethod.objects.filter(payment_type=paymentmethod_dto.payment_type).exists():
+        if PaymentMethod.objects.filter(payment_type=payment_type).exists():
             raise custom_exceptions.PaymentMethodAlreadyExistsException
         
     def check_if_order_exists(self, order_id:int):

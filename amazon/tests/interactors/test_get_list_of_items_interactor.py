@@ -1,7 +1,7 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
-from amazon.interactors.item_interactor import ItemInteractor
-from amazon.interactors.storage_interfaces.storage_interface import ItemDTO
+from amazon.interactors.item_interactors.item_interactor import ItemInteractor
+from amazon.interactors.storage_interfaces.dtos import ItemDTO
 from mock import create_autospec
 import pytest
 

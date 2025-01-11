@@ -1,7 +1,7 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from amazon.interactors.category_interactor import CategoryInteractor
-from amazon.interactors.storage_interfaces.storage_interface import CategoryDTO
+from amazon.interactors.storage_interfaces.dtos import CategoryDTO
 from mock import create_autospec
 
 class TestGetListOfCategoriesInteractor:

@@ -1,7 +1,7 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from amazon.exceptions import custom_exceptions
-from amazon.interactors.storage_interfaces.storage_interface import RefundDTO
+from amazon.interactors.storage_interfaces.dtos import RefundDTO
 
 class RefundInteractor:
 
@@ -10,10 +10,8 @@ class RefundInteractor:
         self.presenter = presenter
 
 
-    def create_refund_request_wrapper(self, user_id:str, order_id:int, amount:float, refund_status:str, payment_date:int, \
-                                      reason:str):
-        refund_dto = RefundDTO(user_id=user_id, order_id=order_id, amount=amount, refund_status=refund_status, \
-                               payment_date=payment_date, reason=reason)
+    def create_refund_request_wrapper(self, refund_dto: RefundDTO):
+
         try:
             refund_id = self.create_refund_request(refund_dto=refund_dto)
         except custom_exceptions.UserDoesNotExist:
@@ -39,6 +37,7 @@ class RefundInteractor:
     
 
     def update_refund_status_after_refunded_wrapper(self, refund_id: int):
+        
         try:
             self.update_refund_status_after_refunded(refund_id=refund_id)
         except custom_exceptions.RefundDoesNotExistException:

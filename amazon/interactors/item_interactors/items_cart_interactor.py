@@ -1,10 +1,7 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
-from amazon.exceptions.custom_exceptions import ItemDoesNotExistException, \
-        ItemPropertyDoesNotExistException, UserDoesNotExistException, CartAlreadyCreatedException, CartDoesNotExistException, \
-            ItemWarrantyDoesNotExistException, ItemExchangePropertyDoesNotExistException, ItemDoesNotExistInCartException
-from typing import Optional
-from amazon.interactors.storage_interfaces.storage_interface import ItemsCartDTO
+from amazon.exceptions import custom_exceptions
+from amazon.interactors.storage_interfaces.dtos import ItemsCartDTO
 
 class ItemsCartInteractor:
 
@@ -45,16 +42,16 @@ class ItemsCartInteractor:
 
         try:
             self.storage.check_if_user_exists(user_id=user_id)
-        except UserDoesNotExistException:
+        except custom_exceptions.UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
 
         try:
             self.storage.check_if_cart_already_created_for_user(user_id=user_id)
-        except CartAlreadyCreatedException:
+        except custom_exceptions.CartAlreadyCreatedException:
             self.presenter.raise_exception_for_cart_already_created()
 
 
-    def add_item_to_cart(self, cart_id:int, item_id:int, item_warranty_id:Optional[int], item_exchange_property_ids:Optional[list[int]], item_properties:list[int]):
+    def add_item_to_cart(self, itemscart_dto:ItemsCartDTO):
 
         """ELP
             -validate input details
@@ -64,9 +61,6 @@ class ItemsCartInteractor:
             -check if item exists
             -add item to cart
         """
-        itemscart_dto = ItemsCartDTO(cart_id=cart_id, item_id=item_id, item_warranty_id=item_warranty_id, \
-                                     item_properties=item_properties, item_exchange_property_ids=item_exchange_property_ids)
-        
         self._validate_input_details_for_add_item_to_cart(itemscart_dto=itemscart_dto)
 
         self._check_if_input_data_is_correct_for_add_item_to_cart(itemscart_dto=itemscart_dto)
@@ -93,29 +87,29 @@ class ItemsCartInteractor:
 
         try:
             self.storage.check_if_cart_exists(cart_id=itemscart_dto.cart_id)
-        except CartDoesNotExistException:
+        except custom_exceptions.CartDoesNotExistException:
             self.presenter.raise_exception_for_cart_does_not_exist()
 
         try:
             self.storage.check_if_item_exists(item_id=itemscart_dto.item_id)
-        except ItemDoesNotExistException:
+        except custom_exceptions.ItemDoesNotExistException:
             self.presenter.raise_exception_for_item_does_not_exist()
 
         try:
             self.storage.check_if_item_properties_exists(item_properties=itemscart_dto.item_properties)
-        except ItemPropertyDoesNotExistException:
+        except custom_exceptions.ItemPropertyDoesNotExistException:
             self.presenter.raise_exception_for_item_property_does_not_exist()
 
         if itemscart_dto.item_warranty_id is not None:
             try:
                 self.storage.check_if_item_warranty_exists(item_warranty_id=itemscart_dto.item_warranty_id)
-            except ItemWarrantyDoesNotExistException:
+            except custom_exceptions.ItemWarrantyDoesNotExistException:
                 self.presenter.raise_exception_for_item_warranty_does_not_exist()
 
         if itemscart_dto.item_exchange_property_ids is not None:
             try:
                 self.storage.check_if_item_exchange_properties_exists(item_exchange_property_ids=itemscart_dto.item_exchange_property_ids)
-            except ItemExchangePropertyDoesNotExistException:
+            except custom_exceptions.ItemExchangePropertyDoesNotExistException:
                 self.presenter.raise_exception_for_item_exchange_property_does_not_exist()
     
 
@@ -138,15 +132,15 @@ class ItemsCartInteractor:
 
         try:
             self.storage.check_if_cart_exists(cart_id=cart_id)
-        except CartDoesNotExistException:
+        except custom_exceptions.CartDoesNotExistException:
             self.presenter.raise_exception_for_cart_does_not_exist()
 
         try:
             self.storage.check_if_item_exists(item_id=item_id)
-        except ItemDoesNotExistException:
+        except custom_exceptions.ItemDoesNotExistException:
             self.presenter.raise_exception_for_item_does_not_exist()
 
         try:
             self.storage.check_if_item_is_in_cart(cart_id=cart_id, item_id=item_id)
-        except ItemDoesNotExistInCartException:
+        except custom_exceptions.ItemDoesNotExistInCartException:
             self.presenter.raise_exception_for_item_does_not_exist_in_cart()

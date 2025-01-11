@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.storage_interface import StorageInter
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from amazon.exceptions.custom_exceptions import UserDoesNotExistException, AddressDoesNotExistException, CartDoesNotExistException
 from django_swagger_utils.drf_server.exceptions import NotFound
-from amazon.interactors.storage_interfaces.storage_interface import OrderDTO
+from amazon.interactors.storage_interfaces.dtos import OrderDTO
 from amazon.interactors.order_interactor import OrderInteractor
 from mock import create_autospec
 import pytest 

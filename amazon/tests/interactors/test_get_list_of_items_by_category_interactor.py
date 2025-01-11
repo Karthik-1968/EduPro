@@ -1,10 +1,10 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
-from amazon.exceptions.custom_exceptions import CategoryDoesNotExist
-from amazon.interactors.item_interactor import ItemInteractor
+from amazon.exceptions.custom_exceptions import CategoryDoesNotExistException
+from amazon.interactors.item_interactors.item_interactor import ItemInteractor
 from mock import create_autospec
 from django_swagger_utils.drf_server.exceptions import NotFound
-from amazon.interactors.storage_interfaces.storage_interface import ItemDTO
+from amazon.interactors.storage_interfaces.dtos import ItemDTO
 import pytest
 
 class TestGetListOfItemsByCategory:

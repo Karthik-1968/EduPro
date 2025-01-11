@@ -1,6 +1,6 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
-from amazon.exceptions.custom_exceptions import UserDoesNotExist, AddressDoesNotExist, AddressAlreadyAddedToUser
+from amazon.exceptions import custom_exceptions
 from django_swagger_utils.drf_server.exceptions import BadRequest, NotFound
 from amazon.interactors.user_interactor import UserInteractor
 from mock import create_autospec
@@ -19,7 +19,7 @@ class TestAddAddressToUserInteractor:
         user_id = "550e8400-e29b-41d4-a716-446655440000"
         address_id = 1
 
-        self.storage.check_if_user_exists.side_effect = UserDoesNotExist
+        self.storage.check_if_user_exists.side_effect = custom_exceptions.UserDoesNotExistException
         self.presenter.raise_exception_for_user_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -33,7 +33,7 @@ class TestAddAddressToUserInteractor:
         user_id = "550e8400-e29b-41d4-a716-446655440000"
         address_id = 1
 
-        self.storage.check_if_address_exists.side_effect = AddressDoesNotExist
+        self.storage.check_if_address_exists.side_effect = custom_exceptions.AddressDoesNotExistException
         self.presenter.raise_exception_for_address_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -47,7 +47,7 @@ class TestAddAddressToUserInteractor:
         user_id = "550e8400-e29b-41d4-a716-446655440000"
         address_id = 1
 
-        self.storage.check_if_address_already_added_to_user.side_effect = AddressAlreadyAddedToUser
+        self.storage.check_if_address_already_added_to_user.side_effect = custom_exceptions.AddressAlreadyAddedToUserException
         self.presenter.raise_exception_for_address_already_added_to_user.side_effect = BadRequest
 
         with pytest.raises(BadRequest):

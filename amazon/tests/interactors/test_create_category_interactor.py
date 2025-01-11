@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.storage_interface import StorageInter
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from django.core.exceptions import BadRequest
 from amazon.interactors.category_interactor import CategoryInteractor
-from amazon.exceptions.custom_exceptions import CategoryAlreadyExists
+from amazon.exceptions.custom_exceptions import CategoryAlreadyExistsException
 from unittest.mock import create_autospec
 import pytest
 

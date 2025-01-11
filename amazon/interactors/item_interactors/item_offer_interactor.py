@@ -1,10 +1,8 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
-from amazon.exceptions.custom_exceptions import OfferAlreadyExistsException, ExchangePropertyAlreadyExistsException,\
-    ExchangeValueAlreadyExistsException, ExchangeValueDoesNotExistException, ExchangePropertyDoesNotExistException, \
-        ItemDoesNotExistException, OfferDoesNotExistException
+from amazon.exceptions import custom_exceptions
 from typing import Optional
-from amazon.interactors.storage_interfaces.storage_interface import OfferDTO
+from amazon.interactors.storage_interfaces.dtos import OfferDTO
 
 class ItemOfferInteractor:
 
@@ -14,21 +12,15 @@ class ItemOfferInteractor:
         self.presenter = presenter
 
 
-    def create_bank_offer(self, offer_type:str, offer_name:Optional[str], card_name:str, discount_in_rupees:int, \
-                          discount_in_percentage:float, minimum_purchase_value:Optional[float], minimum_months_emi:Optional[int], \
-                          start_date:str, end_date:str, terms_and_conditions:str):
+    def create_bank_offer(self, offer_dto:OfferDTO):
         
         """ELP
             -check if offer already exists
             -create bank offer
         """
-        offer_dto = OfferDTO(offer_type=offer_type, offer_name=offer_name, card_name=card_name, discount_in_rupees=discount_in_rupees,\
-                             discount_in_percentage=discount_in_percentage, minimum_purchase_value=minimum_purchase_value, minimum_months_emi=minimum_months_emi,\
-                             start_date=start_date, end_date=end_date, terms_and_conditions=terms_and_conditions)
-        
         try:
             self.storage.check_if_offer_already_exists(offer_dto=offer_dto)
-        except OfferAlreadyExistsException:
+        except custom_exceptions.OfferAlreadyExistsException:
             self.presenter.raise_exception_for_offer_already_exists()
 
         offer_id = self.storage.create_bank_offer(offer_dto=offer_dto)
@@ -45,7 +37,7 @@ class ItemOfferInteractor:
 
         try:
             self.storage.check_if_offer_already_exists(offer_type=offer_type)
-        except OfferAlreadyExistsException:
+        except custom_exceptions.OfferAlreadyExistsException:
             self.presenter.raise_exception_for_offer_already_exists()
 
         offer_id = self.storage.create_no_cost_emi_offer(offer_type=offer_type)
@@ -53,20 +45,15 @@ class ItemOfferInteractor:
         return self.presenter.get_response_for_create_no_cost_emi_offer(offer_id=offer_id)
     
 
-    def create_coupon_offer(self, offer_type:str, offer_name:Optional[str], coupon_code:str, discount_in_rupees:int, discount_in_percentage:float, \
-                            minimum_purchase_value:Optional[float], start_date:str, end_date:str, terms_and_conditions:str):
+    def create_coupon_offer(self, offer_dto:OfferDTO):
 
         """ELP
             -check if offer already exists
             -create offer
         """
-
-        offer_dto = OfferDTO(offer_type=offer_type, offer_name=offer_name, coupon_code=coupon_code, discount_in_rupees=discount_in_rupees,\
-                             discount_in_percentage=discount_in_percentage, minimum_purchase_value=minimum_purchase_value, start_date=start_date,\
-                             end_date=end_date, terms_and_conditions=terms_and_conditions)
         try:
             self.storage.check_if_offer_already_exists(offer_dto=offer_dto)
-        except OfferAlreadyExistsException:
+        except custom_exceptions.OfferAlreadyExistsException:
             self.presenter.raise_exception_for_offer_already_exists()
 
         offer_id = self.storage.create_coupon_offer(offer_dto=offer_dto)
@@ -74,22 +61,15 @@ class ItemOfferInteractor:
         return self.presenter.get_response_for_create_coupon_offer(offer_id=offer_id)
     
 
-    def create_partner_offer(self, offer_type:str, offer_name:Optional[str], minimum_number_of_items:int, discount_in_rupees:int, \
-                             discount_in_percentage:float, minimum_purchase_value:Optional[float], start_date:str, end_date:str,\
-                                  terms_and_conditions:str):
+    def create_partner_offer(self, offer_dto:OfferDTO):
 
         """ELP
             -check if offer already exists
             -create offer
         """
-
-        offer_dto = OfferDTO(offer_type=offer_type, offer_name=offer_name, minimum_number_of_items=minimum_number_of_items, \
-                             discount_in_rupees=discount_in_rupees, discount_in_percentage=discount_in_percentage, \
-                                minimum_purchase_value=minimum_purchase_value, start_date=start_date, end_date=end_date, \
-                                    terms_and_conditions=terms_and_conditions)
         try:
             self.storage.check_if_offer_already_exists(offer_dto=offer_dto)
-        except OfferAlreadyExistsException:
+        except custom_exceptions.OfferAlreadyExistsException:
             self.presenter.raise_exception_for_offer_already_exists()
 
         offer_id = self.storage.create_partner_offer(offer_dto=offer_dto)
@@ -106,7 +86,7 @@ class ItemOfferInteractor:
 
         try:
             self.storage.check_if_exchange_property_already_exists(property_name=property_name, property_value=property_value)
-        except ExchangePropertyAlreadyExistsException:
+        except custom_exceptions.ExchangePropertyAlreadyExistsException:
             self.presenter.raise_exception_for_exchange_property_already_exists()
 
         exchange_property_id = self.storage.create_exchange_property(property_name=property_name, property_value=property_value)
@@ -122,7 +102,7 @@ class ItemOfferInteractor:
 
         try:
             self.storage.check_if_exchange_value_already_exists(exchange_discount=exchange_discount, service_charge=service_charge)
-        except ExchangeValueAlreadyExistsException:
+        except custom_exceptions.ExchangeValueAlreadyExistsException:
             self.presenter.raise_exception_for_exchange_value_already_exists()
 
         exchange_value_id = self.storage.create_exchange_value(exchange_discount=exchange_discount, service_charge=service_charge)
@@ -140,12 +120,12 @@ class ItemOfferInteractor:
 
         try:
             self.storage.check_if_exchange_value_exists(exchange_value_id=exchange_value_id)
-        except ExchangeValueDoesNotExistException:
+        except custom_exceptions.ExchangeValueDoesNotExistException:
             self.presenter.raise_exception_for_exchange_value_does_not_exist()
 
         try:
             self.storage.check_if_exchange_properties_exists(exchange_property_ids=exchange_property_ids)
-        except ExchangePropertyDoesNotExistException:
+        except custom_exceptions.ExchangePropertyDoesNotExistException:
             self.presenter.raise_exception_for_exchange_property_does_not_exist()
         
         self.storage.add_exchange_properties_to_exchange_value(exchange_value_id=exchange_value_id, \
@@ -164,12 +144,12 @@ class ItemOfferInteractor:
 
         try:
             self.storage.check_if_item_exists(item_id=item_id)
-        except ItemDoesNotExistException:
+        except custom_exceptions.ItemDoesNotExistException:
             self.presenter.raise_exception_for_item_does_not_exist()
 
         try:
             self.storage.check_if_exchange_property_exists(exchange_property_id=exchange_property_id)
-        except ExchangePropertyDoesNotExistException:
+        except custom_exceptions.ExchangePropertyDoesNotExistException:
             self.presenter.raise_exception_for_exchange_property_does_not_exist()
         
         item_exchange_property_id = self.storage.add_exchange_properties_to_item(item_id=item_id, exchange_property_id=exchange_property_id)
@@ -187,12 +167,12 @@ class ItemOfferInteractor:
         
         try:
             self.storage.check_if_item_exists(item_id=item_id)
-        except ItemDoesNotExistException:
+        except custom_exceptions.ItemDoesNotExistException:
             self.presenter.raise_exception_for_item_does_not_exist()
 
         try:
             self.storage.check_if_offer_exists(offer_id=offer_id)
-        except OfferDoesNotExistException:
+        except custom_exceptions.OfferDoesNotExistException:
             self.presenter.raise_exception_for_offer_does_not_exist()
         
         item_offer_id = self.storage.add_offer_to_item(item_id=item_id, offer_id=offer_id)

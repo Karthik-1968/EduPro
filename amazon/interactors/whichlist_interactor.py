@@ -1,8 +1,6 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
-from amazon.exceptions.custom_exceptions import ItemDoesNotExistException, ItemPropertyDoesNotExistException, \
-    UserDoesNotExistException, WhishlistAlreadyCreatedException, WhishlistDoesNotExistException, \
-                    ItemDoesNotExistInWhishlistException
+from amazon.exceptions import custom_exceptions
 
 class WhichListInteractor:
 
@@ -15,9 +13,9 @@ class WhichListInteractor:
 
         try:
             whishlist_id = self.create_whishlist_for_user(user_id=user_id, name=name)
-        except UserDoesNotExistException:
+        except custom_exceptions.UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
-        except WhishlistAlreadyCreatedException:
+        except custom_exceptions.WhishlistAlreadyCreatedException:
             self.presenter.raise_exception_for_whishlist_already_created()
         else:
             return self.presenter.get_response_for_create_whishlist_for_user(whishlist_id=whishlist_id)
@@ -44,11 +42,11 @@ class WhichListInteractor:
         
         try:
             self.add_item_to_whishlist(whishlist_id=whishlist_id, item_id=item_id)
-        except WhishlistDoesNotExistException:
+        except custom_exceptions.WhishlistDoesNotExistException:
             self.presenter.raise_exception_for_whishlist_does_not_exist()
-        except ItemDoesNotExistException:
+        except custom_exceptions.ItemDoesNotExistException:
             self.presenter.raise_exception_for_item_does_not_exist()
-        except ItemPropertyDoesNotExistException:
+        except custom_exceptions.ItemPropertyDoesNotExistException:
             self.presenter.raise_exception_for_item_property_does_not_exist()
         else:
             return self.presenter.get_response_for_add_item_to_whishlist()
@@ -79,11 +77,11 @@ class WhichListInteractor:
         
         try:
             self.delete_item_from_whishlist_by_item_id(whishlist_id=whishlist_id, item_id=item_id)
-        except WhishlistDoesNotExistException:
+        except custom_exceptions.WhishlistDoesNotExistException:
             self.presenter.raise_exception_for_whishlist_does_not_exist()
-        except ItemDoesNotExistException:
+        except custom_exceptions.ItemDoesNotExistException:
             self.presenter.raise_exception_for_item_does_not_exist()
-        except ItemDoesNotExistInWhishlistException:
+        except custom_exceptions.ItemDoesNotExistInWhishlistException:
             self.presenter.raise_exception_for_item_does_not_exist_in_whishlist()
         else:
             return self.presenter.get_response_for_delete_item_from_whishlist()
@@ -114,7 +112,7 @@ class WhichListInteractor:
         
         try:
             recommendations_dtos = self.get_recommendations_for_user(user_id=user_id)
-        except UserDoesNotExistException:
+        except custom_exceptions.UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
         else:
             return self.presenter.get_response_for_get_recommendations_for_user(recommendations_dtos=recommendations_dtos)
