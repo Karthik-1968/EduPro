@@ -682,3 +682,67 @@ class PresenterInterface:
     @abstractmethod
     def get_response_for_update_refund_status_after_refunded(self):
         pass
+
+    @abstractmethod
+    def get_response_for_create_delivery_availability(self, delivery_availability_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_delivery_availability_already_exists(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_delivery_service(self, delivery_service_id:int):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_delivery_service_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_delivery_service_to_order(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_item_emi_does_not_exist(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_item_emi_to_order(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_item_emi_already_added_to_order(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_item_emi_is_not_associated_with_item(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_item_emi_already_added_to_item_in_cart(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_item_emi_to_item_in_cart(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_item_warranty_is_not_associated_with_item(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_warranty_already_associated_with_order(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_item_warranty_to_order(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_offer_is_not_specific_to_item_in_order(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_offer_already_added_to_order(self):
+        pass

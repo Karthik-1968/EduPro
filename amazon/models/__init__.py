@@ -25,10 +25,11 @@ from .deliveryavailability import DeliveryAvailability
 from .rating import Rating
 from .exchangevalue import ExchangeValue
 from .refund import Refund
+from .orderitem import OrderItem
 
 __all__ = [User, Address, Item, ItemProperty, Cart, Order, ItemsCart, UserAddress, Category, ItemsWhishlist, Payment, Whishlist, \
            PaymentMethod, Property, ItemView, Emi, ItemWarranty, Offer, Warranty, ExchangeProperty, ItemEmi, ItemOffer, \
-            ItemExchangeProperty, DeliveryAvailability, Rating, ExchangeValue, Refund]
+            ItemExchangeProperty, DeliveryAvailability, Rating, ExchangeValue, Refund, OrderItem]
 
 # class DummyModel(AbstractDateTimeModel):
 #     """

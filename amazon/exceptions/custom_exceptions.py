@@ -123,3 +123,30 @@ class UserAlreadyRatedItemException(Exception):
 
 class RefundDoesNotExistException(Exception):
     pass
+
+class DeliveryAvailabilityAlreadyExistsException(Exception):
+    pass
+
+class DeliveryAvailabilityDoesNotExistException(Exception):
+    pass
+
+class ItemEmiDoesNotExistException(Exception):
+    pass
+
+class ItemEmiIsNotAssociatedWithItemException(Exception):
+    pass
+
+class ItemEmiAlreadyAddedToOrderException(Exception):
+    pass
+
+class ItemIsNotInCartException(Exception):
+    pass
+
+class ItemEmiAlreadyAddedToItemInCartException(Exception):
+    pass
+
+class OfferIsNotSpecificToItemInOrderException(Exception):
+    pass
+
+class OfferAlreadyAddedToOrderException(Exception):
+    pass

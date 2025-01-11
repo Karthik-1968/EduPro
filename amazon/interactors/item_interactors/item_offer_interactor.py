@@ -178,3 +178,41 @@ class ItemOfferInteractor:
         item_offer_id = self.storage.add_offer_to_item(item_id=item_id, offer_id=offer_id)
 
         return self.presenter.get_response_for_add_offer_to_item(item_offer_id=item_offer_id)
+    
+
+    def add_offer_to_order(self, order_id:int, offer_id:int):
+        
+        """ELP
+            -check if order exists
+            -check if offer exists
+            -check if offer is specific to item in order
+            -check if offer is already added to order
+            -add offer to order
+        """
+        self._check_if_input_data_is_correct_for_add_offer_to_order(order_id=order_id, offer_id=offer_id)
+
+        self.storage.add_offer_to_order(order_id=order_id, offer_id=offer_id)
+
+        return self.presenter.get_response_for_add_offer_to_order()
+    
+    def _check_if_input_data_is_correct_for_add_offer_to_order(self, order_id:int, offer_id:int):
+
+        try:
+            self.storage.check_if_order_exists(order_id=order_id)
+        except custom_exceptions.OrderDoesNotExistException:
+            self.presenter.raise_exception_for_order_does_not_exist()
+        
+        try:
+            self.storage.check_if_offer_exists(offer_id=offer_id)
+        except custom_exceptions.OfferDoesNotExistException:
+            self.presenter.raise_exception_for_offer_does_not_exist()
+        
+        try:
+            self.storage.check_if_offer_is_specific_to_item_in_order(order_id=order_id, offer_id=offer_id)
+        except custom_exceptions.OfferIsNotSpecificToItemInOrderException:
+            self.presenter.raise_exception_for_offer_is_not_specific_to_item_in_order()
+        
+        try:
+            self.storage.check_if_offer_is_already_added_to_order(order_id=order_id, offer_id=offer_id)
+        except custom_exceptions.OfferAlreadyAddedToOrderException:
+            self.presenter.raise_exception_for_offer_already_added_to_order()

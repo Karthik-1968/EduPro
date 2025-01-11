@@ -456,3 +456,67 @@ class StorageInterface:
     @abstractmethod
     def update_refund_status_after_refunded(self, refund_id:int):
         pass
+
+    @abstractmethod
+    def check_if_delivery_service_already_exists(self, name:str, email:str, contact_number:str):
+        pass
+
+    @abstractmethod
+    def create_delivery_service(self, name:str, email:str, contact_number:str)->int:
+        pass
+
+    @abstractmethod
+    def check_if_delivery_service_exists(self, delivery_service_id:int):
+        pass
+
+    @abstractmethod
+    def add_delivery_service_to_order(self, order_id:int, delivery_service_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_item_emi_exists(self, item_emi_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_item_emi_is_associated_with_item(self, item_emi_id:int, order_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_item_emi_is_not_already_added_to_order(self, order_id:int, item_emi_id:int):
+        pass
+
+    @abstractmethod
+    def add_item_emi_to_order(self, order_id:int, item_emi_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_item_emi_is_already_added_to_item_in_cart(self, item_id:int, item_emi_id:int):
+        pass
+
+    @abstractmethod
+    def add_item_emi_to_item_in_cart(self, item_id:int, order_id:int, item_emi_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_warranty_is_associated_with_item(self, item_id:int, item_warranty_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_warranty_is_already_associated_with_order(self, order_id:int, item_warranty_id:int):
+        pass
+
+    @abstractmethod
+    def add_item_warranty_to_order(self, order_id:int, item_warranty_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_items_exists(self, item_ids:list[int]):
+        pass
+
+    @abstractmethod
+    def check_if_offer_is_specific_to_item_in_order(self, order_id:int, offer_id:int):
+        pass
+
+    @abstractmethod
+    def check_if_offer_is_already_added_to_order(self, order_id:int, offer_id:int):
+        pass

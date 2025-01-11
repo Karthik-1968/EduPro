@@ -33,17 +33,25 @@ class ItemDTO:
     views:int
 
 @dataclass
-class OrderDTO:
+class OrderItemDTO:
+    user_id:str
+    address_id:int
+    order_status:str
+    delivery_date:str
+    item_properties:list[int]
+    item_id:int
+    delivery_charges:Optional[float]
+    receiving_person_name:Optional[str]
+
+@dataclass
+class OrderCartItemsDTO:
     user_id:str
     address_id:int
     order_status:str
     delivery_date:str
     delivery_charges:Optional[float]
     receiving_person_name:Optional[str]
-    item_warranty_id:Optional[int]=None
-    item_properties:Optional[list[int]]=None
-    item_id:Optional[int]=None
-    cart_id:Optional[int]=None
+    item_ids:list[int]
 
 @dataclass
 class CardPaymentMethodDTO:

@@ -1,9 +1,9 @@
 from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
 from amazon.models import User, Address, UserAddress, Category, Item, Property, ItemProperty, Cart, ItemsCart, Order, Whishlist, \
-    ItemsWhishlist, PaymentMethod, Payment, ItemView, Rating, Refund
+    ItemsWhishlist, PaymentMethod, Payment, ItemView, Rating, Refund, OrderItem
 from amazon.exceptions import custom_exceptions
 from amazon.interactors.storage_interfaces.dtos import UserDTO, AddressDTO, CategoryDTO, ItemDTO, ItemsCartDTO,\
-    OrderDTO, CardPaymentMethodDTO, NetBankingPaymentMethodDTO, OrderPaymentDTO, RatingDTO, ItemIdDTO, RefundDTO
+    OrderItemDTO, CardPaymentMethodDTO, NetBankingPaymentMethodDTO, OrderPaymentDTO, RatingDTO, ItemIdDTO, RefundDTO
 from django.db.models import Avg
 
 class StorageImplementation(StorageInterface):
@@ -236,43 +236,21 @@ class StorageImplementation(StorageInterface):
             itemscart.add(item_property)
 
     
-    def create_order_for_item(self, order_dto:OrderDTO)->int:
+    def create_order_for_item(self, order_dto:OrderItemDTO)->int:
 
         order = Order.objects.create(
             user_id=order_dto.user_id,
-            item_id=order_dto.item_id,
             address_id=order_dto.address_id,
             order_status=order_dto.order_status,
             delivary_date=order_dto.delivary_date
         )
 
+        orderitem = OrderItem.objects.create(order_id=order.id, item_id=order_dto.item_id)
+
         for item_property in order_dto.item_properties:
-            order.add(item_property)
+            orderitem.add(item_property)
 
         return order.id
-    
-    def get_orders_of_user(self, user_id:str)->list[OrderDTO]:
-        
-        orders = Order.objects.filter(user_id=user_id)
-        order_dtos = []
-
-        for order in orders:
-            order_dto = self._convert_order_object_to_dto(order)
-            order_dtos.append(order_dto)
-        
-        return order_dtos
-    
-    def _convert_order_object_to_dto(order)->OrderDTO:
-
-        order_dto = OrderDTO(
-            user_id=order.user_id,
-            item_id=order.item_id,
-            address_id=order.address_id,
-            order_status=order.order_status,
-            delivary_date=order.delivary_date
-        )
-
-        return order_dto
     
     def check_if_whishlist_already_created_for_user(self, user_id:str):
         
