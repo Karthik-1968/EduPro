@@ -520,3 +520,19 @@ class StorageInterface:
     @abstractmethod
     def check_if_offer_is_already_added_to_order(self, order_id:int, offer_id:int):
         pass
+
+    @abstractmethod
+    def check_if_exchange_properties_are_associated_with_item_in_order(self, order_id:int, exchange_property_ids:list[int]):
+        pass
+
+    @abstractmethod
+    def check_if_exchange_properties_are_already_added_to_order(self, order_id:int, exchange_property_ids:list[int]):
+        pass
+
+    @abstractmethod
+    def add_exchange_properties_to_order(self, order_id:int, exchange_property_ids:list[int]):
+        pass
+
+    @abstractmethod
+    def check_if_item_properties_belong_to_item(self, item_properties:list[int], item_id:int):
+        pass

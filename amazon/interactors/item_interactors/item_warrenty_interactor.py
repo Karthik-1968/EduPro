@@ -13,17 +13,9 @@ class ItemWarrentyInteractor:
     def create_warranty(self, warranty_name:str, warranty_amount:float, number_of_months:int):
 
         """ELP
-            -validate input details
-                -validate warranty_name
-                -validate warranty_amount
-                -validate number_of_months
             -check if warranty already exists
             -create warranty
         """
-
-        self._validate_input_data_for_create_warranty(warranty_name=warranty_name, warranty_amount=warranty_amount, \
-                                                      number_of_months=number_of_months)
-        
         try:
             self.storage.check_if_warranty_already_exists(warranty_name=warranty_name, warranty_amount=warranty_amount, \
                                                           number_of_months=number_of_months)
@@ -34,34 +26,15 @@ class ItemWarrentyInteractor:
                                                           number_of_months=number_of_months)
         
         return self.presenter.get_response_for_create_warranty(warranty_id = warranty_id)
-        
-    def _validate_input_data_for_create_warranty(self, warranty_name:str, warranty_amount:float, number_of_months:int):
-
-        warranty_name_not_present = not warranty_name
-        if warranty_name_not_present:
-            self.presenter.raise_exception_for_missing_warranty_name()
-
-        warranty_amount_not_present = not warranty_amount
-        if warranty_amount_not_present:
-            self.presenter.raise_exception_for_missing_warranty_amount()
-
-        number_of_months_not_present = not number_of_months
-        if number_of_months_not_present:
-            self.presenter.raise_exception_for_missing_number_of_months()
 
     
     def add_warranty_to_item(self, item_id:int, warranty_id:int):
 
         """ELP
-            -validate input details
-                -validate item_id
-                -validate warranty_id
             -check if item exits
             -check if warranty exists
             -add warranty to item
         """
-        self._validate_input_details_for_add_warranty_to_item(item_id=item_id, warranty_id=warranty_id)
-
         try:
             self.storage.check_if_item_exists(item_id=item_id)
         except custom_exceptions.ItemDoesNotExistException:
@@ -75,16 +48,6 @@ class ItemWarrentyInteractor:
         item_warranty_id = self.storage.add_warranty_to_item(item_id=item_id, warranty_id=warranty_id)
 
         return self.presenter.get_response_for_add_warranty_to_items(item_warranty_id = item_warranty_id)
-    
-    def _validate_input_details_for_add_warranty_to_item(self, item_id:int, warranty_id:int):
-
-        item_id_not_present = not item_id
-        if item_id_not_present:
-            self.presenter.raise_exception_for_missing_item_id()
-
-        warranty_id_not_present = not warranty_id
-        if warranty_id_not_present:
-            self.presenter.raise_exception_for_missing_warranty_id()
 
     
     def add_item_warranty_to_order(self, order_id:int, item_warranty_id:int):

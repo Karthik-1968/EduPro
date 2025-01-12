@@ -17,6 +17,14 @@ class ItemRatingInterctor:
             -create item rating
         """
 
+        self._check_if_input_data_is_correct_for_rate_an_item(item_id=item_id, user_id=user_id)
+
+        item_rating_id = self.storage.rate_an_item(item_id=item_id, user_id=user_id, rating=rating)
+
+        return self.presenter.get_response_for_rate_an_item(item_rating_id=item_rating_id)
+    
+    def _check_if_input_data_is_correct_for_rate_an_item(self, item_id:int, user_id:str):
+
         try:
             self.storage.check_if_item_exists(item_id=item_id)
         except custom_exceptions.ItemDoesNotExistException:
@@ -31,10 +39,6 @@ class ItemRatingInterctor:
             self.storage.check_if_user_already_rated_item(item_id=item_id, user_id=user_id)
         except custom_exceptions.UserAlreadyRatedItemException:
             self.presenter.raise_exception_for_user_already_rated_item()
-
-        item_rating_id = self.storage.rate_an_item(item_id=item_id, user_id=user_id, rating=rating)
-
-        return self.presenter.get_response_for_rate_an_item(item_rating_id=item_rating_id)
 
     
     def get_ratings_of_an_item(self, item_id:int):

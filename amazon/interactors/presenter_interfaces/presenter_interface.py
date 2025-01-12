@@ -4,22 +4,6 @@ from amazon.interactors.storage_interfaces.storage_interface import CategoryDTO,
 class PresenterInterface:
 
     @abstractmethod
-    def raise_exception_for_missing_user_id(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_user_name(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_email(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_contact_number(self):
-        pass
-
-    @abstractmethod
     def raise_exception_for_user_already_exists(self):
         pass
 
@@ -28,51 +12,11 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_missing_door_no(self):
-        pass
-    
-    @abstractmethod
-    def raise_exception_for_missing_street(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_city(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_district(self):
-        pass
-    
-    @abstractmethod
-    def raise_exception_for_missing_state(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_country(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_pincode(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_contact_number(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_address_type(self):
-        pass
-
-    @abstractmethod
     def raise_exception_for_address_already_exists(self):
         pass
 
     @abstractmethod
     def get_response_for_create_address(self, address_id:str):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_address_id(self):
         pass
 
     @abstractmethod
@@ -92,10 +36,6 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_missing_category_name(self):
-        pass
-
-    @abstractmethod
     def raise_exception_for_category_already_exists(self):
         pass
 
@@ -105,18 +45,6 @@ class PresenterInterface:
 
     @abstractmethod
     def get_response_for_list_of_categories(self, category_dtos:list[CategoryDTO])->list[dict]:
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_item_name(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_category_id(self):
-        pass
-    
-    @abstractmethod
-    def raise_exception_for_missing_price(self):
         pass
     
     @abstractmethod
@@ -140,27 +68,11 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_missing_property_name(self):
-        pass
-
-    @abstractmethod
     def raise_exception_for_property_already_exists(self):
         pass
     
     @abstractmethod
     def get_response_for_create_property(self, property_id:int):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_item_id(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_property_id(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_value(self):
         pass
 
     @abstractmethod
@@ -177,14 +89,6 @@ class PresenterInterface:
 
     @abstractmethod
     def get_response_for_add_property_to_item(self, itemproperty_id:int):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_status(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_delivery_date(self):
         pass
 
     @abstractmethod
@@ -224,31 +128,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_missing_order_id(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_payment_method_id(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_payment_status(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_amount(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_transaction_id(self):
-        pass
-
-    @abstractmethod
     def get_response_for_add_payment_method_to_order(self, payment_id:int):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_properties(self):
         pass
 
     @abstractmethod
@@ -268,47 +148,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_missing_payment_type(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_upi_id(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_card_holder_name(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_card_number(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_expiry_date(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_cvv(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_bank_name(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_username(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_password(self):
-        pass
-
-    @abstractmethod
     def get_response_for_delete_order(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_useraddress_id(self):
         pass
 
     @abstractmethod
@@ -329,10 +169,6 @@ class PresenterInterface:
 
     @abstractmethod
     def get_response_for_update_user_contact_number(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_item_property_id(self):
         pass
 
     @abstractmethod
@@ -360,10 +196,6 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_missing_number_of_left_in_stock(self):
-        pass
-
-    @abstractmethod
     def raise_exception_for_out_of_stock(self):
         pass
 
@@ -376,19 +208,11 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_missing_cart_name(self):
-        pass
-
-    @abstractmethod
     def raise_exception_for_cart_already_created(self):
         pass
 
     @abstractmethod
     def get_response_for_create_cart(self, cart_id:int):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_cart_id(self):
         pass
 
     @abstractmethod
@@ -400,47 +224,11 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_missing_rating(self):
-        pass
-
-    @abstractmethod
-    def get_response_for_add_rating_to_item(self):
-        pass
-
-    @abstractmethod
     def raise_exception_for_item_not_rated(self):
         pass
 
     @abstractmethod
     def get_response_for_ratings_of_an_item(self, rating_dtos:list[RatingDTO])->list[dict]:
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_card_name(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_emi_type(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_debit_card_name(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_number_of_months(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_interest_in_rupees(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_interest_in_percentage(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_total_amount(self):
         pass
 
     @abstractmethod
@@ -456,10 +244,6 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_missing_emi_id(self):
-        pass
-
-    @abstractmethod
     def raise_exception_for_emi_does_not_exist(self):
         pass
 
@@ -468,27 +252,11 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_missing_warranty_name(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_warranty_amount(self):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_number_of_months(self):
-        pass
-
-    @abstractmethod
     def raise_exception_for_warrenty_already_exists(self):
         pass
 
     @abstractmethod
     def get_response_for_create_warranty(self, warranty_id:int):
-        pass
-
-    @abstractmethod
-    def raise_exception_for_missing_warranty_id(self):
         pass
 
     @abstractmethod
@@ -745,4 +513,20 @@ class PresenterInterface:
 
     @abstractmethod
     def raise_exception_for_offer_already_added_to_order(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_add_exchange_properties_to_order(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_exchange_properties_are_already_added_to_order(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_exchange_properties_are_not_associated_with_item_in_order(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_item_property_does_not_belong_to_item(self):
         pass

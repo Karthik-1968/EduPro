@@ -23,10 +23,10 @@ class OrderInteractor:
             self.presenter.raise_exception_for_address_does_not_exist()
         except custom_exceptions.ItemPropertyDoesNotExistException:
             self.presenter.raise_exception_for_item_property_does_not_exist()
+        except custom_exceptions.ItemPropertyDoesNotBelongToItemException:
+            self.presenter.raise_exception_for_item_property_does_not_belong_to_item()
         except custom_exceptions.OutOfStockException:
             self.presenter.raise_exception_for_out_of_stock()
-        except custom_exceptions.ItemWarrantyDoesNotExistException:
-            self.presenter.raise_exception_for_item_warranty_does_not_exist()
         else:
             return self.presenter.get_response_for_create_order_for_item(order_id=order_id)
 
@@ -54,11 +54,9 @@ class OrderInteractor:
 
         self.storage.check_if_item_properties_exists(item_properties=orderitem_dto.item_properties)
 
+        self.storage.check_if_item_properties_belong_to_item(item_properties=orderitem_dto.item_properties, item_id=orderitem_dto.item_id)
+
         self.storage.check_if_number_of_left_in_stock_is_greater_than_zero(item_id=orderitem_dto.item_id)
-
-        if orderitem_dto.item_warranty_id:
-            self.storage.check_if_item_warranty_exists(item_warranty_id=orderitem_dto.item_warranty_id)
-
 
     def create_order_for_cart(self, ordercartitems_dto:OrderCartItemsDTO):
         
@@ -94,14 +92,9 @@ class OrderInteractor:
     def get_orders_of_user(self, user_id:str):
 
         """ELP
-            validate user_id
             check if user exists
             get_orders_of_user
         """
-        user_id_not_present = not user_id
-        if user_id_not_present:
-            self.presenter.raise_exception_for_missing_user_id()
-
         try:
             self.storage.check_if_user_exists(user_id=user_id)
         except custom_exceptions.UserDoesNotExistException:
@@ -115,14 +108,9 @@ class OrderInteractor:
     def get_orders_of_item(self, item_id:int):
 
         """ELP
-            validate item_id
             check if item exists
             get_orders_of_item
         """
-        item_id_not_present = not item_id
-        if item_id_not_present:
-            self.presenter.raise_exception_for_missing_item_id()
-
         try:
             self.storage.check_if_item_exists(item_id=item_id)
         except custom_exceptions.ItemDoesNotExistException:
@@ -136,14 +124,9 @@ class OrderInteractor:
     def delete_order(self, order_id:int):
 
         """ELP
-            validate order_id
             check if order exists
             delete_order
         """
-        order_id_not_present = not order_id
-        if order_id_not_present:
-            self.presenter.raise_exception_for_missing_order_id()
-
         try:
             self.storage.check_if_order_exists(order_id=order_id)
         except custom_exceptions.OrderDoesNotExistException:

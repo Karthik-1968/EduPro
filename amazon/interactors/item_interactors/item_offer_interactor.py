@@ -216,3 +216,45 @@ class ItemOfferInteractor:
             self.storage.check_if_offer_is_already_added_to_order(order_id=order_id, offer_id=offer_id)
         except custom_exceptions.OfferAlreadyAddedToOrderException:
             self.presenter.raise_exception_for_offer_already_added_to_order()
+
+    
+    def add_exchange_properties_to_order(self, order_id:int, exchange_property_ids:list[int]):
+
+        """ELP
+            -check if order exists
+            -check if all exchange properties exists
+            -check if exchange properties are associated with item in order
+            -check if exchange properties are already added to order
+            -add properties to order
+        """
+
+        self._check_if_input_data_is_correct_for_add_exchange_properties_to_order(order_id=order_id, \
+                                                                                  exchange_property_ids=exchange_property_ids)
+        
+        self.storage.add_exchange_properties_to_order(order_id=order_id, exchange_property_ids=exchange_property_ids)
+
+        return self.presenter.get_response_for_add_exchange_properties_to_order()
+        
+    def _check_if_input_data_is_correct_for_add_exchange_properties_to_order(self, order_id:int, exchange_property_ids:list[int]):
+
+        try:
+            self.storage.check_if_order_exists(order_id=order_id)
+        except custom_exceptions.OrderDoesNotExistException:
+            self.presenter.raise_exception_for_order_does_not_exist()
+        
+        try:
+            self.storage.check_if_exchange_properties_exists(exchange_property_ids=exchange_property_ids)
+        except custom_exceptions.ExchangePropertyDoesNotExistException:
+            self.presenter.raise_exception_for_exchange_property_does_not_exist()
+        
+        try:
+            self.storage.check_if_exchange_properties_are_associated_with_item_in_order(order_id=order_id, \
+                                                                                        exchange_property_ids=exchange_property_ids)
+        except custom_exceptions.ExchangePropertiesAreNotAssociatedWithItemInOrderException:
+            self.presenter.raise_exception_for_exchange_properties_are_not_associated_with_item_in_order()
+        
+        try:
+            self.storage.check_if_exchange_properties_are_already_added_to_order(order_id=order_id, \
+                                                                                exchange_property_ids=exchange_property_ids)
+        except custom_exceptions.ExchangePropertiesAreAlreadyAddedToOrderException:
+            self.presenter.raise_exception_for_exchange_properties_are_already_added_to_order()

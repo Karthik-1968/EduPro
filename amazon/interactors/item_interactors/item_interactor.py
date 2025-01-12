@@ -13,17 +13,9 @@ class ItemInteractor:
     def create_item(self, item_dto:ItemDTO):
         
         """ELP
-            validate_input_details
-                -validate item_name
-                -validate category_id
-                -validate price
-                -number of left in stock
             check if item already exists
             create_item
         """
-        
-        self._validate_input_details_for_create_item(item_dto=item_dto)
-        
         try:
             self.storage.check_if_category_exists(category_id=item_dto.category_id)
         except custom_exceptions.CategoryDoesNotExistException:
@@ -38,36 +30,13 @@ class ItemInteractor:
 
         return self.presenter.get_response_for_create_item(item_id=item_id)
 
-    def _validate_input_details_for_create_item(self, item_dto:ItemDTO):
-        
-        item_name_not_present = not item_dto.item_name
-        if item_name_not_present:
-            self.presenter.raise_exception_for_missing_item_name()
-
-        category_id_not_present = not item_dto.category_id
-        if category_id_not_present:
-            self.presenter.raise_exception_for_missing_category_id()
-
-        price_not_present = not item_dto.price
-        if price_not_present:
-            self.presenter.raise_exception_for_missing_price()
-
-        number_of_left_in_stock_not_present = not item_dto.number_of_left_in_stock
-        if number_of_left_in_stock_not_present:
-            self.presenter.raise_exception_for_missing_number_of_left_in_stock()
-
     def get_item_details(self, item_id: str, user_id: str):
 
         """ELP
-            -validate input details
-                -validate user_id
-                -validate item_id
             -check if user exists
             -check if item exists
             -get item details
         """
-        self._validate_input_details_for_get_item_details(item_id=item_id, user_id=user_id)
-
         self._check_if_input_data_is_correct(item_id=item_id, user_id=user_id)
 
         self.add_view_to_item(user_id=user_id, item_id=item_id)
@@ -75,16 +44,6 @@ class ItemInteractor:
         item_dto = self.storage.get_item_details(item_id=item_id)
 
         return self.presenter.get_response_for_get_item_details(item_dto=item_dto)
-
-    def _validate_input_details_for_get_item_details(self, item_id:int, user_id:str):
-
-        item_id_not_present = not item_id
-        if item_id_not_present:
-            self.presenter.raise_exception_for_missing_item_id()
-
-        user_id_not_present = not user_id
-        if user_id_not_present:
-            self.presenter.raise_exception_for_missing_user_id()
 
     def _check_if_input_data_is_correct(self, item_id:int, user_id:str):
 
@@ -109,16 +68,9 @@ class ItemInteractor:
     def get_list_of_items_by_category(self, category_id:int):
 
         """ELP
-            validate_input_details
-                -validate category_id
             check if category exists
             get_list_of_items_by_category
         """
-
-        category_id_not_present = not category_id
-        if category_id_not_present:
-            self.presenter.raise_exception_for_missing_category_id()
-
         try:
             self.storage.check_if_category_exists(category_id=category_id)
         except custom_exceptions.CategoryDoesNotExistException:
@@ -131,16 +83,9 @@ class ItemInteractor:
     def create_property(self, property_name:str):
         
         """ELP
-            validate_input_details
-                -validate property_name
             check if property already exists
             create_property
         """
-
-        property_name_not_present = not property_name
-        if property_name_not_present:
-            self.presenter.raise_exception_for_missing_property_name()
-
         try:
             self.storage.check_if_property_already_exists(property_name=property_name)
         except custom_exceptions.PropertyAlreadyExistsException:
@@ -153,37 +98,16 @@ class ItemInteractor:
     def add_property_to_item(self, item_id:int, property_id:int, value:str):
 
         """ELP
-            validate_input_details
-                -validate item_id
-                -validate property_id
-                -validate value
             check if item exists
             check if property exists
             check if property already added to item
             add_property_to_item
         """
-
-        self._validate_input_details_for_add_property_to_item(item_id=item_id, property_id=property_id, value=value)
-
         self._check_if_input_data_is_correct_for_add_property_to_item(item_id=item_id, property_id=property_id, value=value)
 
         itemproperty_id = self.storage.add_property_to_item(item_id=item_id, property_id=property_id, value=value)
 
         return self.presenter.get_response_for_add_property_to_item(itemproperty_id=itemproperty_id)
-
-    def _validate_input_details_for_add_property_to_item(self, item_id:int, property_id:int, value:str):
-
-        item_id_not_present = not item_id
-        if item_id_not_present:
-            self.presenter.raise_exception_for_missing_item_id()
-
-        property_id_not_present = not property_id
-        if property_id_not_present:
-            self.presenter.raise_exception_for_missing_property_id()
-
-        value_not_present = not value
-        if value_not_present:
-            self.presenter.raise_exception_for_missing_value()
 
     def _check_if_input_data_is_correct_for_add_property_to_item(self, item_id:int, property_id:int, value:str):
 
@@ -206,15 +130,9 @@ class ItemInteractor:
     def delete_item_property(self, item_property_id:int):
 
         """ELP
-            validate itemproperty_id
             check if itemproperty exists
             delete itemproperty
         """
-
-        item_property_id_not_present = not item_property_id
-        if item_property_id_not_present:
-            self.presenter.raise_exception_for_missing_item_property_id()
-
         try:
             self.storage.check_if_item_property_exists(item_property_id=item_property_id)
         except custom_exceptions.ItemPropertyDoesNotExistException:
@@ -228,14 +146,9 @@ class ItemInteractor:
     def update_item_property(self, item_property_id:int, value:str):
 
         """ELP
-            -validate input details
-                -validate itemproperty_id
-                -validate value
             check if itemproperty exists
             update item property value
         """
-
-        self._validate_input_details_for_update_item_property(item_property_id=item_property_id, value=value)
 
         try:
             self.storage.check_if_item_property_exists(item_property_id=item_property_id)
@@ -245,16 +158,6 @@ class ItemInteractor:
         self.storage.update_item_property(item_property_id=item_property_id, value=value)
 
         return self.presenter.get_response_for_update_item_property()
-
-    def _validate_input_details_for_update_item_property(self,item_property_id:int, value:str):
-
-        item_property_id_not_present = not item_property_id
-        if item_property_id_not_present:
-            self.presenter.raise_exception_for_missing_item_property_id()
-
-        value_not_present = not value
-        if value_not_present:
-            self.presenter.raise_exception_for_missing_value()
 
     def add_view_to_item(self, user_id:str, item_id:int):
 

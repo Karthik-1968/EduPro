@@ -150,3 +150,18 @@ class OfferIsNotSpecificToItemInOrderException(Exception):
 
 class OfferAlreadyAddedToOrderException(Exception):
     pass
+
+class ExchangePropertiesAreNotAssociatedWithItemInOrderException(Exception):
+    pass
+
+class ExchangePropertiesAreAlreadyAddedToOrderException(Exception):
+    pass
+
+class ItemPropertyDoesNotBelongToItemException(Exception):
+    pass
+
+class WarrantyIsNotAssociatedWithItemException(Exception):
+    pass
+
+class WarrantyAlreadyAssociatedWithOrderException(Exception):
+    pass

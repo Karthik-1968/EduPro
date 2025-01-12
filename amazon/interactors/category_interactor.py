@@ -12,15 +12,9 @@ class CategoryInteractor:
     def create_category(self, category_name:str):
 
         """ELP
-            validate_input_details
-                -validate category_name
             check if category already exists
             create_category
         """
-        category_not_present = not category_name
-        if category_not_present:
-            self.presenter.raise_exception_for_missing_category_name()
-
         try:
             self.storage.check_if_category_already_exists(category_name=category_name)
         except CategoryAlreadyExistsException:
