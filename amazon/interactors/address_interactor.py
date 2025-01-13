@@ -1,12 +1,12 @@
-from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
-from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
+from amazon.interactors.storage_interfaces.user_storage_interface import UserStorageInterface
+from amazon.interactors.presenter_interfaces.user_presenter_interface import UserPresenterInterface
 from amazon.exceptions import custom_exceptions
 from amazon.interactors.storage_interfaces.storage_interface import AddressDTO
 
-
 class AddressInteractor:
 
-    def __init__(self, storage: StorageInterface, presenter: PresenterInterface):
+    def __init__(self, storage: UserStorageInterface, presenter: UserPresenterInterface):
+
         self.storage = storage
         self.presenter = presenter
 

@@ -1,7 +1,7 @@
 from abc import abstractmethod
-from typing import Optional
-from amazon.interactors.storage_interfaces.dtos import UserDTO, AddressDTO, CategoryDTO, ItemDTO, OrderDTO, CardPaymentMethodDTO, \
-    NetBankingPaymentMethodDTO, RatingDTO, EmiDTO, OfferDTO, ItemsCartDTO, ItemIdDTO, RefundDTO   
+from amazon.interactors.storage_interfaces.dtos import UserDTO, AddressDTO, CategoryDTO, ItemDTO, OrderItemDTO, CardPaymentMethodDTO, \
+    NetBankingPaymentMethodDTO, RatingDTO, EmiDTO, OfferDTO, ItemsCartDTO, ItemIdDTO, RefundDTO, OrderPaymentDTO, OrderCartItemsDTO, \
+    OrderIdDTO
 
 class StorageInterface:
 
@@ -94,15 +94,15 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_order_for_item(self, order_dto:OrderDTO)->int:
+    def create_order_for_item(self, order_dto:OrderItemDTO)->int:
         pass
 
     @abstractmethod
-    def get_orders_of_user(self, user_id:str)->list[OrderDTO]:
+    def get_orders_of_user(self, user_id:str)->list[OrderIdDTO]:
         pass
 
     @abstractmethod
-    def get_orders_of_item(self, item_id:int)->list[OrderDTO]:
+    def get_orders_of_item(self, item_id:int)->list[OrderIdDTO]:
         pass
 
     @abstractmethod
@@ -274,7 +274,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_order_for_cart(self, order_dto:OrderDTO)->int:
+    def create_order_for_cart(self, order_dto:OrderCartItemsDTO)->int:
         pass
 
     @abstractmethod

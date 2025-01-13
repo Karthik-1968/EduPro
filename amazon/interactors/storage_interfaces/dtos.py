@@ -115,6 +115,10 @@ class ItemsCartDTO:
     item_exchange_properties:Optional[list[int]]
 
 @dataclass
+class OrderIdDTO:
+    order_id:int
+
+@dataclass
 class RatingDTO:
     user_id:str
     rating:int

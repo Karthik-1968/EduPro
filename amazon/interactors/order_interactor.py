@@ -100,9 +100,9 @@ class OrderInteractor:
         except custom_exceptions.UserDoesNotExistException:
             self.presenter.raise_exception_for_user_does_not_exist()
 
-        order_dtos = self.storage.get_orders_of_user(user_id=user_id)
+        orderid_dtos = self.storage.get_orders_of_user(user_id=user_id)
 
-        return self.presenter.get_response_for_get_orders_of_user(order_dtos=order_dtos)
+        return self.presenter.get_response_for_get_orders_of_user(orderid_dtos=orderid_dtos)
 
     
     def get_orders_of_item(self, item_id:int):
@@ -116,9 +116,9 @@ class OrderInteractor:
         except custom_exceptions.ItemDoesNotExistException:
             self.presenter.raise_exception_for_item_does_not_exist()
 
-        order_dtos = self.storage.get_orders_of_item(item_id=item_id)
+        orderid_dtos = self.storage.get_orders_of_item(item_id=item_id)
 
-        return self.presenter.get_response_for_get_orders_of_item(order_dtos=order_dtos)
+        return self.presenter.get_response_for_get_orders_of_item(orderid_dtos=orderid_dtos)
 
     
     def delete_order(self, order_id:int):

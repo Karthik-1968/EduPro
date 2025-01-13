@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from amazon.interactors.storage_interfaces.storage_interface import CategoryDTO, ItemDTO, OrderDTO, RatingDTO, ItemIdDTO
+from amazon.interactors.storage_interfaces.dtos import CategoryDTO, ItemDTO, OrderIdDTO, RatingDTO, ItemIdDTO
 
 class PresenterInterface:
 
@@ -96,11 +96,11 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_get_orders_of_user(self, order_dtos:list[OrderDTO])->list[dict]:
+    def get_response_for_get_orders_of_user(self, order_dtos:list[OrderIdDTO])->list[dict]:
         pass
 
     @abstractmethod
-    def get_response_for_get_orders_of_item(self, order_dtos:list[OrderDTO])->list[dict]:
+    def get_response_for_get_orders_of_item(self, orderid_dtos:list[OrderIdDTO])->list[dict]:
         pass
 
     @abstractmethod

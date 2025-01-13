@@ -1,10 +1,10 @@
-from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
-from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
+from amazon.interactors.storage_interfaces.category_storage_interface import CategoryStorageInterface
+from amazon.interactors.presenter_interfaces.category_presenter_interface import CategoryPresenterInterface
 from amazon.exceptions.custom_exceptions import CategoryAlreadyExistsException
 
 class CategoryInteractor:
 
-    def __init__(self, storage: StorageInterface, presenter: PresenterInterface):
+    def __init__(self, storage: CategoryStorageInterface, presenter: CategoryPresenterInterface):
         self.storage = storage
         self.presenter = presenter
 
