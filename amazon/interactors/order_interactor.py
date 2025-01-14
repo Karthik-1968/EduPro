@@ -89,6 +89,16 @@ class OrderInteractor:
         except custom_exceptions.ItemDoesNotExistException:
             self.presenter.raise_exception_for_item_does_not_exist()
 
+        try:
+            self.storage.check_if_cart_exists(cart_id=ordercartitems_dto.cart_id)
+        except custom_exceptions.CartDoesNotExistException:
+            self.presenter.raise_exception_for_cart_does_not_exist()
+
+        try:
+            self.storage.check_if_items_are_in_cart(item_ids=ordercartitems_dto.item_ids, cart_id=ordercartitems_dto.cart_id)
+        except custom_exceptions.ItemDoesNotBelongToCartException:
+            self.presenter.raise_exception_for_item_does_not_belong_to_cart()
+
     def get_orders_of_user(self, user_id:str):
 
         """ELP

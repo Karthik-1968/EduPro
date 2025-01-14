@@ -165,3 +165,6 @@ class WarrantyIsNotAssociatedWithItemException(Exception):
 
 class WarrantyAlreadyAssociatedWithOrderException(Exception):
     pass
+
+class ItemDoesNotBelongToCartException(Exception):
+    pass

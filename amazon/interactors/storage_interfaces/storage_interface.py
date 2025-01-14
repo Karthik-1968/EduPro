@@ -536,3 +536,7 @@ class StorageInterface:
     @abstractmethod
     def check_if_item_properties_belong_to_item(self, item_properties:list[int], item_id:int):
         pass
+
+    @abstractmethod
+    def check_if_items_are_in_cart(self, item_ids:int, cart_id:int):
+        pass

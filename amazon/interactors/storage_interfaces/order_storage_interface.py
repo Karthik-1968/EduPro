@@ -62,3 +62,7 @@ class OrderStorageInterface:
     @abstractmethod
     def add_delivery_service_to_order(self, order_id:int, delivery_service_id:int):
         pass
+
+    @abstractmethod
+    def check_if_items_are_in_cart(self, item_ids:int, cart_id:int):
+        pass

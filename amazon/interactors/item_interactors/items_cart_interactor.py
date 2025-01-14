@@ -70,6 +70,11 @@ class ItemsCartInteractor:
         except custom_exceptions.ItemDoesNotExistException:
             self.presenter.raise_exception_for_item_does_not_exist()
 
+        try:
+            self.storage.check_if_number_of_left_in_stock_is_greater_than_zero(item_id=itemscart_dto.item_id)
+        except custom_exceptions.OutOfStockException:
+            self.presenter.raise_exception_for_out_of_stock()
+
     def _check_if_input_data_for_item_properties_is_correct_for_add_item_to_cart(self, itemscart_dto:ItemsCartDTO):
 
         try:

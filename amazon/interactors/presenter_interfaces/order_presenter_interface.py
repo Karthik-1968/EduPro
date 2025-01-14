@@ -62,3 +62,7 @@ class OrderPresenterInterface:
     @abstractmethod
     def get_response_for_add_delivery_service_to_order(self):
         pass
+
+    @abstractmethod
+    def raise_exception_for_item_does_not_belong_to_cart(self):
+        pass

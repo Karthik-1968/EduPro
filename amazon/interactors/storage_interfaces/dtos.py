@@ -51,7 +51,8 @@ class OrderCartItemsDTO:
     delivery_date:str
     delivery_charges:Optional[float]
     receiving_person_name:Optional[str]
-    item_ids:list[int]
+    item_ids: int
+    cart_id:int
 
 @dataclass
 class CardPaymentMethodDTO:

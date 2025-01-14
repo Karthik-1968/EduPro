@@ -3,7 +3,8 @@ from amazon.models import User, Address, UserAddress, Category, Item, Property, 
     ItemsWhishlist, PaymentMethod, Payment, ItemView, Rating, Refund, OrderItem
 from amazon.exceptions import custom_exceptions
 from amazon.interactors.storage_interfaces.dtos import UserDTO, AddressDTO, CategoryDTO, ItemDTO, ItemsCartDTO,\
-    OrderItemDTO, CardPaymentMethodDTO, NetBankingPaymentMethodDTO, OrderPaymentDTO, RatingDTO, ItemIdDTO, RefundDTO
+    OrderItemDTO, CardPaymentMethodDTO, NetBankingPaymentMethodDTO, OrderPaymentDTO, RatingDTO, ItemIdDTO, RefundDTO, \
+        OrderCartItemsDTO
 from django.db.models import Avg
 
 class StorageImplementation(StorageInterface):
@@ -236,18 +237,18 @@ class StorageImplementation(StorageInterface):
             itemscart.add(item_property)
 
     
-    def create_order_for_item(self, order_dto:OrderItemDTO)->int:
+    def create_order_for_item(self, orderitem_dto:OrderItemDTO)->int:
 
         order = Order.objects.create(
-            user_id=order_dto.user_id,
-            address_id=order_dto.address_id,
-            order_status=order_dto.order_status,
-            delivary_date=order_dto.delivary_date
+            user_id=orderitem_dto.user_id,
+            address_id=orderitem_dto.address_id,
+            order_status=orderitem_dto.order_status,
+            delivary_date=orderitem_dto.delivary_date
         )
 
-        orderitem = OrderItem.objects.create(order_id=order.id, item_id=order_dto.item_id)
+        orderitem = OrderItem.objects.create(order_id=order.id, item_id=orderitem_dto.item_id)
 
-        for item_property in order_dto.item_properties:
+        for item_property in orderitem_dto.item_properties:
             orderitem.add(item_property)
 
         return order.id
@@ -462,7 +463,7 @@ class StorageImplementation(StorageInterface):
         else:
             ItemView.objects.create(user_id=user_id, item_id=item_id, views=1)
 
-    def get_list_best_selling_items(self)->list[int]:
+    def get_list_best_selling_items(self)->list[ItemIdDTO]:
         
         items = Item.objects.all().order_by('-number_of_purchases_in_last_month')[:100]
         best_selling_items_dtos = []
@@ -571,3 +572,21 @@ class StorageImplementation(StorageInterface):
 
         refund.order.order_status = "Refunded"
         refund.order.save()
+
+
+    def create_order_for_cart(self, ordercartitems_dto:OrderCartItemsDTO)->int:
+
+        order = Order.objects.create(
+            user_id=ordercartitems_dto.user_id,
+            address_id=ordercartitems_dto.address_id,
+            order_status=ordercartitems_dto.order_status,
+            delivary_date=ordercartitems_dto.delivary_date
+        )
+
+        for item in ordercartitems_dto.item_ids:
+            ordercartitem = OrderItem.objects.create(order_id=order.id, item_id=ordercartitems_dto.item_id)
+            item_properties = ItemsCart.objects.get(id=ordercartitems_dto.cart_id, item_id=ordercartitems_dto.item_id).itemproperties.all()
+            for item_property in item_properties:
+                ordercartitem.add(item_property)
+
+        return order.id
