@@ -540,3 +540,7 @@ class StorageInterface:
     @abstractmethod
     def check_if_items_are_in_cart(self, item_ids:int, cart_id:int):
         pass
+
+    @abstractmethod
+    def create_partner_offer(self, offer_dto:OfferDTO)->int:
+        pass

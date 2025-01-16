@@ -102,3 +102,7 @@ class ItemOfferStorageInterface:
     @abstractmethod
     def add_exchange_properties_to_order(self, order_id:int, exchange_property_ids:list[int]):
         pass
+
+    @abstractmethod
+    def create_partner_offer(self, offer_dto:OfferDTO)->int:
+        pass

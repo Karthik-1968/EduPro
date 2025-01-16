@@ -66,3 +66,7 @@ class OrderPresenterInterface:
     @abstractmethod
     def raise_exception_for_item_does_not_belong_to_cart(self):
         pass
+
+    @abstractmethod
+    def raise_exception_for_delivery_service_already_exists(self):
+        pass

@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.storage_interface import StorageInter
 from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from amazon.exceptions import custom_exceptions
 from django_swagger_utils.drf_server.exceptions import BadRequest, NotFound
-from amazon.interactors.user_interactor import UserInteractor
+from amazon.interactors.address_interactor import AddressInteractor
 from mock import create_autospec
 import pytest
 
@@ -12,7 +12,7 @@ class TestAddAddressToUserInteractor:
 
         self.storage = create_autospec(StorageInterface)
         self.presenter = create_autospec(PresenterInterface)
-        self.interactor = UserInteractor(storage = self.storage, presenter = self.presenter)
+        self.interactor = AddressInteractor(storage = self.storage, presenter = self.presenter)
 
     def test_if_user_does_not_exist_raises_exception(self):
 

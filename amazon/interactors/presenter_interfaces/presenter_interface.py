@@ -432,7 +432,7 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_recommendations_for_multiple_users(self, recommendations_dtos:list[ItemDTO]])->list[dict]:
+    def get_response_for_recommendations_for_multiple_users(self, recommendations_dtos:list[ItemDTO])->list[dict]:
         pass
 
     @abstractmethod
@@ -533,4 +533,8 @@ class PresenterInterface:
 
     @abstractmethod
     def raise_exception_for_item_does_not_belong_to_cart(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_delivery_service_already_exists(self):
         pass

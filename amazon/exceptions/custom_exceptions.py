@@ -168,3 +168,6 @@ class WarrantyAlreadyAssociatedWithOrderException(Exception):
 
 class ItemDoesNotBelongToCartException(Exception):
     pass
+
+class DeliveryServiceDoesNotExistException(Exception):
+    pass

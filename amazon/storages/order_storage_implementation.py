@@ -37,3 +37,11 @@ class OrderStorageImplementation(OrderStorageInterface):
                 ordercartitem.add(item_property)
 
         return order.id
+    
+    def check_if_order_exists(self, order_id:int):
+
+        order = Order.objects.filter(id=order_id).exists()
+        order_not_exists = not order
+
+        if order_not_exists:
+            raise custom_exceptions.OrderDoesNotExistException
