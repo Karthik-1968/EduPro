@@ -2,15 +2,18 @@ from amazon.interactors.storage_interfaces.item_storage_interface import ItemSto
 from amazon.interactors.presenter_interfaces.item_presenter_interface import ItemPresenterInterface
 from amazon.interactors.storage_interfaces.user_storage_interface import UserStorageInterface
 from amazon.interactors.presenter_interfaces.user_presenter_interface import UserPresenterInterface
+from amazon.interactors.storage_interfaces.item_offer_storage_interface import ItemOfferStorageInterface
+from amazon.interactors.presenter_interfaces.item_offer_presenter_interface import ItemOfferPresenterInterface
 from amazon.exceptions import custom_exceptions
 from amazon.interactors.storage_interfaces.dtos import ItemsCartDTO
 
 class ItemsCartInteractor:
 
-    def __init__(self, item_storage: ItemStorageInterface, user_storage: UserStorageInterface):
+    def __init__(self, item_storage: ItemStorageInterface, user_storage: UserStorageInterface, item_offer_storage: ItemOfferStorageInterface):
         
         self.item_storage = item_storage
         self.user_storage = user_storage
+        self.item_offer_storage = item_offer_storage
 
     def create_cart(self, user_id:str, name:str, item_presenter: ItemPresenterInterface, user_presenter: UserPresenterInterface):
 
@@ -40,7 +43,7 @@ class ItemsCartInteractor:
             item_presenter.raise_exception_for_cart_already_created()
 
 
-    def add_item_to_cart(self, itemscart_dto:ItemsCartDTO, item_presenter: ItemPresenterInterface):
+    def add_item_to_cart(self, itemscart_dto:ItemsCartDTO, item_presenter: ItemPresenterInterface, item_offer_presenter: ItemOfferPresenterInterface):
 
         """ELP
             -check if cart exists
@@ -58,7 +61,7 @@ class ItemsCartInteractor:
                                                                                     item_presenter=item_presenter)
 
         self._check_if_input_data_for_item_exchange_property_is_correct_for_add_item_to_cart(itemscart_dto=itemscart_dto, \
-                                                                                             item_presenter=item_presenter)
+                                                                                             item_offer_presenter=item_offer_presenter)
 
         self.item_storage.add_item_to_cart(itemscart_dto=itemscart_dto)
 
@@ -112,19 +115,19 @@ class ItemsCartInteractor:
                 item_presenter.raise_exception_for_item_warranty_is_not_associated_with_item()
     
     def _check_if_input_data_for_item_exchange_property_is_correct_for_add_item_to_cart(self, itemscart_dto:ItemsCartDTO, \
-                                                                                         item_presenter: ItemPresenterInterface):
+                                                                                         item_offer_presenter: ItemOfferPresenterInterface):
 
-        if itemscart_dto.item_exchange_property_ids is not None:
+        if itemscart_dto.item_exchange_properties is not None:
             try:
-                self.item_storage.check_if_item_exchange_properties_exists(item_exchange_property_ids=itemscart_dto.item_exchange_property_ids)
+                self.item_offer_storage.check_if_item_exchange_properties_exists(item_exchange_property_ids=itemscart_dto.item_exchange_properties)
             except custom_exceptions.ItemExchangePropertyDoesNotExistException:
-                item_presenter.raise_exception_for_item_exchange_property_does_not_exist()
+                item_offer_presenter.raise_exception_for_item_exchange_property_does_not_exist()
 
             try:
-                self.item_storage.check_if_exchange_properties_are_associated_with_item_in_order(item_id=itemscart_dto.item_id, \
-                                                            item_exchange_property_ids=itemscart_dto.item_exchange_property_ids)
+                self.item_offer_storage.check_if_exchange_properties_are_associated_with_item_in_order(item_id=itemscart_dto.item_id, \
+                                                            item_exchange_property_ids=itemscart_dto.item_exchange_properties)
             except custom_exceptions.ExchangePropertiesAreNotAssociatedWithItemInOrderException:
-                item_presenter.raise_exception_for_exchange_properties_are_not_associated_with_item_in_order()
+                item_offer_presenter.raise_exception_for_exchange_properties_are_not_associated_with_item_in_order()
     
 
     def delete_item_from_cart_by_item_id(self, cart_id:int, item_id:int, item_presenter: ItemPresenterInterface):

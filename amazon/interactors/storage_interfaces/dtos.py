@@ -74,7 +74,7 @@ class NetBankingPaymentMethodDTO:
 @dataclass
 class OrderPaymentDTO:
     order_id:int
-    payment_method_id:int
+    paymentmethod_id:int
     payment_status:str
     amount:int
     transaction_id:str

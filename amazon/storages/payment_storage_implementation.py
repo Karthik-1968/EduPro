@@ -82,9 +82,9 @@ class PaymentStorageImplementation(PaymentStorageInterface):
         if order_not_exists:
             raise custom_exceptions.OrderDoesNotExistException
         
-    def check_if_payment_method_exists(self, payment_method_id:int):
+    def check_if_payment_method_exists(self, paymentmethod_id:int):
 
-        paymentmethod = PaymentMethod.objects.filter(id=payment_method_id).exists()
+        paymentmethod = PaymentMethod.objects.filter(id=paymentmethod_id).exists()
         paymentmethod_not_exists = not paymentmethod
 
         if paymentmethod_not_exists:
@@ -102,7 +102,7 @@ class PaymentStorageImplementation(PaymentStorageInterface):
 
         return payment.id
     
-        def create_refund_request(self, refund_dto:RefundDTO)->int:
+    def create_refund_request(self, refund_dto:RefundDTO)->int:
 
         refund = Refund.objects.create(
             user_id=refund_dto.user_id,

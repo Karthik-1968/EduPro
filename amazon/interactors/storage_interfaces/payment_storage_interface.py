@@ -36,7 +36,7 @@ class PaymentStorageInterface:
         pass
 
     @abstractmethod
-    def check_if_payment_method_exists(self, payment_method_id:int):
+    def check_if_payment_method_exists(self, paymentmethod_id:int):
         pass
 
     @abstractmethod

@@ -1,5 +1,5 @@
-from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
-from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
+from amazon.interactors.storage_interfaces.category_storage_interface import CategoryStorageInterface
+from amazon.interactors.presenter_interfaces.category_presenter_interface import CategoryPresenterInterface
 from amazon.interactors.category_interactor import CategoryInteractor
 from amazon.interactors.storage_interfaces.dtos import CategoryDTO
 from mock import create_autospec
@@ -8,9 +8,8 @@ class TestGetListOfCategoriesInteractor:
 
     def setup_method(self):
 
-        self.storage = create_autospec(StorageInterface)
-        self.presenter = create_autospec(PresenterInterface)
-        self.interactor = CategoryInteractor(storage = self.storage, presenter = self.presenter)
+        self.storage = create_autospec(CategoryStorageInterface)
+        self.interactor = CategoryInteractor(storage = self.storage)
 
     def test_get_list_of_categories(self):
 
@@ -26,12 +25,14 @@ class TestGetListOfCategoriesInteractor:
             {"category_name": "home"}
         ]
 
-        self.storage.get_list_of_categories.return_value = category_dtos
-        self.presenter.get_response_for_list_of_categories.return_value = expected_output
+        presenter = create_autospec(CategoryPresenterInterface)
 
-        actual_output = self.interactor.get_list_of_categories()
+        self.storage.get_list_of_categories.return_value = category_dtos
+        presenter.get_response_for_list_of_categories.return_value = expected_output
+
+        actual_output = self.interactor.get_list_of_categories(presenter=presenter)
 
         assert actual_output == expected_output
 
         self.storage.get_list_of_categories.assert_called_once()
-        self.presenter.get_response_for_list_of_categories.assert_called_once_with(category_dtos=category_dtos)
+        presenter.get_response_for_list_of_categories.assert_called_once_with(category_dtos=category_dtos)

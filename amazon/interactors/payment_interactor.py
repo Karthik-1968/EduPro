@@ -7,7 +7,7 @@ from amazon.interactors.storage_interfaces.dtos import CardPaymentMethodDTO, Net
 from typing import Optional
 
 
-class PaymentInteractor():
+class PaymentInteractor:
 
     def __init__(self, order_storage: OrderStorageInterface, payment_storage: PaymentStorageInterface):
         
@@ -71,7 +71,7 @@ class PaymentInteractor():
 
         paymentmethod_id = self.payment_storage.create_upi_payment_method(payment_type=payment_type, upi_id=upi_id)
 
-        return self.payment_presenter.get_response_for_create_upi_payment_method(paymentmethod_id=paymentmethod_id)
+        return payment_presenter.get_response_for_create_upi_payment_method(paymentmethod_id=paymentmethod_id)
 
     def _check_if_input_data_is_correct_for_create_upi_payment(self, payment_type:str, upi_id:str, payment_presenter: PaymentPresenterInterface):
 
@@ -98,7 +98,7 @@ class PaymentInteractor():
         """
         self.payment_storage.check_if_cash_on_delivery_payment_method_already_exists(payment_type=payment_type)
 
-        return self.payment_storage.create_cash_on_delivery_payment_method(payment_type=payment_type))
+        return self.payment_storage.create_cash_on_delivery_payment_method(payment_type=payment_type)
 
     def add_payment_method_to_order_wrapper(self, orderpayment_dto: OrderPaymentDTO, payment_presenter: PaymentPresenterInterface, 
                                             order_presenter: OrderPresenterInterface):
@@ -127,4 +127,4 @@ class PaymentInteractor():
         
         self.order_storage.check_if_order_exists(order_id=orderpayment_dto.order_id)
 
-        self.payment_storage.check_if_payment_method_exists(payment_method_id=orderpayment_dto.payment_method_id)
+        self.payment_storage.check_if_payment_method_exists(paymentmethod_id=orderpayment_dto.paymentmethod_id)

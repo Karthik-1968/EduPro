@@ -11,63 +11,70 @@ class TestAddAddressToUserInteractor:
     def setup_method(self):
 
         self.storage = create_autospec(StorageInterface)
-        self.presenter = create_autospec(PresenterInterface)
-        self.interactor = AddressInteractor(storage = self.storage, presenter = self.presenter)
+        self.interactor = AddressInteractor(storage = self.storage)
 
     def test_if_user_does_not_exist_raises_exception(self):
 
         user_id = "550e8400-e29b-41d4-a716-446655440000"
         address_id = 1
 
+        presenter = create_autospec(PresenterInterface)
+
         self.storage.check_if_user_exists.side_effect = custom_exceptions.UserDoesNotExistException
-        self.presenter.raise_exception_for_user_does_not_exist.side_effect = NotFound
+        presenter.raise_exception_for_user_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
-            self.interactor.add_address_to_user(user_id=user_id, address_id=address_id)
+            self.interactor.add_address_to_user(user_id=user_id, address_id=address_id, presenter=presenter)
         
         self.storage.check_if_user_exists.assert_called_once_with(user_id=user_id)
-        self.presenter.raise_exception_for_user_does_not_exist.assert_called_once()
+        presenter.raise_exception_for_user_does_not_exist.assert_called_once()
 
     def test_if_address_does_not_exist_raises_exception(self):
 
         user_id = "550e8400-e29b-41d4-a716-446655440000"
         address_id = 1
 
+        presenter = create_autospec(PresenterInterface)
+
         self.storage.check_if_address_exists.side_effect = custom_exceptions.AddressDoesNotExistException
-        self.presenter.raise_exception_for_address_does_not_exist.side_effect = NotFound
+        presenter.raise_exception_for_address_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
-            self.interactor.add_address_to_user(user_id=user_id, address_id=address_id)
+            self.interactor.add_address_to_user(user_id=user_id, address_id=address_id, presenter=presenter)
         
         self.storage.check_if_address_exists.assert_called_once_with(address_id=address_id)
-        self.presenter.raise_exception_for_address_does_not_exist.assert_called_once()
+        presenter.raise_exception_for_address_does_not_exist.assert_called_once()
 
     def test_if_address_already_added_to_user_raises_exception(self):
 
         user_id = "550e8400-e29b-41d4-a716-446655440000"
         address_id = 1
 
+        presenter = create_autospec(PresenterInterface)
+
         self.storage.check_if_address_already_added_to_user.side_effect = custom_exceptions.AddressAlreadyAddedToUserException
-        self.presenter.raise_exception_for_address_already_added_to_user.side_effect = BadRequest
+        presenter.raise_exception_for_address_already_added_to_user.side_effect = BadRequest
 
         with pytest.raises(BadRequest):
-            self.interactor.add_address_to_user(user_id=user_id, address_id=address_id)
+            self.interactor.add_address_to_user(user_id=user_id, address_id=address_id, presenter=presenter)
         
         self.storage.check_if_address_already_added_to_user.assert_called_once_with(user_id=user_id, address_id=address_id)
-        self.presenter.raise_exception_for_address_already_added_to_user.assert_called_once()
+        presenter.raise_exception_for_address_already_added_to_user.assert_called_once()
 
     def test_add_address_to_user(self):
 
         user_id = "550e8400-e29b-41d4-a716-446655440000"
         address_id = 1
 
+        presenter = create_autospec(PresenterInterface)
+
         useraddress_id = 1
         expected_output = {"useraddress_id":useraddress_id}
 
         self.storage.add_address_to_user.return_value = useraddress_id
-        self.presenter.get_response_for_add_address_to_user.return_value = expected_output
+        presenter.get_response_for_add_address_to_user.return_value = expected_output
 
-        actual_output = self.interactor.add_address_to_user(user_id=user_id, address_id=address_id)
+        actual_output = self.interactor.add_address_to_user(user_id=user_id, address_id=address_id, presenter=presenter)
 
         assert actual_output == expected_output
 
@@ -75,4 +82,4 @@ class TestAddAddressToUserInteractor:
         self.storage.check_if_address_exists.assert_called_once_with(address_id=address_id)
         self.storage.check_if_address_already_added_to_user.assert_called_once_with(user_id=user_id, address_id=address_id)
         self.storage.add_address_to_user.assert_called_once_with(user_id=user_id, address_id=address_id)
-        self.presenter.get_response_for_add_address_to_user.assert_called_once_with(useraddress_id=useraddress_id)
+        presenter.get_response_for_add_address_to_user.assert_called_once_with(useraddress_id=useraddress_id)

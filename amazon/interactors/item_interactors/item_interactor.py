@@ -115,7 +115,7 @@ class ItemInteractor:
 
         itemproperty_id = self.item_storage.add_property_to_item(item_id=item_id, property_id=property_id, value=value)
 
-        return self.item_presenter.get_response_for_add_property_to_item(itemproperty_id=itemproperty_id)
+        return item_presenter.get_response_for_add_property_to_item(itemproperty_id=itemproperty_id)
 
     def _check_if_input_data_is_correct_for_add_property_to_item(self, item_id:int, property_id:int, value:str, \
                                                                  item_presenter: ItemPresenterInterface):
