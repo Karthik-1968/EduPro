@@ -9,27 +9,25 @@ from amazon.interactors.storage_interfaces.dtos import RefundDTO
 
 class RefundInteractor:
 
-    def __init__(self, user_storage: UserStorageInterface, user_presenter: UserPresenterInterface, order_storage: OrderStorageInterface, \
-                 order_presenter: OrderPresenterInterface, payment_storage: PaymentStorageInterface, payment_presenter: PaymentPresenterInterface):
+    def __init__(self, user_storage: UserStorageInterface, order_storage: OrderStorageInterface, \
+                 payment_storage: PaymentStorageInterface):
         
         self.user_storage = user_storage
-        self.user_presenter = user_presenter
         self.order_storage = order_storage
-        self.order_presenter = order_presenter
         self.payment_storage = payment_storage
-        self.payment_presenter = payment_presenter
 
 
-    def create_refund_request_wrapper(self, refund_dto: RefundDTO):
+    def create_refund_request_wrapper(self, refund_dto: RefundDTO, user_presenter: UserPresenterInterface, \
+                                      order_presenter: OrderPresenterInterface, payment_presenter: PaymentPresenterInterface):
 
         try:
             refund_id = self.create_refund_request(refund_dto=refund_dto)
         except custom_exceptions.UserDoesNotExistException:
-            self.user_presenter.raise_exception_for_user_does_not_exist()
+            user_presenter.raise_exception_for_user_does_not_exist()
         except custom_exceptions.OrderDoesNotExistException:
-            self.order_presenter.raise_exception_for_order_does_not_exist()
+            order_presenter.raise_exception_for_order_does_not_exist()
         else:
-            return self.payment_presenter.get_response_for_create_refund_request(refund_id=refund_id)
+            return payment_presenter.get_response_for_create_refund_request(refund_id=refund_id)
 
     def create_refund_request(self, refund_dto: RefundDTO):
 
@@ -46,14 +44,14 @@ class RefundInteractor:
         return self.payment_storage.create_refund_request(refund_dto=refund_dto)
     
 
-    def update_refund_status_after_refunded_wrapper(self, refund_id: int):
+    def update_refund_status_after_refunded_wrapper(self, refund_id: int, payment_presenter: PaymentPresenterInterface):
         
         try:
             self.update_refund_status_after_refunded(refund_id=refund_id)
         except custom_exceptions.RefundDoesNotExistException:
-            self.payment_presenter.raise_exception_for_refund_does_not_exist()
+            payment_presenter.raise_exception_for_refund_does_not_exist()
         else:
-            return self.payment_presenter.get_response_for_update_refund_status_after_refunded()
+            return payment_presenter.get_response_for_update_refund_status_after_refunded()
     
     def update_refund_status_after_refunded(self, refund_id: int):
 

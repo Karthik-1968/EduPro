@@ -6,12 +6,11 @@ from amazon.interactors.storage_interfaces.dtos import UserDTO
 
 class UserInteractor:
     
-    def __init__(self, storage: UserStorageInterface, presenter: UserPresenterInterface):
+    def __init__(self, storage: UserStorageInterface):
         
         self.storage = storage
-        self.presenter = presenter
 
-    def create_user(self, user_dto:UserDTO):
+    def create_user(self, user_dto:UserDTO, presenter:UserPresenterInterface):
 
         """ELP
             check if user already exists
@@ -20,14 +19,14 @@ class UserInteractor:
         try:
             self.storage.check_if_user_already_exists(email=user_dto.email, contact_number=user_dto.contact_number)
         except UserAlreadyExistsException:
-            self.presenter.raise_exception_for_user_already_exists()
+            presenter.raise_exception_for_user_already_exists()
 
         user_id = self.storage.create_user(user_dto=user_dto)
 
-        return self.presenter.get_response_for_create_user(user_id=user_id)
+        return presenter.get_response_for_create_user(user_id=user_id)
     
 
-    def get_user_details(self, user_id:str):
+    def get_user_details(self, user_id:str, presenter:UserPresenterInterface):
 
         """ELP
             -check if user_exists
@@ -36,12 +35,12 @@ class UserInteractor:
         try:
             self.storage.check_if_user_exists(user_id=user_id)
         except UserDoesNotExistException:
-            self.presenter.raise_exception_for_user_does_not_exist()
+            presenter.raise_exception_for_user_does_not_exist()
 
         order_details = OrderInteractor.get_orders_of_user(user_id=user_id)
 
         user_details=self.storage.get_user_details(user_id=user_id)
 
-        return self.presenter.get_response_for_get_user_details(user_details=user_details,order_details=order_details)
+        return presenter.get_response_for_get_user_details(user_details=user_details,order_details=order_details)
 
 

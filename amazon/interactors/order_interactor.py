@@ -11,34 +11,31 @@ from typing import Optional
 class OrderInteractor:
 
 
-    def __init__(self, user_storage: UserStorageInterface, user_presenter: UserPresenterInterface, order_storage: OrderStorageInterface, \
-                 item_storage: ItemStorageInterface, order_presenter: OrderPresenterInterface, item_presenter: ItemPresenterInterface):
+    def __init__(self, user_storage: UserStorageInterface, order_storage: OrderStorageInterface, item_storage: ItemStorageInterface):
         
         self.user_storage = user_storage
-        self.user_presenter = user_presenter
         self.order_storage = order_storage
-        self.order_presenter = order_presenter
         self.item_storage = item_storage
-        self.item_presenter = item_presenter
 
-    def create_order_for_item_wrapper(self, orderitem_dto:OrderItemDTO):
+    def create_order_for_item_wrapper(self, orderitem_dto:OrderItemDTO, user_presenter:UserPresenterInterface, item_presenter:ItemPresenterInterface,\
+                                      order_presenter:OrderPresenterInterface):
         
         try:
             order_id = self.create_order_for_item(orderitem_dto=orderitem_dto)
         except custom_exceptions.UserDoesNotExistException:
-            self.user_presenter.raise_exception_for_user_does_not_exist()
+            user_presenter.raise_exception_for_user_does_not_exist()
         except custom_exceptions.ItemDoesNotExistException:
-            self.item_presenter.raise_exception_for_item_does_not_exist()
+            item_presenter.raise_exception_for_item_does_not_exist()
         except custom_exceptions.AddressDoesNotExistException:
-            self.user_presenter.raise_exception_for_address_does_not_exist()
+            user_presenter.raise_exception_for_address_does_not_exist()
         except custom_exceptions.ItemPropertyDoesNotExistException:
-            self.item_presenter.raise_exception_for_item_property_does_not_exist()
+            item_presenter.raise_exception_for_item_property_does_not_exist()
         except custom_exceptions.ItemPropertyDoesNotBelongToItemException:
-            self.item_presenter.raise_exception_for_item_property_does_not_belong_to_item()
+            item_presenter.raise_exception_for_item_property_does_not_belong_to_item()
         except custom_exceptions.OutOfStockException:
-            self.item_presenter.raise_exception_for_out_of_stock()
+            item_presenter.raise_exception_for_out_of_stock()
         else:
-            return self.order_presenter.get_response_for_create_order_for_item(order_id=order_id)
+            return order_presenter.get_response_for_create_order_for_item(order_id=order_id)
 
     def create_order_for_item(self, orderitem_dto:OrderItemDTO):
 
@@ -68,7 +65,8 @@ class OrderInteractor:
 
         self.item_storage.check_if_number_of_left_in_stock_is_greater_than_zero(item_id=orderitem_dto.item_id)
 
-    def create_order_for_cart(self, ordercartitems_dto:OrderCartItemsDTO):
+    def create_order_for_cart(self, ordercartitems_dto:OrderCartItemsDTO, user_presenter:UserPresenterInterface, \
+                              item_presenter:ItemPresenterInterface, order_presenter:OrderPresenterInterface):
         
         """ELP
             -check if user exists
@@ -76,40 +74,42 @@ class OrderInteractor:
             -check if address exists
             -create_order_for_cart
         """
-        self._check_if_input_data_is_correct_for_create_order_for_cart(ordercartitems_dto=ordercartitems_dto)
+        self._check_if_input_data_is_correct_for_create_order_for_cart(ordercartitems_dto=ordercartitems_dto, user_presenter=user_presenter, \
+                                                                       item_presenter=item_presenter)
 
         order_id = self.order_storage.create_order_for_cart(ordercartitems_dto=ordercartitems_dto)
 
-        return self.order_presenter.get_response_for_create_order_for_cart(order_id=order_id)
+        return order_presenter.get_response_for_create_order_for_cart(order_id=order_id)
     
-    def _check_if_input_data_is_correct_for_create_order_for_cart(self, ordercartitems_dto:OrderCartItemsDTO):
+    def _check_if_input_data_is_correct_for_create_order_for_cart(self, ordercartitems_dto:OrderCartItemsDTO, user_presenter:UserPresenterInterface, \
+                                                                  item_presenter:ItemPresenterInterface):
 
         try:
             self.user_storage.check_if_user_exists(user_id=ordercartitems_dto.user_id)
         except custom_exceptions.UserDoesNotExistException:
-            self.user_presenter.raise_exception_for_user_does_not_exist()
+            user_presenter.raise_exception_for_user_does_not_exist()
 
         try:
             self.user_storage.check_if_address_exists(address_id=ordercartitems_dto.address_id)
         except custom_exceptions.AddressDoesNotExistException:
-            self.user_presenter.raise_exception_for_address_does_not_exist()
+            user_presenter.raise_exception_for_address_does_not_exist()
 
         try:
             self.item_storage.check_if_items_exists(item_ids=ordercartitems_dto.item_ids)
         except custom_exceptions.ItemDoesNotExistException:
-            self.item_presenter.raise_exception_for_item_does_not_exist()
+            item_presenter.raise_exception_for_item_does_not_exist()
 
         try:
             self.item_storage.check_if_cart_exists(cart_id=ordercartitems_dto.cart_id)
         except custom_exceptions.CartDoesNotExistException:
-            self.item_presenter.raise_exception_for_cart_does_not_exist()
+            item_presenter.raise_exception_for_cart_does_not_exist()
 
         try:
             self.item_storage.check_if_items_are_in_cart(item_ids=ordercartitems_dto.item_ids, cart_id=ordercartitems_dto.cart_id)
         except custom_exceptions.ItemDoesNotBelongToCartException:
-            self.item_presenter.raise_exception_for_item_does_not_belong_to_cart()
+            item_presenter.raise_exception_for_item_does_not_belong_to_cart()
 
-    def get_orders_of_user(self, user_id:str):
+    def get_orders_of_user(self, user_id:str, user_presenter:UserPresenterInterface, order_presenter:OrderPresenterInterface):
 
         """ELP
             check if user exists
@@ -118,14 +118,14 @@ class OrderInteractor:
         try:
             self.user_storage.check_if_user_exists(user_id=user_id)
         except custom_exceptions.UserDoesNotExistException:
-            self.user_presenter.raise_exception_for_user_does_not_exist()
+            user_presenter.raise_exception_for_user_does_not_exist()
 
         orderid_dtos = self.order_storage.get_orders_of_user(user_id=user_id)
 
-        return self.order_presenter.get_response_for_get_orders_of_user(orderid_dtos=orderid_dtos)
+        return order_presenter.get_response_for_get_orders_of_user(orderid_dtos=orderid_dtos)
 
     
-    def get_orders_of_item(self, item_id:int):
+    def get_orders_of_item(self, item_id:int, item_presenter:ItemPresenterInterface, order_presenter:OrderPresenterInterface):
 
         """ELP
             check if item exists
@@ -134,14 +134,14 @@ class OrderInteractor:
         try:
             self.item_storage.check_if_item_exists(item_id=item_id)
         except custom_exceptions.ItemDoesNotExistException:
-            self.item_presenter.raise_exception_for_item_does_not_exist()
+            item_presenter.raise_exception_for_item_does_not_exist()
 
         orderid_dtos = self.order_storage.get_orders_of_item(item_id=item_id)
 
-        return self.order_presenter.get_response_for_get_orders_of_item(orderid_dtos=orderid_dtos)
+        return order_presenter.get_response_for_get_orders_of_item(orderid_dtos=orderid_dtos)
 
     
-    def delete_order(self, order_id:int):
+    def delete_order(self, order_id:int, order_presenter:OrderPresenterInterface):
 
         """ELP
             check if order exists
@@ -150,8 +150,8 @@ class OrderInteractor:
         try:
             self.order_storage.check_if_order_exists(order_id=order_id)
         except custom_exceptions.OrderDoesNotExistException:
-            self.order_presenter.raise_exception_for_order_does_not_exist()
+            order_presenter.raise_exception_for_order_does_not_exist()
 
         self.order_storage.delete_order(order_id=order_id)
 
-        return self.order_presenter.get_response_for_delete_order()
+        return order_presenter.get_response_for_delete_order()
