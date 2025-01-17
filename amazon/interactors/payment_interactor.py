@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.order_storage_interface import OrderS
 from amazon.interactors.presenter_interfaces.order_presenter_interface import OrderPresenterInterface
 from amazon.interactors.storage_interfaces.payment_storage_interface import PaymentStorageInterface
 from amazon.interactors.presenter_interfaces.payment_presenter_interface import PaymentPresenterInterface
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import payment_custom_exceptions, order_custom_exceptions
 from amazon.interactors.storage_interfaces.dtos import CardPaymentMethodDTO, NetBankingPaymentMethodDTO, OrderPaymentDTO
 
 class PaymentInteractor:
@@ -31,7 +31,7 @@ class PaymentInteractor:
     
         try:
             self.payment_storage.check_if_card_payment_method_already_exists(cardpaymentmethod_dto=cardpaymentmethod_dto)
-        except custom_exceptions.PaymentMethodAlreadyExistsException:
+        except payment_custom_exceptions.PaymentMethodAlreadyExistsException:
             payment_presenter.raise_exception_for_card_payment_method_already_exists()
 
 
@@ -54,7 +54,7 @@ class PaymentInteractor:
 
         try:
             self.payment_storage.check_if_net_banking_payment_method_already_exists(netbankingpaymentmethod_dto=netbankingpaymentmethod_dto)
-        except custom_exceptions.PaymentMethodAlreadyExistsException:
+        except payment_custom_exceptions.PaymentMethodAlreadyExistsException:
             payment_presenter.raise_exception_for_net_banking_payment_method_already_exists()
 
 
@@ -75,7 +75,7 @@ class PaymentInteractor:
 
         try:
             self.payment_storage.check_if_upi_payment_method_already_exists(payment_type=payment_type, upi_id=upi_id)
-        except custom_exceptions.PaymentMethodAlreadyExistsException:
+        except payment_custom_exceptions.PaymentMethodAlreadyExistsException:
             payment_presenter.raise_exception_for_upi_payment_method_already_exists()
 
 
@@ -83,7 +83,7 @@ class PaymentInteractor:
 
         try:
             paymentmethod_id = self.create_cash_on_delivery_payment_method(payment_type=payment_type)
-        except custom_exceptions.PaymentMethodAlreadyExistsException:
+        except payment_custom_exceptions.PaymentMethodAlreadyExistsException:
             payment_presenter.raise_exception_for_cash_on_delivery_payment_method_already_exists()
         else:
             return payment_presenter.get_response_for_create_cash_on_delivery_payment_method(paymentmethod_id=paymentmethod_id)
@@ -103,9 +103,9 @@ class PaymentInteractor:
 
         try:
             payment_id = self.add_payment_method_to_order(orderpayment_dto=orderpayment_dto)
-        except custom_exceptions.OrderDoesNotExistException:
+        except order_custom_exceptions.OrderDoesNotExistException:
             order_presenter.raise_exception_for_order_does_not_exist()
-        except custom_exceptions.PaymentMethodDoesNotExistException:
+        except payment_custom_exceptions.PaymentMethodDoesNotExistException:
             payment_presenter.raise_exception_for_payment_method_does_not_exist()
         else:
             return payment_presenter.get_response_for_add_payment_method_to_order(payment_id=payment_id)

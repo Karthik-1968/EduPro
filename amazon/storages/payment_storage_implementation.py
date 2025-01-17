@@ -1,7 +1,7 @@
 from amazon.interactors.storage_interfaces.payment_storage_interface import PaymentStorageInterface
 from amazon.interactors.storage_interfaces.dtos import CardPaymentMethodDTO, NetBankingPaymentMethodDTO, OrderPaymentDTO, RefundDTO
 from amazon.models import PaymentMethod, Payment, Order, Refund
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import payment_custom_exceptions
 
 class PaymentStorageImplementation(PaymentStorageInterface):
 
@@ -56,31 +56,23 @@ class PaymentStorageImplementation(PaymentStorageInterface):
                                          card_holder_name=cardpaymentmethod_dto.card_holder_name, \
                                              cvv=cardpaymentmethod_dto.cvv, expiry_date=cardpaymentmethod_dto.expiry_date, \
                                                  card_type=cardpaymentmethod_dto.card_type).exists():
-            raise custom_exceptions.PaymentMethodAlreadyExistsException
+            raise payment_custom_exceptions.PaymentMethodAlreadyExistsException
         
     def check_if_net_banking_payment_method_already_exists(self, netbankingpaymentmethod_dto:NetBankingPaymentMethodDTO):
 
         if PaymentMethod.objects.filter(payment_type=netbankingpaymentmethod_dto.payment_type, bank_name=netbankingpaymentmethod_dto.bank_name, \
                                         username=netbankingpaymentmethod_dto.username, password=netbankingpaymentmethod_dto.password).exists():
-            raise custom_exceptions.PaymentMethodAlreadyExistsException
+            raise payment_custom_exceptions.PaymentMethodAlreadyExistsException
         
     def check_if_upi_payment_method_already_exists(self, payment_type:str, upi_id:str):
 
         if PaymentMethod.objects.filter(payment_type=payment_type, upi_id=upi_id).exists():
-            raise custom_exceptions.PaymentMethodAlreadyExistsException
+            raise payment_custom_exceptions.PaymentMethodAlreadyExistsException
         
     def check_if_cash_on_delivery_payment_method_already_exists(self, payment_type:str):
 
         if PaymentMethod.objects.filter(payment_type=payment_type).exists():
-            raise custom_exceptions.PaymentMethodAlreadyExistsException
-        
-    def check_if_order_exists(self, order_id:int):
-        
-        order = Order.objects.filter(id=order_id).exists()
-        order_not_exists = not order
-
-        if order_not_exists:
-            raise custom_exceptions.OrderDoesNotExistException
+            raise payment_custom_exceptions.PaymentMethodAlreadyExistsException
         
     def check_if_payment_method_exists(self, paymentmethod_id:int):
 
@@ -88,7 +80,7 @@ class PaymentStorageImplementation(PaymentStorageInterface):
         paymentmethod_not_exists = not paymentmethod
 
         if paymentmethod_not_exists:
-            raise custom_exceptions.PaymentMethodDoesNotExistException
+            raise payment_custom_exceptions.PaymentMethodDoesNotExistException(paymentmethod_id=paymentmethod_id)
         
     def add_payment_method_to_order(self, orderpayment_dto:OrderPaymentDTO)->int:
         
@@ -121,7 +113,7 @@ class PaymentStorageImplementation(PaymentStorageInterface):
         refund_not_exists = not refund
 
         if refund_not_exists:
-            raise custom_exceptions.RefundDoesNotExistException
+            raise payment_custom_exceptions.RefundDoesNotExistException(refund_id=refund_id)
         
     
     def update_refund_status_after_refunded(self, refund_id:int):

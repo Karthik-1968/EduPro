@@ -3,7 +3,7 @@ from amazon.interactors.storage_interfaces.user_storage_interface import UserSto
 from amazon.interactors.presenter_interfaces.item_presenter_interface import ItemPresenterInterface
 from amazon.interactors.storage_interfaces.item_offer_storage_interface import ItemOfferStorageInterface
 from amazon.interactors.presenter_interfaces.item_offer_presenter_interface import ItemOfferPresenterInterface
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import item_custom_exceptions
 from django_swagger_utils.drf_server.exceptions import NotFound, BadRequest
 from amazon.interactors.item_interactors.items_cart_interactor import ItemsCartInteractor
 from amazon.interactors.storage_interfaces.dtos import ItemsCartDTO
@@ -32,7 +32,7 @@ class TestAddItemToCartInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         item_offer_presenter = create_autospec(ItemOfferPresenterInterface)
 
-        self.item_storage.check_if_item_exists.side_effect = custom_exceptions.ItemDoesNotExistException
+        self.item_storage.check_if_item_exists.side_effect = item_custom_exceptions.ItemDoesNotExistException(item_id=itemscart_dto.item_id)
         item_presenter.raise_exception_for_item_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -54,7 +54,7 @@ class TestAddItemToCartInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         item_offer_presenter = create_autospec(ItemOfferPresenterInterface)
 
-        self.item_storage.check_if_cart_exists.side_effect = custom_exceptions.CartDoesNotExistException
+        self.item_storage.check_if_cart_exists.side_effect = item_custom_exceptions.CartDoesNotExistException(cart_id=itemscart_dto.cart_id)
         item_presenter.raise_exception_for_cart_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -76,7 +76,7 @@ class TestAddItemToCartInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         item_offer_presenter = create_autospec(ItemOfferPresenterInterface)
 
-        self.item_storage.check_if_number_of_left_in_stock_is_greater_than_zero.side_effect = custom_exceptions.OutOfStockException
+        self.item_storage.check_if_number_of_left_in_stock_is_greater_than_zero.side_effect = item_custom_exceptions.OutOfStockException
         item_presenter.raise_exception_for_out_of_stock.side_effect = BadRequest
 
         with pytest.raises(BadRequest):
@@ -98,7 +98,8 @@ class TestAddItemToCartInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         item_offer_presenter = create_autospec(ItemOfferPresenterInterface)
 
-        self.item_storage.check_if_item_properties_exists.side_effect = custom_exceptions.ItemPropertyDoesNotExistException
+        self.item_storage.check_if_item_properties_exists.side_effect = item_custom_exceptions.ItemPropertyDoesNotExistException(\
+                                                                            item_property_id=itemscart_dto.item_properties[0])
         item_presenter.raise_exception_for_item_property_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -120,7 +121,8 @@ class TestAddItemToCartInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         item_offer_presenter = create_autospec(ItemOfferPresenterInterface)
 
-        self.item_storage.check_if_item_properties_belong_to_item.side_effect = custom_exceptions.ItemPropertyDoesNotBelongToItemException
+        self.item_storage.check_if_item_properties_belong_to_item.side_effect = item_custom_exceptions.ItemPropertyDoesNotBelongToItemException(\
+                                                item_id=itemscart_dto.item_id, item_property_id=itemscart_dto.item_properties[0])
         item_presenter.raise_exception_for_item_property_does_not_belong_to_item.side_effect = BadRequest
 
         with pytest.raises(BadRequest):

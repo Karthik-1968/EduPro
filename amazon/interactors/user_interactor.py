@@ -1,6 +1,6 @@
 from amazon.interactors.storage_interfaces.user_storage_interface import UserStorageInterface
 from amazon.interactors.presenter_interfaces.user_presenter_interface import UserPresenterInterface
-from amazon.exceptions.custom_exceptions import UserAlreadyExistsException, UserDoesNotExistException
+from amazon.exceptions.user_custom_exceptions import UserAlreadyExistsException, UserDoesNotExistException
 from amazon.interactors.order_interactor import OrderInteractor
 from amazon.interactors.storage_interfaces.dtos import UserDTO
 

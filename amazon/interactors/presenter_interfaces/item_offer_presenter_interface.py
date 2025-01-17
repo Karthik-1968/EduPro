@@ -55,7 +55,7 @@ class ItemOfferPresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_offer_does_not_exist(self):
+    def raise_exception_for_item_offer_does_not_exist(self):
         pass
 
     @abstractmethod
@@ -83,7 +83,7 @@ class ItemOfferPresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_offer_already_added_to_order(self):
+    def raise_exception_for_item_offer_already_added_to_order(self):
         pass
 
     @abstractmethod

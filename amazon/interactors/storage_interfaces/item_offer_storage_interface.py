@@ -60,7 +60,7 @@ class ItemOfferStorageInterface:
         pass
 
     @abstractmethod
-    def check_if_offer_exists(self, offer_id:int):
+    def check_if_item_offer_exists(self, item_offer_id:int):
         pass
 
     @abstractmethod
@@ -68,7 +68,7 @@ class ItemOfferStorageInterface:
         pass
 
     @abstractmethod
-    def add_offer_to_order(self, order_id:int, offer_id:int):
+    def add_offer_to_order(self, order_id:int, item_offer_id:int):
         pass
 
     @abstractmethod
@@ -84,11 +84,11 @@ class ItemOfferStorageInterface:
         pass
 
     @abstractmethod
-    def check_if_offer_is_specific_to_item_in_order(self, order_id:int, offer_id:int):
+    def check_if_offer_is_specific_to_item_in_order(self, order_id:int, item_offer_id:int):
         pass
 
     @abstractmethod
-    def check_if_offer_is_already_added_to_order(self, order_id:int, offer_id:int):
+    def check_if_item_offer_is_already_added_to_order(self, order_id:int, item_offer_id:int):
         pass
 
     @abstractmethod

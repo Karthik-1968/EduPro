@@ -228,11 +228,11 @@ class ItemStorageInterface:
         pass
 
     @abstractmethod
-    def check_if_warranty_is_associated_with_item(self, item_id:int, item_warranty_id:int):
+    def check_if_item_warranty_is_associated_with_item(self, item_id:int, item_warranty_id:int):
         pass
 
     @abstractmethod
-    def check_if_warranty_is_already_associated_with_order(self, order_id:int, item_warranty_id:int):
+    def check_if_item_warranty_is_already_associated_with_order(self, order_id:int, item_warranty_id:int):
         pass
 
     @abstractmethod

@@ -1,7 +1,7 @@
 from amazon.interactors.storage_interfaces.order_storage_interface import OrderStorageInterface
 from amazon.interactors.storage_interfaces.dtos import OrderItemDTO, OrderCartItemsDTO
 from amazon.models import Order, OrderItem, ItemsCart
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import order_custom_exceptions
 
 class OrderStorageImplementation(OrderStorageInterface):
 
@@ -44,4 +44,4 @@ class OrderStorageImplementation(OrderStorageInterface):
         order_not_exists = not order
 
         if order_not_exists:
-            raise custom_exceptions.OrderDoesNotExistException
+            raise order_custom_exceptions.OrderDoesNotExistException(order_id=order_id)

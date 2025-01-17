@@ -232,7 +232,7 @@ class ItemPresenterInterface:
         pass
 
     @abstractmethod
-    def raise_exception_for_warranty_already_associated_with_order(self):
+    def raise_exception_for_item_warranty_already_associated_with_order(self):
         pass
 
     @abstractmethod

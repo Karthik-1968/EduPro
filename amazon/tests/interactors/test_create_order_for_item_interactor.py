@@ -4,7 +4,7 @@ from amazon.interactors.storage_interfaces.item_storage_interface import ItemSto
 from amazon.interactors.presenter_interfaces.user_presenter_interface import UserPresenterInterface
 from amazon.interactors.presenter_interfaces.order_presenter_interface import OrderPresenterInterface
 from amazon.interactors.presenter_interfaces.item_presenter_interface import ItemPresenterInterface
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import user_custom_exceptions, item_custom_exceptions
 from django_swagger_utils.drf_server.exceptions import NotFound, BadRequest
 from amazon.interactors.storage_interfaces.dtos import OrderItemDTO
 from amazon.interactors.order_interactor import OrderInteractor
@@ -36,7 +36,7 @@ class TestCreateOrderForItemInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         order_presenter = create_autospec(OrderPresenterInterface)
 
-        self.user_storage.check_if_user_exists.side_effect = custom_exceptions.UserDoesNotExistException
+        self.user_storage.check_if_user_exists.side_effect = user_custom_exceptions.UserDoesNotExistException(user_id=orderitem_dto.user_id)
         user_presenter.raise_exception_for_user_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -62,7 +62,7 @@ class TestCreateOrderForItemInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         order_presenter = create_autospec(OrderPresenterInterface)
 
-        self.item_storage.check_if_item_exists.side_effect = custom_exceptions.ItemDoesNotExistException
+        self.item_storage.check_if_item_exists.side_effect = item_custom_exceptions.ItemDoesNotExistException(item_id=orderitem_dto.item_id)
         item_presenter.raise_exception_for_item_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -89,7 +89,7 @@ class TestCreateOrderForItemInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         order_presenter = create_autospec(OrderPresenterInterface)
 
-        self.user_storage.check_if_address_exists.side_effect = custom_exceptions.AddressDoesNotExistException
+        self.user_storage.check_if_address_exists.side_effect = user_custom_exceptions.AddressDoesNotExistException(address_id=orderitem_dto.address_id)
         user_presenter.raise_exception_for_address_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -116,7 +116,8 @@ class TestCreateOrderForItemInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         order_presenter = create_autospec(OrderPresenterInterface)
 
-        self.item_storage.check_if_item_properties_exists.side_effect = custom_exceptions.ItemPropertyDoesNotExistException
+        self.item_storage.check_if_item_properties_exists.side_effect = item_custom_exceptions.ItemPropertyDoesNotExistException(\
+                                                                            item_property_id=orderitem_dto.item_properties[0])
         item_presenter.raise_exception_for_item_properties_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -143,7 +144,8 @@ class TestCreateOrderForItemInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         order_presenter = create_autospec(OrderPresenterInterface)
 
-        self.item_storage.check_if_item_properties_belong_to_item.side_effect = custom_exceptions.ItemPropertyDoesNotBelongToItemException
+        self.item_storage.check_if_item_properties_belong_to_item.side_effect = item_custom_exceptions.ItemPropertyDoesNotBelongToItemException(\
+                                                    item_property_id=orderitem_dto.item_properties[0], item_id=orderitem_dto.item_id)
         item_presenter.raise_exception_for_item_property_does_not_belong_to_item.side_effect = BadRequest
 
         with pytest.raises(BadRequest):
@@ -171,7 +173,7 @@ class TestCreateOrderForItemInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         order_presenter = create_autospec(OrderPresenterInterface)
 
-        self.item_storage.check_if_number_of_left_in_stock_is_greater_than_zero.side_effect = custom_exceptions.OutOfStockException
+        self.item_storage.check_if_number_of_left_in_stock_is_greater_than_zero.side_effect = item_custom_exceptions.OutOfStockException
         item_presenter.raise_exception_for_out_of_stock.side_effect = NotFound
 
         with pytest.raises(NotFound):

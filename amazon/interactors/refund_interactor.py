@@ -4,7 +4,7 @@ from amazon.interactors.storage_interfaces.order_storage_interface import OrderS
 from amazon.interactors.presenter_interfaces.order_presenter_interface import OrderPresenterInterface
 from amazon.interactors.storage_interfaces.payment_storage_interface import PaymentStorageInterface
 from amazon.interactors.presenter_interfaces.payment_presenter_interface import PaymentPresenterInterface
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import payment_custom_exceptions, user_custom_exceptions, order_custom_exceptions
 from amazon.interactors.storage_interfaces.dtos import RefundDTO
 
 class RefundInteractor:
@@ -22,9 +22,9 @@ class RefundInteractor:
 
         try:
             refund_id = self.create_refund_request(refund_dto=refund_dto)
-        except custom_exceptions.UserDoesNotExistException:
+        except user_custom_exceptions.UserDoesNotExistException:
             user_presenter.raise_exception_for_user_does_not_exist()
-        except custom_exceptions.OrderDoesNotExistException:
+        except order_custom_exceptions.OrderDoesNotExistException:
             order_presenter.raise_exception_for_order_does_not_exist()
         else:
             return payment_presenter.get_response_for_create_refund_request(refund_id=refund_id)
@@ -48,7 +48,7 @@ class RefundInteractor:
         
         try:
             self.update_refund_status_after_refunded(refund_id=refund_id)
-        except custom_exceptions.RefundDoesNotExistException:
+        except payment_custom_exceptions.RefundDoesNotExistException:
             payment_presenter.raise_exception_for_refund_does_not_exist()
         else:
             return payment_presenter.get_response_for_update_refund_status_after_refunded()

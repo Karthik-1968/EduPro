@@ -3,7 +3,7 @@ from amazon.interactors.presenter_interfaces.item_presenter_interface import Ite
 from amazon.interactors.storage_interfaces.user_storage_interface import UserStorageInterface
 from amazon.interactors.presenter_interfaces.user_presenter_interface import UserPresenterInterface
 from amazon.interactors.storage_interfaces.item_offer_storage_interface import ItemOfferStorageInterface
-from amazon.exceptions.custom_exceptions import CartAlreadyCreatedException, UserDoesNotExistException
+from amazon.exceptions import user_custom_exceptions, item_custom_exceptions
 from django_swagger_utils.drf_server.exceptions import BadRequest, NotFound
 from amazon.interactors.item_interactors.items_cart_interactor import ItemsCartInteractor
 from mock import create_autospec
@@ -27,7 +27,7 @@ class TestCreateItemsCartInteractor:
         user_presenter = create_autospec(UserPresenterInterface)
         item_presenter = create_autospec(ItemPresenterInterface)
 
-        self.user_storage.check_if_user_exists.side_effect= UserDoesNotExistException
+        self.user_storage.check_if_user_exists.side_effect= user_custom_exceptions.UserDoesNotExistException(user_id=user_id)
         user_presenter.raise_exception_for_user_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -44,7 +44,7 @@ class TestCreateItemsCartInteractor:
         user_presenter = create_autospec(UserPresenterInterface)
         item_presenter = create_autospec(ItemPresenterInterface)
 
-        self.item_storage.check_if_cart_already_created_for_user.side_effect = CartAlreadyCreatedException
+        self.item_storage.check_if_cart_already_created_for_user.side_effect = item_custom_exceptions.CartAlreadyCreatedException                                   
         item_presenter.raise_exception_for_cart_already_created.side_effect = BadRequest
 
         with pytest.raises(BadRequest):

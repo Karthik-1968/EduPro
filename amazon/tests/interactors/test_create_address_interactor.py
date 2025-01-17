@@ -1,6 +1,6 @@
-from amazon.interactors.storage_interfaces.storage_interface import StorageInterface
-from amazon.interactors.presenter_interfaces.presenter_interface import PresenterInterface
-from amazon.exceptions.custom_exceptions import AddressAlreadyExistsException
+from amazon.interactors.storage_interfaces.user_storage_interface import UserStorageInterface
+from amazon.interactors.presenter_interfaces.user_presenter_interface import UserPresenterInterface
+from amazon.exceptions.user_custom_exceptions import AddressAlreadyExistsException
 from django_swagger_utils.drf_server.exceptions import BadRequest
 from amazon.interactors.address_interactor import AddressInteractor
 from amazon.interactors.storage_interfaces.dtos import AddressDTO
@@ -11,7 +11,7 @@ class TestCreateAddressInteractor:
 
     def setup_method(self):
 
-        self.storage = create_autospec(StorageInterface)
+        self.storage = create_autospec(UserStorageInterface)
         self.interactor = AddressInteractor(storage = self.storage)
 
     def test_if_address_already_exists_raises_exception(self):
@@ -27,7 +27,7 @@ class TestCreateAddressInteractor:
         contact_number = "9876543210",
         address_type = "home")
 
-        presenter = create_autospec(PresenterInterface)
+        presenter = create_autospec(UserPresenterInterface)
 
         self.storage.check_if_address_already_exists.side_effect = AddressAlreadyExistsException
         presenter.raise_exception_for_address_already_exists.side_effect = BadRequest
@@ -51,7 +51,7 @@ class TestCreateAddressInteractor:
         contact_number = "9876543210",
         address_type = "home")
 
-        presenter = create_autospec(PresenterInterface)
+        presenter = create_autospec(UserPresenterInterface)
 
         address_id = 1
         expected_output = {"address_id": address_id}

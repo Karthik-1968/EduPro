@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.item_storage_interface import ItemSto
 from amazon.interactors.presenter_interfaces.item_presenter_interface import ItemPresenterInterface
 from amazon.interactors.storage_interfaces.user_storage_interface import UserStorageInterface
 from amazon.interactors.storage_interfaces.category_storage_interface import CategoryStorageInterface
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import item_custom_exceptions
 from mock import create_autospec
 from django_swagger_utils.drf_server.exceptions import NotFound, BadRequest
 from amazon.interactors.item_interactors.item_interactor import ItemInteractor
@@ -26,7 +26,7 @@ class TestAddPropertyToItemInteractor:
 
         item_presenter = create_autospec(ItemPresenterInterface)
 
-        self.item_storage.check_if_item_exists.side_effect = custom_exceptions.ItemDoesNotExistException
+        self.item_storage.check_if_item_exists.side_effect = item_custom_exceptions.ItemDoesNotExistException(item_id=item_id)
         item_presenter.raise_exception_for_item_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -43,7 +43,8 @@ class TestAddPropertyToItemInteractor:
 
         item_presenter = create_autospec(ItemPresenterInterface)
 
-        self.item_storage.check_if_property_exists.side_effect = custom_exceptions.PropertyDoesNotExistException
+        self.item_storage.check_if_property_exists.side_effect = item_custom_exceptions.PropertyDoesNotExistException(property_id=\
+                                                                                                                property_id)
         item_presenter.raise_exception_for_property_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -60,7 +61,8 @@ class TestAddPropertyToItemInteractor:
 
         item_presenter = create_autospec(ItemPresenterInterface)
 
-        self.item_storage.check_if_property_already_added_to_item.side_effect = custom_exceptions.PropertyAlreadyAddedToItemException
+        self.item_storage.check_if_property_already_added_to_item.side_effect = item_custom_exceptions.PropertyAlreadyAddedToItemException(\
+            item_id=item_id, property_id=property_id)
         item_presenter.raise_exception_for_property_already_added_to_item.side_effect = BadRequest
 
         with pytest.raises(BadRequest):

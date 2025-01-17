@@ -1,7 +1,7 @@
 from amazon.interactors.item_interactors.item_interactor import ItemInteractor
 from mock import create_autospec
 import pytest
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import item_custom_exceptions, user_custom_exceptions
 from django_swagger_utils.drf_server.exceptions import NotFound
 from amazon.interactors.storage_interfaces.item_storage_interface import ItemStorageInterface
 from amazon.interactors.presenter_interfaces.item_presenter_interface import ItemPresenterInterface
@@ -28,7 +28,7 @@ class TestGetItemDetailsInteractor:
         user_presenter = create_autospec(UserPresenterInterface)
         item_presenter = create_autospec(ItemPresenterInterface)
         
-        self.item_storage.check_if_item_exists.side_effect = custom_exceptions.ItemDoesNotExistException
+        self.item_storage.check_if_item_exists.side_effect = item_custom_exceptions.ItemDoesNotExistException(item_id=item_id)
         item_presenter.raise_exception_for_item_does_not_exist.side_effect = NotFound
         
         with pytest.raises(NotFound):
@@ -46,7 +46,7 @@ class TestGetItemDetailsInteractor:
         user_presenter = create_autospec(UserPresenterInterface)
         item_presenter = create_autospec(ItemPresenterInterface)
     
-        self.user_storage.check_if_user_exists.side_effect = custom_exceptions.UserDoesNotExistException
+        self.user_storage.check_if_user_exists.side_effect = user_custom_exceptions.UserDoesNotExistException(user_id=user_id)
         user_presenter.raise_exception_for_user_does_not_exist.side_effect = NotFound
         
         with pytest.raises(NotFound):
@@ -70,6 +70,7 @@ class TestGetItemDetailsInteractor:
             item_name="item",
             price=100.0,
             number_of_left_in_stock=10,
+            number_of_purchases_in_last_month=5,
             views=5
         )
 
@@ -78,6 +79,7 @@ class TestGetItemDetailsInteractor:
             "item_name": "item",
             "price": 100.0,
             "number_of_left_in_stock": 10,
+            "number_of_purchases_in_last_month": 5,
             "views": 5
         }
         

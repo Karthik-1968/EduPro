@@ -3,7 +3,7 @@ from amazon.interactors.storage_interfaces.order_storage_interface import OrderS
 from amazon.interactors.storage_interfaces.item_storage_interface import ItemStorageInterface
 from amazon.interactors.presenter_interfaces.user_presenter_interface import UserPresenterInterface
 from amazon.interactors.presenter_interfaces.order_presenter_interface import OrderPresenterInterface
-from amazon.exceptions.custom_exceptions import UserDoesNotExistException
+from amazon.exceptions.user_custom_exceptions import UserDoesNotExistException
 from django_swagger_utils.drf_server.exceptions import NotFound
 from amazon.interactors.storage_interfaces.dtos import OrderIdDTO
 from amazon.interactors.order_interactor import OrderInteractor
@@ -26,7 +26,7 @@ class TestGetOrdersOfUser:
         user_presenter = create_autospec(UserPresenterInterface)
         order_presenter = create_autospec(OrderPresenterInterface)
 
-        self.user_storage.check_if_user_exists.side_effect = UserDoesNotExistException
+        self.user_storage.check_if_user_exists.side_effect = UserDoesNotExistException(user_id=user_id)
         user_presenter.raise_exception_for_user_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):

@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.category_storage_interface import Cat
 from amazon.interactors.presenter_interfaces.category_presenter_interface import CategoryPresenterInterface
 from django_swagger_utils.drf_server.exceptions import BadRequest
 from amazon.interactors.category_interactor import CategoryInteractor
-from amazon.exceptions.custom_exceptions import CategoryAlreadyExistsException
+from amazon.exceptions.category_custom_exceptions import CategoryAlreadyExistsException
 from unittest.mock import create_autospec
 import pytest
 

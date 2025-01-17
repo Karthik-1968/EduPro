@@ -3,7 +3,7 @@ from amazon.interactors.presenter_interfaces.item_presenter_interface import Ite
 from amazon.interactors.storage_interfaces.category_storage_interface import CategoryStorageInterface
 from amazon.interactors.presenter_interfaces.category_presenter_interface import CategoryPresenterInterface
 from amazon.interactors.storage_interfaces.user_storage_interface import UserStorageInterface
-from amazon.exceptions.custom_exceptions import CategoryDoesNotExistException
+from amazon.exceptions.category_custom_exceptions import CategoryDoesNotExistException
 from amazon.interactors.item_interactors.item_interactor import ItemInteractor
 from mock import create_autospec
 from django_swagger_utils.drf_server.exceptions import NotFound
@@ -26,7 +26,7 @@ class TestGetListOfItemsByCategory:
         category_presenter = create_autospec(CategoryPresenterInterface)
         item_presenter = create_autospec(ItemPresenterInterface)
 
-        self.category_storage.check_if_category_exists.side_effect = CategoryDoesNotExistException
+        self.category_storage.check_if_category_exists.side_effect = CategoryDoesNotExistException(category_id=category_id)
         category_presenter.raise_exception_for_category_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -41,8 +41,10 @@ class TestGetListOfItemsByCategory:
         category_id = 1
 
         item_dtos = [
-            ItemDTO(item_name="item1", category_id=1, price=1000.0, number_of_left_in_stock=10, views=0),
-            ItemDTO(item_name="item2", category_id=1, price=2000.0, number_of_left_in_stock=10, views=0)
+            ItemDTO(item_name="item1", category_id=1, price=1000.0, number_of_left_in_stock=10, number_of_purchases_in_last_month=5, 
+            views=10),
+            ItemDTO(item_name="item2", category_id=1, price=2000.0, number_of_left_in_stock=10, number_of_purchases_in_last_month=5, 
+            views=10)
         ]
 
         expected_output = [

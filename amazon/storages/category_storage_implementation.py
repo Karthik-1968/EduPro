@@ -1,14 +1,14 @@
 from amazon.interactors.storage_interfaces.category_storage_interface import CategoryStorageInterface
 from amazon.interactors.storage_interfaces.dtos import CategoryDTO
 from amazon.models import Category
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import category_custom_exceptions
 
 class CategoryStorageImplementation(CategoryStorageInterface):
 
     def check_if_category_already_exists(self, category_name):
         
         if Category.objects.filter(name=category_name).exists():
-            raise custom_exceptions.CategoryAlreadyExistsException
+            raise category_custom_exceptions.CategoryAlreadyExistsException()
 
     def create_category(self, category_name:str)->int:
         
@@ -43,4 +43,4 @@ class CategoryStorageImplementation(CategoryStorageInterface):
         category_not_exists = not category
 
         if category_not_exists:
-            raise custom_exceptions.CategoryDoesNotExistException
+            raise category_custom_exceptions.CategoryDoesNotExistException(category_id=category_id)

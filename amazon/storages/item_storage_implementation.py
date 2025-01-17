@@ -1,14 +1,14 @@
 from amazon.interactors.storage_interfaces.item_storage_interface import ItemStorageInterface
 from amazon.interactors.storage_interfaces.dtos import ItemDTO, ItemsCartDTO, ItemIdDTO, RatingDTO
 from amazon.models import Item, Property, ItemProperty, Cart, ItemsCart, Whishlist, ItemsWhishlist, Order, ItemView, Rating
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import item_custom_exceptions
 
 class ItemStorageImplementation(ItemStorageInterface):
 
     def check_if_item_already_exists(self, item_name):
 
         if Item.objects.filter(name=item_name).exists():
-            raise custom_exceptions.ItemAlreadyExistsException
+            raise item_custom_exceptions.ItemAlreadyExistsException()
         
     def create_item(self, item_dto:ItemDTO)->int:
         
@@ -21,7 +21,7 @@ class ItemStorageImplementation(ItemStorageInterface):
     def check_if_property_already_exists(self, property_name:str):
         
         if Property.objects.filter(property_name=property_name).exists():
-            raise custom_exceptions.PropertyAlreadyExistsException
+            raise item_custom_exceptions.PropertyAlreadyExistsException()
     
     def create_property(self, property_name:str)->int:
 
@@ -37,7 +37,7 @@ class ItemStorageImplementation(ItemStorageInterface):
         item_not_exists = not item
 
         if item_not_exists:
-            raise custom_exceptions.ItemDoesNotExistException
+            raise item_custom_exceptions.ItemDoesNotExistException(item_id=item_id)
         
     def check_if_property_exists(self, property_id:int):
         
@@ -45,7 +45,7 @@ class ItemStorageImplementation(ItemStorageInterface):
         property_not_exists = not property
 
         if property_not_exists:
-            raise custom_exceptions.PropertyDoesNotExistException()
+            raise item_custom_exceptions.PropertyDoesNotExistException(property_id=property_id)
         
     def add_property_to_item(self, item_id:int, property_id:int, value:str):
 
@@ -94,7 +94,7 @@ class ItemStorageImplementation(ItemStorageInterface):
     def check_if_cart_already_created_for_user(self, user_id):
         
         if Cart.objects.filter(user_id=user_id).exists():
-            raise custom_exceptions.CartAlreadyExistsException
+            raise custom_exceptions.CartAlreadyExistsException()
         
     def create_cart(self, user_id:str, name:str)->int:
         
@@ -110,7 +110,7 @@ class ItemStorageImplementation(ItemStorageInterface):
         cart_not_exists = not cart
 
         if cart_not_exists:
-            raise custom_exceptions.CartDoesNotExistException
+            raise item_custom_exceptions.CartDoesNotExistException(cart_id=cart_id)
     
     def add_item_to_cart(self, itemscart_dto:ItemsCartDTO):
         
@@ -125,7 +125,7 @@ class ItemStorageImplementation(ItemStorageInterface):
      def check_if_whishlist_already_created_for_user(self, user_id:str):
         
         if Whishlist.objects.filter(user_id=user_id).exists():
-            raise custom_exceptions.WhishlistAlreadyCreatedException
+            raise item_custom_exceptions.WhishlistAlreadyCreatedException()
         
     def create_whishlist_for_user(self, user_id:str, name:str)->int:
 
@@ -142,7 +142,7 @@ class ItemStorageImplementation(ItemStorageInterface):
         whishlist_not_exists = not whishlist
 
         if whishlist_not_exists:
-            raise custom_exceptions.WhishlistDoesNotExistException
+            raise item_custom_exceptions.WhishlistDoesNotExistException(whishlist_id=whishlist_id)
 
     def add_item_to_whishlist(self, whishlist_id:int, item_id:int, item_properties:list[int]):
 
@@ -161,7 +161,7 @@ class ItemStorageImplementation(ItemStorageInterface):
         item_not_exists = not itemswhishlist
 
         if item_not_exists:
-            raise custom_exceptions.ItemDoesNotExistInWhishlistException
+            raise item_custom_exceptions.ItemDoesNotExistInWhishlistException(item_id=item_id, whishlist_id=whishlist_id)
         
     def check_if_item_property_exists(self, item_property_id:int):
 
@@ -169,7 +169,7 @@ class ItemStorageImplementation(ItemStorageInterface):
         itemproperty_not_exists = not itemproperty
 
         if itemproperty_not_exists:
-            raise custom_exceptions.ItemPropertyDoesNotExistException
+            raise item_custom_exceptions.ItemPropertyDoesNotExistException(item_property_id=item_property_id)
         
     def check_if_item_properties_exists(self, item_properties:list[int]):
         
@@ -264,7 +264,7 @@ class ItemStorageImplementation(ItemStorageInterface):
         itemview = ItemView.objects.filter(user_id=user_id).exists()
         itemview_not_exists = not itemview
         if itemview_not_exists:
-            raise custom_exceptions.UserHasNotViewedAnyItemException
+            raise item_custom_exceptions.UserHasNotViewedAnyItemException(user_id=user_id)
     
     def get_recently_viewed_item_by_user(self, user_id:str)->int:
 
@@ -284,7 +284,7 @@ class ItemStorageImplementation(ItemStorageInterface):
         item_rating_not_exists = not item_rating
 
         if item_rating_not_exists:
-            raise custom_exceptions.ItemIsNotRatedException
+            raise item_custom_exceptions.ItemIsNotRatedException(item_id=item_id)
 
     def check_if_user_already_rated_item(self, item_id:int, user_id:str):
 
@@ -292,7 +292,7 @@ class ItemStorageImplementation(ItemStorageInterface):
         item_rating_exists = item_rating
 
         if item_rating_exists:
-            raise custom_exceptions.UserAlreadyRatedItemException
+            raise item_custom_exceptions.UserAlreadyRatedItemException(user_id=user_id, item_id=item_id)
         
     def get_ratings_of_an_item(self, item_id:int)->list[RatingDTO]:
 

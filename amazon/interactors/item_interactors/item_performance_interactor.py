@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.item_storage_interface import ItemSto
 from amazon.interactors.presenter_interfaces.item_presenter_interface import ItemPresenterInterface
 from amazon.interactors.storage_interfaces.user_storage_interface import UserStorageInterface
 from amazon.interactors.presenter_interfaces.user_presenter_interface import UserPresenterInterface
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import item_custom_exceptions, user_custom_exceptions
 from amazon.interactors.whichlist_interactor import WhichListInteractor
 
 
@@ -47,9 +47,9 @@ class ItemPerformanceInteractor:
         
         try:
             recently_viewed_item = self.get_recently_viewed_item_by_user(user_id=user_id)
-        except custom_exceptions.UserDoesNotExistException:
+        except user_custom_exceptions.UserDoesNotExistException:
             user_presenter.raise_exception_for_user_does_not_exist()
-        except custom_exceptions.UserHasNotViewedAnyItemException:
+        except item_custom_exceptions.UserHasNotViewedAnyItemException:
             item_presenter.raise_exception_for_user_has_not_viewed_any_item()
         else:
             return item_presenter.get_response_for_recently_viewed_item_by_user(recently_viewed_item=recently_viewed_item)
@@ -74,9 +74,9 @@ class ItemPerformanceInteractor:
         
         try:
             recommendations = self.get_recommendations_for_multiple_users(user_ids=user_ids)
-        except custom_exceptions.UserDoesNotExistException:
+        except user_custom_exceptions.UserDoesNotExistException:
             user_presenter.raise_exception_for_user_does_not_exist()
-        except custom_exceptions.UserHasNotViewedAnyItemException:
+        except item_custom_exceptions.UserHasNotViewedAnyItemException:
             item_presenter.raise_exception_for_user_has_not_viewed_any_item()
         else:
             return item_presenter.get_response_for_recommendations_for_multiple_users(recommendations=recommendations)

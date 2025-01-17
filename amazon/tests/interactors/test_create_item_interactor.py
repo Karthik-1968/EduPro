@@ -3,7 +3,7 @@ from amazon.interactors.presenter_interfaces.item_presenter_interface import Ite
 from amazon.interactors.storage_interfaces.category_storage_interface import CategoryStorageInterface
 from amazon.interactors.presenter_interfaces.category_presenter_interface import CategoryPresenterInterface
 from amazon.interactors.storage_interfaces.user_storage_interface import UserStorageInterface
-from amazon.exceptions.custom_exceptions import ItemAlreadyExistsException
+from amazon.exceptions.item_custom_exceptions import ItemAlreadyExistsException
 from amazon.interactors.item_interactors.item_interactor import ItemInteractor
 from amazon.interactors.storage_interfaces.dtos import ItemDTO
 from mock import create_autospec

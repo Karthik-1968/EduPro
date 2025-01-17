@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.order_storage_interface import OrderS
 from amazon.interactors.presenter_interfaces.order_presenter_interface import OrderPresenterInterface
 from amazon.interactors.storage_interfaces.payment_storage_interface import PaymentStorageInterface
 from amazon.interactors.presenter_interfaces.payment_presenter_interface import PaymentPresenterInterface
-from amazon.exceptions.custom_exceptions import PaymentMethodDoesNotExistException, OrderDoesNotExistException
+from amazon.exceptions import payment_custom_exceptions, order_custom_exceptions
 from django_swagger_utils.drf_server.exceptions import NotFound
 from amazon.interactors.storage_interfaces.dtos import OrderPaymentDTO
 from amazon.interactors.payment_interactor import PaymentInteractor
@@ -31,7 +31,8 @@ class TestAddPaymentMethodToOrderInteractor:
         order_presenter = create_autospec(OrderPresenterInterface)
         payment_presenter = create_autospec(PaymentPresenterInterface)
 
-        self.order_storage.check_if_order_exists.side_effect = OrderDoesNotExistException
+        self.order_storage.check_if_order_exists.side_effect = order_custom_exceptions.OrderDoesNotExistException(order_id=\
+                                                                                            orderpayment_dto.order_id)
         order_presenter.raise_exception_for_order_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -54,7 +55,8 @@ class TestAddPaymentMethodToOrderInteractor:
         order_presenter = create_autospec(OrderPresenterInterface)
         payment_presenter = create_autospec(PaymentPresenterInterface)
 
-        self.payment_storage.check_if_payment_method_exists.side_effect = PaymentMethodDoesNotExistException
+        self.payment_storage.check_if_payment_method_exists.side_effect = payment_custom_exceptions.PaymentMethodDoesNotExistException(\
+                                                                    paymentmethod_id=orderpayment_dto.paymentmethod_id)
         payment_presenter.raise_exception_for_payment_method_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):

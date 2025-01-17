@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.item_storage_interface import ItemSto
 from amazon.interactors.presenter_interfaces.item_presenter_interface import ItemPresenterInterface
 from amazon.interactors.storage_interfaces.order_storage_interface import OrderStorageInterface
 from amazon.interactors.presenter_interfaces.order_presenter_interface import OrderPresenterInterface
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import item_custom_exceptions, order_custom_exceptions
 
 class ItemWarrentyInteractor:
 
@@ -21,7 +21,7 @@ class ItemWarrentyInteractor:
         try:
             self.item_storage.check_if_warranty_already_exists(warranty_name=warranty_name, warranty_amount=warranty_amount, \
                                                           number_of_months=number_of_months)
-        except custom_exceptions.WarrantyAlreadyExistsException:
+        except item_custom_exceptions.WarrantyAlreadyExistsException:
             item_presenter.raise_exception_for_warrenty_already_exists()
 
         warranty_id = self.item_storage.create_warrenty(warranty_name=warranty_name, warranty_amount=warranty_amount, \
@@ -39,12 +39,12 @@ class ItemWarrentyInteractor:
         """
         try:
             self.item_storage.check_if_item_exists(item_id=item_id)
-        except custom_exceptions.ItemDoesNotExistException:
+        except item_custom_exceptions.ItemDoesNotExistException:
             item_presenter.raise_exception_for_item_does_not_exist()
 
         try:
             self.item_storage.check_if_warranty_exists(warranty_id=warranty_id)
-        except custom_exceptions.WarrantyDoesNotExistException:
+        except item_custom_exceptions.WarrantyDoesNotExistException:
             item_presenter.raise_exception_for_warranty_does_not_exists()
 
         item_warranty_id = self.item_storage.add_warranty_to_item(item_id=item_id, warranty_id=warranty_id)
@@ -75,20 +75,20 @@ class ItemWarrentyInteractor:
 
         try:
             self.order_storage.check_if_order_exists(order_id=order_id)
-        except custom_exceptions.OrderDoesNotExistException:
+        except order_custom_exceptions.OrderDoesNotExistException:
             order_presenter.raise_exception_for_order_does_not_exist()
 
         try:
             self.item_storage.check_if_item_warranty_exists(item_warranty_id=item_warranty_id)
-        except custom_exceptions.ItemWarrantyDoesNotExistException:
+        except item_custom_exceptions.ItemWarrantyDoesNotExistException:
             item_presenter.raise_exception_for_item_warranty_does_not_exist()
 
         try:
-            self.item_storage.check_if_warranty_is_associated_with_item(item_warranty_id=item_warranty_id, order_id=order_id)
-        except custom_exceptions.WarrantyIsNotAssociatedWithItemException:
+            self.item_storage.check_if_item_warranty_is_associated_with_item(item_warranty_id=item_warranty_id, order_id=order_id)
+        except item_custom_exceptions.ItemWarrantyIsNotAssociatedWithItemException:
             item_presenter.raise_exception_for_item_warranty_is_not_associated_with_item()
 
         try:
-            self.item_storage.check_if_warranty_is_already_associated_with_order(item_warranty_id=item_warranty_id, order_id=order_id)
-        except custom_exceptions.WarrantyAlreadyAssociatedWithOrderException:
-            item_presenter.raise_exception_for_warranty_already_associated_with_order()
+            self.item_storage.check_if_item_warranty_is_already_associated_with_order(item_warranty_id=item_warranty_id, order_id=order_id)
+        except item_custom_exceptions.ItemWarrantyAlreadyAssociatedWithOrderException:
+            item_presenter.raise_exception_for_item_warranty_already_associated_with_order()

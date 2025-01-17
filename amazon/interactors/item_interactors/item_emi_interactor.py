@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.item_storage_interface import ItemSto
 from amazon.interactors.presenter_interfaces.item_presenter_interface import ItemPresenterInterface
 from amazon.interactors.storage_interfaces.order_storage_interface import OrderStorageInterface
 from amazon.interactors.presenter_interfaces.order_presenter_interface import OrderPresenterInterface
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import item_custom_exceptions, order_custom_exceptions
 from typing import Optional
 from amazon.interactors.storage_interfaces.dtos import EmiDTO
 
@@ -21,7 +21,7 @@ class ItemEmiInteractor:
         """
         try:
             self.item_storage.check_if_emi_already_exists(emi_dto=emi_dto)
-        except custom_exceptions.EmiAlreadyExistsException:
+        except item_custom_exceptions.EmiAlreadyExistsException:
             item_presenter.raise_exception_for_emi_already_exists()
 
         emi_id = self.item_storage.create_debit_card_emi(emi_dto=emi_dto)
@@ -36,7 +36,7 @@ class ItemEmiInteractor:
         """
         try:
             self.item_storage.check_if_emi_already_exists(emi_dto=emi_dto)
-        except custom_exceptions.EmiAlreadyExistsException:
+        except item_custom_exceptions.EmiAlreadyExistsException:
             item_presenter.raise_exception_for_emi_already_exists()
 
         emi_id = self.item_storage.create_no_cost_emi(emi_dto=emi_dto)
@@ -52,7 +52,7 @@ class ItemEmiInteractor:
         """
         try:
             self.item_storage.check_if_emi_already_exists(emi_dto=emi_dto)
-        except custom_exceptions.EmiAlreadyExistsException:
+        except item_custom_exceptions.EmiAlreadyExistsException:
             item_presenter.raise_exception_for_emi_already_exists()
 
         emi_id = self.item_storage.create_other_emi_type(emi_dto=emi_dto)
@@ -77,12 +77,12 @@ class ItemEmiInteractor:
 
         try:
             self.item_storage.check_if_item_exists(item_id=item_id)
-        except custom_exceptions.ItemDoesNotExistException:
+        except item_custom_exceptions.ItemDoesNotExistException:
             item_presenter.raise_exception_for_item_does_not_exist()
 
         try:
             self.item_storage.check_if_emi_exists(emi_id=emi_id)
-        except custom_exceptions.EmiDoesNotExistException:
+        except item_custom_exceptions.EmiDoesNotExistException:
             item_presenter.raise_exception_for_emi_does_not_exist()
 
     
@@ -109,20 +109,20 @@ class ItemEmiInteractor:
 
         try:
             self.order_storage.check_if_order_exists(order_id=order_id)
-        except custom_exceptions.OrderDoesNotExistException:
+        except order_custom_exceptions.OrderDoesNotExistException:
             order_presenter.raise_exception_for_order_does_not_exist()
 
         try:
             self.item_storage.check_if_item_emi_exists(item_emi_id=item_emi_id)
-        except custom_exceptions.ItemEmiDoesNotExistException:
+        except item_custom_exceptions.ItemEmiDoesNotExistException:
             item_presenter.raise_exception_for_item_emi_does_not_exist()
 
         try:
             self.item_storage.check_if_item_emi_is_associated_with_item(order_id=order_id, item_emi_id=item_emi_id)
-        except custom_exceptions.ItemEmiIsNotAssociatedWithItemException:
+        except item_custom_exceptions.ItemEmiIsNotAssociatedWithItemException:
             item_presenter.raise_exception_for_item_emi_is_not_associated_with_item()
 
         try:
             self.item_storage.check_if_item_emi_is_not_already_added_to_order(order_id=order_id, item_emi_id=item_emi_id)
-        except custom_exceptions.ItemEmiAlreadyAddedToOrderException:
+        except item_custom_exceptions.ItemEmiAlreadyAddedToOrderException:
             item_presenter.raise_exception_for_item_emi_already_added_to_order()

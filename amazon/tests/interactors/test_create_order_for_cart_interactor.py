@@ -4,7 +4,7 @@ from amazon.interactors.storage_interfaces.item_storage_interface import ItemSto
 from amazon.interactors.presenter_interfaces.user_presenter_interface import UserPresenterInterface
 from amazon.interactors.presenter_interfaces.order_presenter_interface import OrderPresenterInterface
 from amazon.interactors.presenter_interfaces.item_presenter_interface import ItemPresenterInterface
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import user_custom_exceptions, item_custom_exceptions
 from django_swagger_utils.drf_server.exceptions import NotFound, BadRequest
 from amazon.interactors.storage_interfaces.dtos import OrderCartItemsDTO
 from amazon.interactors.order_interactor import OrderInteractor
@@ -35,7 +35,8 @@ class TestCreateOrderForCartInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         order_presenter = create_autospec(OrderPresenterInterface)
 
-        self.user_storage.check_if_user_exists.side_effect = custom_exceptions.UserDoesNotExistException
+        self.user_storage.check_if_user_exists.side_effect = user_custom_exceptions.UserDoesNotExistException(user_id=\
+                                                                                ordercartitems_dto.user_id)
         user_presenter.raise_exception_for_user_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -60,7 +61,8 @@ class TestCreateOrderForCartInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         order_presenter = create_autospec(OrderPresenterInterface)
 
-        self.item_storage.check_if_cart_exists.side_effect = custom_exceptions.CartDoesNotExistException
+        self.item_storage.check_if_cart_exists.side_effect = item_custom_exceptions.CartDoesNotExistException(cart_id=\
+                                                                                ordercartitems_dto.cart_id)     
         item_presenter.raise_exception_for_cart_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -85,7 +87,8 @@ class TestCreateOrderForCartInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         order_presenter = create_autospec(OrderPresenterInterface)
 
-        self.user_storage.check_if_address_exists.side_effect = custom_exceptions.AddressDoesNotExistException
+        self.user_storage.check_if_address_exists.side_effect = user_custom_exceptions.AddressDoesNotExistException(address_id=\
+                                                                                ordercartitems_dto.address_id)      
         user_presenter.raise_exception_for_address_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -110,7 +113,8 @@ class TestCreateOrderForCartInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         order_presenter = create_autospec(OrderPresenterInterface)
 
-        self.item_storage.check_if_items_exists.side_effect = custom_exceptions.ItemDoesNotExistException
+        self.item_storage.check_if_items_exists.side_effect = item_custom_exceptions.ItemDoesNotExistException(item_id=\
+                                                                                ordercartitems_dto.item_ids[0])
         item_presenter.raise_exception_for_item_does_not_exist.side_effect = NotFound
 
         with pytest.raises(NotFound):
@@ -136,7 +140,8 @@ class TestCreateOrderForCartInteractor:
         item_presenter = create_autospec(ItemPresenterInterface)
         order_presenter = create_autospec(OrderPresenterInterface)
 
-        self.item_storage.check_if_items_are_in_cart.side_effect = custom_exceptions.ItemDoesNotBelongToCartException
+        self.item_storage.check_if_items_are_in_cart.side_effect = item_custom_exceptions.ItemDoesNotExistInCartException(item_id=\
+                                                                                ordercartitems_dto.item_ids[0], cart_id=ordercartitems_dto.cart_id)
         item_presenter.raise_exception_for_item_does_not_belong_to_cart.side_effect = NotFound
 
         with pytest.raises(NotFound):

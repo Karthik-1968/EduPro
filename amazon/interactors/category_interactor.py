@@ -1,6 +1,6 @@
 from amazon.interactors.storage_interfaces.category_storage_interface import CategoryStorageInterface
 from amazon.interactors.presenter_interfaces.category_presenter_interface import CategoryPresenterInterface
-from amazon.exceptions.custom_exceptions import CategoryAlreadyExistsException
+from amazon.exceptions.category_custom_exceptions import CategoryAlreadyExistsException
 
 class CategoryInteractor:
 

@@ -2,7 +2,7 @@ from amazon.interactors.storage_interfaces.item_storage_interface import ItemSto
 from amazon.interactors.presenter_interfaces.item_presenter_interface import ItemPresenterInterface
 from amazon.interactors.storage_interfaces.user_storage_interface import UserStorageInterface
 from amazon.interactors.presenter_interfaces.user_presenter_interface import UserPresenterInterface
-from amazon.exceptions import custom_exceptions
+from amazon.exceptions import item_custom_exceptions, user_custom_exceptions
 
 class ItemRatingInterctor:
 
@@ -33,17 +33,17 @@ class ItemRatingInterctor:
 
         try:
             self.item_storage.check_if_item_exists(item_id=item_id)
-        except custom_exceptions.ItemDoesNotExistException:
+        except item_custom_exceptions.ItemDoesNotExistException:
             item_presenter.raise_exception_for_item_does_not_exist()
 
         try:
             self.user_storage.check_if_user_exists(user_id=user_id)
-        except custom_exceptions.UserDoesNotExistException:
+        except user_custom_exceptions.UserDoesNotExistException:
             user_presenter.raise_exception_for_user_does_not_exist()
 
         try:
             self.item_storage.check_if_user_already_rated_item(item_id=item_id, user_id=user_id)
-        except custom_exceptions.UserAlreadyRatedItemException:
+        except item_custom_exceptions.UserAlreadyRatedItemException:
             item_presenter.raise_exception_for_user_already_rated_item()
 
     
@@ -57,12 +57,12 @@ class ItemRatingInterctor:
 
         try:
             self.item_storage.check_if_item_exists(item_id=item_id)
-        except custom_exceptions.ItemDoesNotExistException:
+        except item_custom_exceptions.ItemDoesNotExistException:
             item_presenter.raise_exception_for_item_does_not_exist()
 
         try:
             self.item_storage.check_if_item_is_rated(item_id=item_id)
-        except custom_exceptions.ItemIsNotRatedException:
+        except item_custom_exceptions.ItemIsNotRatedException:
             item_presenter.raise_exception_for_item_not_rated()
 
         rating_dtos = self.item_storage.get_ratings_of_an_item(item_id=item_id)
