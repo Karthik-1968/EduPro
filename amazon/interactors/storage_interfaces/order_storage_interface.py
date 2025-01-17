@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from amazon.interactors.storage_interfaces.dtos import OrderItemDTO, OrderIdDTO, OrderCartItemsDTO
+from amazon.interactors.storage_interfaces.dtos import OrderItemDTO, OrderIdDTO, OrderCartItemsDTO, PaymentDTO
 
 class OrderStorageInterface:
 

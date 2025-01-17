@@ -137,3 +137,11 @@ class RefundDTO:
     refund_status:str
     payment_date:int
     reason:str
+
+@dataclass
+class PaymentDTO:
+    paymentmethod_id:int
+    payment_status:str
+    amount:int
+    transaction_id:str
+    gift_card_or_promo_code:Optional[str]

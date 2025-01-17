@@ -53,3 +53,7 @@ class PaymentPresenterInterface:
     @abstractmethod
     def get_response_for_update_refund_status_after_refunded(self):
         pass
+
+    @abstractmethod
+    def get_response_for_create_order_for_item_and_add_payment_method(self, payment_id:int)->dict:
+        pass
