@@ -18,7 +18,7 @@ class TestDeleteItemPropertyInteractor:
         self.item_storage = create_autospec(ItemStorageInterface)
         self.interactor = ItemInteractor(user_storage=self.user_storage, category_storage=self.category_storage, item_storage=self.item_storage)
 
-    def test_if_item_property_does_not_exist(self):
+    def test_if_item_property_does_not_exist_raises_exception(self):
 
         item_property_id = 1
 

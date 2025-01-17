@@ -72,6 +72,8 @@ class OrderInteractor:
             -check if user exists
             -check if cart exists
             -check if address exists
+            -check if items exists
+            -check if items belong to cart
             -create_order_for_cart
         """
         self._check_if_input_data_is_correct_for_create_order_for_cart(ordercartitems_dto=ordercartitems_dto, user_presenter=user_presenter, \

@@ -17,7 +17,7 @@ class TestCreatePropertyInteractor:
         self.item_storage = create_autospec(ItemStorageInterface)
         self.interactor = ItemInteractor(user_storage=self.user_storage, category_storage=self.category_storage, item_storage=self.item_storage)
 
-    def test_if_property_already_exists_raise_exception(self):
+    def test_if_property_already_exists_raises_exception(self):
 
         property_name = "property1"
 

@@ -19,7 +19,7 @@ class TestGetListOfItemsByCategory:
         self.item_storage = create_autospec(ItemStorageInterface)
         self.interactor = ItemInteractor(user_storage=self.user_storage, category_storage=self.category_storage, item_storage=self.item_storage)
 
-    def test_if_category_does_not_exist_raise_exception(self):
+    def test_if_category_does_not_exist_raises_exception(self):
 
         category_id = 1
 

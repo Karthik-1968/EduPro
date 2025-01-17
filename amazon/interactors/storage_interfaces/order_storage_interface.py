@@ -4,7 +4,7 @@ from amazon.interactors.storage_interfaces.dtos import OrderItemDTO, OrderIdDTO,
 class OrderStorageInterface:
 
     @abstractmethod
-    def create_order_for_item(self, order_dto:OrderItemDTO)->int:
+    def create_order_for_item(self, orderitem_dto:OrderItemDTO)->int:
         pass
 
     @abstractmethod
@@ -24,7 +24,7 @@ class OrderStorageInterface:
         pass
 
     @abstractmethod
-    def create_order_for_cart(self, order_dto:OrderCartItemsDTO)->int:
+    def create_order_for_cart(self, ordercartitems_dto:OrderCartItemsDTO)->int:
         pass
 
     @abstractmethod

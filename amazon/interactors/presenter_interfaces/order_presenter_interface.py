@@ -8,7 +8,7 @@ class OrderPresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_get_orders_of_user(self, order_dtos:list[OrderIdDTO])->list[dict]:
+    def get_response_for_get_orders_of_user(self, orderid_dtos:list[OrderIdDTO])->list[dict]:
         pass
 
     @abstractmethod

@@ -4,8 +4,6 @@ from amazon.interactors.storage_interfaces.payment_storage_interface import Paym
 from amazon.interactors.presenter_interfaces.payment_presenter_interface import PaymentPresenterInterface
 from amazon.exceptions import custom_exceptions
 from amazon.interactors.storage_interfaces.dtos import CardPaymentMethodDTO, NetBankingPaymentMethodDTO, OrderPaymentDTO
-from typing import Optional
-
 
 class PaymentInteractor:
 
@@ -13,7 +11,7 @@ class PaymentInteractor:
         
         self.order_storage = order_storage
         self.payment_storage = payment_storage
-
+        
 
     def create_card_payment_method(self, cardpaymentmethod_dto: CardPaymentMethodDTO, payment_presenter: PaymentPresenterInterface):
 
