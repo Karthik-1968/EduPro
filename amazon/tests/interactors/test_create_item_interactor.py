@@ -26,7 +26,8 @@ class TestCreateItemInteractor:
             category_id = 1,
             price = 1000.0,
             number_of_left_in_stock = 10,
-            views = 0)
+            number_of_purchases_in_last_month=5,
+            views = 10)
         
         item_presenter = create_autospec(ItemPresenterInterface)
         category_presenter = create_autospec(CategoryPresenterInterface)
@@ -47,7 +48,8 @@ class TestCreateItemInteractor:
             category_id = 1,
             price = 1000.0,
             number_of_left_in_stock = 10,
-            views = 0)
+            number_of_purchases_in_last_month=5,
+            views = 10)
 
         item_id = 1
         expected_output = {

@@ -30,6 +30,7 @@ class ItemDTO:
     item_name:str
     price:float
     number_of_left_in_stock:int
+    number_of_purchases_in_last_month:int
     views:int
 
 @dataclass

@@ -4,7 +4,6 @@ from .address import Address
 from .deliveryavailability import DeliveryAvailability
 from .deliveryservice import DeliveryService
 
-
 class Order(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -16,4 +15,3 @@ class Order(models.Model):
     receiving_person_name = models.CharField(max_length=100, null=True, blank=True)
     delivered_by = models.ForeignKey(DeliveryService, on_delete=models.CASCADE, related_name="orders", null=True, blank=True)
     delivery_availability = models.ForeignKey(DeliveryAvailability, on_delete=models.CASCADE, related_name="orders", null=True, blank=True)
-    

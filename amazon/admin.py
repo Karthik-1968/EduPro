@@ -1,7 +1,7 @@
 from django.contrib import admin
-from amazon.models import User, Address, Item, ItemProperty, Cart, Order, ItemsCart, UserAddress, Category, ItemsWhishlist, Payment, Whishlist, \
-           PaymentMethod, Property, ItemView, Emi, ItemWarranty, Offer, Warranty, ExchangeProperty, ItemEmi, ItemOffer, \
-            ItemExchangeProperty, DeliveryAvailability, Rating, ExchangeValue, Refund
+from amazon.models import User, Address, Item, ItemProperty, Cart, Order, ItemsCart, UserAddress, Category, ItemsWhishlist, Payment, \
+    Whishlist, PaymentMethod, Property, ItemView, Emi, ItemWarranty, Offer, Warranty, ExchangeProperty, ItemEmi, ItemOffer, \
+            ItemExchangeProperty, DeliveryAvailability, Rating, ExchangeValue, Refund, OrderItem, DeliveryService
 
 admin.site.register(User)
 admin.site.register(Address)
@@ -30,3 +30,5 @@ admin.site.register(DeliveryAvailability)
 admin.site.register(Rating)
 admin.site.register(ExchangeValue)
 admin.site.register(Refund)
+admin.site.register(OrderItem)
+admin.site.register(DeliveryService)

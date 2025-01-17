@@ -1,6 +1,5 @@
 from django.db import models
 import uuid
-from .address import Address
 
 class User(models.Model):
 

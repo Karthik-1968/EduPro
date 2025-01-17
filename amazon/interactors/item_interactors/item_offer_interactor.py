@@ -5,7 +5,6 @@ from amazon.interactors.presenter_interfaces.item_offer_presenter_interface impo
 from amazon.interactors.storage_interfaces.order_storage_interface import OrderStorageInterface
 from amazon.interactors.presenter_interfaces.order_presenter_interface import OrderPresenterInterface
 from amazon.exceptions import custom_exceptions
-from typing import Optional
 from amazon.interactors.storage_interfaces.dtos import OfferDTO
 
 class ItemOfferInteractor:
@@ -238,7 +237,6 @@ class ItemOfferInteractor:
             -check if exchange properties are already added to order
             -add properties to order
         """
-
         self._check_if_input_data_is_correct_for_add_exchange_properties_to_order(order_id=order_id, \
                                                                                   exchange_property_ids=exchange_property_ids, \
                                                                                   item_offer_presenter=item_offer_presenter, \
