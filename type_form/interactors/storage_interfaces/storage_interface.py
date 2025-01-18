@@ -62,7 +62,21 @@ class FormFieldResponseDTO:
 class PhoneNumberFieldSettingsDTO:
     country: str
     code: str
-    
+
+@dataclass
+class TabDTO:
+    user_id: str
+    layout_id: int
+    tab_name: str
+    tab_type: str
+
+@dataclass
+class SectionConfigDTO:
+    section_type: str
+    section_name: Optional[str]
+    gof: Optional[str]
+    formfields: Optional[list[int]]
+     
 @dataclass
 class FormFieldSettingsDTO:
     multiple_selection: bool = None
@@ -243,7 +257,7 @@ class StorageInterface:
         pass
     
     @abstractmethod
-    def check_settings(self, settings_id:int):
+    def check_settings(self, id:int):
         pass
     
     @abstractmethod
@@ -252,4 +266,40 @@ class StorageInterface:
     
     @abstractmethod
     def check_if_invitation_expired(self, id:int):
+        pass
+
+    @abstractmethod
+    def check_if_layout_already_exists_for_form(self, form_id:int):
+        pass
+
+    @abstractmethod
+    def create_layout_for_form(self, user_id:str, form_id:int, layout_name:str)->int:
+        pass
+
+    @abstractmethod
+    def check_layout(self, id:int):
+        pass
+
+    @abstractmethod
+    def check_tab(self, id:int):
+        pass
+
+    @abstractmethod
+    def check_if_tab_already_exists_for_layout(self, layout_id:int, tab_type:str):
+        pass
+    
+    @abstractmethod
+    def create_tab_for_layout_for_section_config(self, tab_dto:TabDTO, sectionconfig_dto:SectionConfigDTO)->int:
+        pass
+
+    @abstractmethod
+    def check_if_form_fields_exists(self, form_fields:list[int]):
+        pass
+
+    @abstractmethod
+    def check_if_form_fields_belong_to_form(self, form_fields:list[int], layout_id:int):
+        pass
+
+    @abstractmethod
+    def get_tab_details(self, tab_id:int)->TabDTO:
         pass

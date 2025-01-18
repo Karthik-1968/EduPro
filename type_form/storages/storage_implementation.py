@@ -2,13 +2,15 @@ from type_form.exceptions.custom_exceptions import UserAlreadyPresentException, 
     InvalidWorkspaceException, AlreadyInvitedException, InvalidInvitationException, AlreadyAcceptedException,\
         FormAlreadyExistsException, InvalidFormException, FieldAlreadyExistsException, InvalidFieldException,\
             MaximumInvitesLimitReachedException, SettingsAlreadyExistsException, InvalidFormFieldException,\
-                InvalidSettingsException, InvitationExpiredException
+                InvalidSettingsException, InvitationExpiredException, LayoutAlreadyExistsException, InvalidLayoutException,\
+                    TabAlreadyExistsException, InvalidTabException
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
 from type_form.models import User, Workspace, Form, Field, FormResponse, FormField, FormFieldResponse, FormFieldSettings,\
     WorkspaceInvite
 from type_form.interactors.storage_interfaces.storage_interface import UserDTO, WorkspaceDTO, FormDTO, FieldDTO, FormFieldDTO, \
-    FormResponseDTO, FormFieldResponseDTO, WorkspaceInviteDTO, PhoneNumberFieldSettingsDTO
+    FormResponseDTO, FormFieldResponseDTO, WorkspaceInviteDTO, PhoneNumberFieldSettingsDTO, TabFieldDTO
 from datetime import datetime
+from json import loads, dumps
 
 class StorageImplementation(StorageInterface):
     
@@ -350,4 +352,99 @@ class StorageImplementation(StorageInterface):
         form = Form.objects.get(id = id)
         
         return form.completion_rate
+
+    def check_if_layout_already_exists_for_form(self, form_id:int):
         
+        if Layout.objects.filter(form_id = form_id).exists():
+            raise LayoutAlreadyExistsException
+
+    def create_layout_for_form(self, user_id:str, form_id:int, layout_name:str):
+
+        layout = Layout.objects.create(user_id = user_id, form_id = form_id, layout_name = layout_name)
+
+        return layout.id
+
+    def check_layout(self, id:int):
+        
+        layout_exists = Layout.objects.filter(id = id).exists()
+        layout_not_exists = not layout_exists
+        if layout_not_exists:
+            raise InvalidLayoutException
+
+    def check_if_tab_already_exists_for_layout(self, layout_id:int, tab_type:str):
+        
+        if Tab.objects.filter(layout_id = layout_id, tab_type=tab_type).exists():
+            raise TabAlreadyExistsException
+
+    def create_tab_for_layout_for_section_config(self, tab_dto:TabDTO)->int:
+
+        tab = Tab.objects.create(user_id = tab_dto.user_id, layout_id = tab_dto.layout_id, tab_type = tab_dto.tab_type, tab_name = tab_dto.tab_name)
+
+        return tab.id
+
+    def check_if_form_fields_exists(self, form_fields:list[str]):
+
+        for form_field_id in form_fields:
+            form_field_exists = FormField.objects.filter(id = form_field_id).exists()
+            form_field_not_exists = not form_field_exists
+            if form_field_not_exists:
+                raise InvalidFormFieldException
+
+    def check_if_form_fields_belong_to_form(self, form_fields:list[str], layout_id:int):
+
+        form_id = Layout.objects.get(id = layout_id).form_id
+        for form_field_id in form_fields:
+            form_field = FormField.objects.get(id = form_field_id)
+            if form_field.form_id != form_id:
+                raise FieldDoesNotBelongToFormException
+
+    def check_tab(self, id:int):
+        
+        tab_exists = Tab.objects.filter(id = id).exists()
+        tab_not_exists = not tab_exists
+        if tab_not_exists:
+            raise InvalidTabException
+
+    def get_tab_details(self, tab_id:int)->TabDTO:
+
+        tab = Tab.objects.get(id = tab_id)
+        tab_dto = self.convert_tab_object_to_dto(tab)
+
+        return tab_dto
+
+    def convert_tab_object_to_dto(tab):
+        
+        return TabDTO(
+            user_id = tab.user_id,
+            layout_id = tab.layout_id,
+            tab_type = tab.tab_type,
+            tab_name = tab.tab_name,
+            gofs = json.dumps(tab.gofs),
+            formfields = json.dumps(tab.formfields)
+        )
+
+    def add_sections_to_tab(self, tab_id:int, sectionconfig_dtos:list[SectionConfigDTO]):
+
+        tab = Tab.objects.get(id = tab_id)
+
+        config = {
+            "sections_config": []
+        }
+
+        for sectionconfig_dto in sectionconfig_dtos:
+
+            if sectionconfig_dto.type == "CUSTOM":
+                config["sections_config"].append({
+                    "section_name": sectionconfig_dto.section_name,
+                    "type": sectionconfig_dto.type,
+                    "field_ids": sectionconfig_dto.field_ids
+                })
+
+            elif sectionconfig_dto.type == "DEFAULT":
+                config["sections_config"].append({
+                    "type": sectionconfig_dto.type,
+                    "gof_name": sectionconfig_dto.gof_name
+                })
+
+        tab.config = json.dumps(config)
+        tab.save()

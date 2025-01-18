@@ -142,3 +142,23 @@ INVALID_SETTINGS_ID = (
     "Invalid settings id",
     "INVALID_SETTINGS_ID"
 )
+
+INVALID_LAYOUT_ID = (
+    "Invalid layout id",
+    "INVALID_LAYOUT_ID"
+)
+
+TAB_ALREADY_EXISTS = (
+    "Tab already exists",
+    "TAB_ALREADY_EXISTS"
+)
+
+INVALID_TAB_ID = (
+    "Invalid tab id",
+    "INVALID_TAB_ID"
+)
+
+LAYOUT_ALREADY_EXISTS = (
+    "Layout already exists",
+    "LAYOUT_ALREADY_EXISTS"
+)

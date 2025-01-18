@@ -226,3 +226,34 @@ class PresenterInterface:
     def raise_exception_for_invitation_expired(self):
         pass
     
+    @abstractmethod
+    def raise_exception_for_layout_already_exists(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_create_layout_for_form(self,id:int)->dict:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_invalid_layout(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_tab_already_exists(self):
+        pass
+
+    @abstractmethod
+    def raise_exception_for_invalid_tab(self):
+        pass
+    
+    @abstractmethod
+    def get_response_for_create_tab_for_layout(self,id:int)->dict:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_field_does_not_belong_to_form(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_get_tab_details(self,tabdto:TabDTO)->dict:
+        pass

@@ -45,3 +45,18 @@ class InvalidSettingsException(Exception):
 
 class InvitationExpiredException(Exception):
     pass
+
+class LayoutAlreadyExistsException(Exception):
+    pass
+
+class InvalidLayoutException(Exception):
+    pass
+
+class TabAlreadyExistsException(Exception):
+    pass
+
+class FieldDoesNotBelongToFormException(Exception):
+    pass
+
+class InvalidTabException(Exception):
+    pass

@@ -12,4 +12,3 @@ class Form(models.Model):
     submissions_count = models.IntegerField(default=0)
     views_count = models.IntegerField(default=0)
     completion_rate = models.FloatField(default=0.0)
-    fields = models.ManyToManyField("Field",through="FormField")

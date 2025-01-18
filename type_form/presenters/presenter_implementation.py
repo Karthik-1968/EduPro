@@ -4,9 +4,10 @@ from type_form.constants.exception_messages import MISSING_EMAIL, MISSING_USERID
     INVALID_USER_ID, INVALID_WORKSPACE_ID, WORKSPACE_ALREADY_EXISTS, USER_ALREADY_INVITED, MAXIMUM_INVITES_REACHED, INVALID_INVITE_ID,\
         INVITATION_EXPIRED, MISSING_FORM_NAME, FORM_ALREADY_EXISTS, MISSING_FIELD_NAME, MISSING_FIELD_TYPE, FIELD_ALREADY_EXISTS,\
             INVALID_FORM_ID, INVALID_FIELD_ID, MISSING_STATUS, MISSING_DEVICE, SETTINGS_ALREADY_EXISTS, MISSING_FORM_FIELD_ID,\
-                MISSING_SETTINGS_ID, MISSING_WORKSPACE_ID, MISSING_INVITE_ID, MISSING_FORM_ID, MISSING_FIELD_ID
+                MISSING_SETTINGS_ID, MISSING_WORKSPACE_ID, MISSING_INVITE_ID, MISSING_FORM_ID, MISSING_FIELD_ID, LAYOUT_ALREADY_EXISTS,\
+                    TAB_ALREADY_EXISTS, INVALID_LAYOUT_ID, INVALID_TAB_ID
 from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO, WorkspaceInviteDTO, FormDTO, FieldDTO, \
-    FormResponseDTO, FormFieldDTO, FormFieldResponseDTO, PhoneNumberFieldSettingsDTO
+    FormResponseDTO, FormFieldDTO, FormFieldResponseDTO, PhoneNumberFieldSettingsDTO, TabDTO
 
 class PresenterImplementation(PresenterInterface):
     
@@ -245,4 +246,45 @@ class PresenterImplementation(PresenterInterface):
     def get_response_for_views_count_of_form(self, count_of_views:int):
         return {
             "count_of_views": count_of_views
+        }
+
+    def raise_exception_for_layout_already_exists(self):
+        raise BadRequest(*LAYOUT_ALREADY_EXISTS)
+
+    def raise_exception_for_tab_already_exists(self):
+        raise BadRequest(*TAB_ALREADY_EXISTS)
+
+    def raise_exception_for_invalid_layout(self):
+        raise NotFound(*INVALID_LAYOUT_ID)
+
+    def raise_exception_for_invalid_tab(self):
+        raise NotFound(*INVALID_TAB_ID)
+
+    def get_response_for_create_layout_for_form(self, id:int)->dict:
+
+        return {
+            "layout_id": id
+        }
+    
+    def get_response_for_create_tab_for_layout(self, id:int)->dict:
+
+        return {
+            "tab_id": id
+        }
+    
+    def get_response_for_create_field_for_tab(self, tabfield_id:int)->dict:
+
+        return {
+            "tabfield_id": tabfield_id
+        }
+
+    def get_response_for_get_tab_details(self, tab_dto:TabDTO)->dict:
+
+        return {
+            "user_id": tab_dto.user_id,
+            "layout_id": tab_dto.layout_id,
+            "tab_type": tab_dto.tab_type,
+            "tab_name": tab_dto.tab_name,
+            "gofs": tab_dto.gofs,
+            "form_fields": tab_dto.form_fields,
         }

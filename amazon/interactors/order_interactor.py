@@ -13,7 +13,6 @@ from typing import Optional
 
 class OrderInteractor:
 
-
     def __init__(self, user_storage: UserStorageInterface, order_storage: OrderStorageInterface, item_storage: \
                     ItemStorageInterface, payment_storage: PaymentStorageInterface):
         
@@ -167,7 +166,6 @@ class OrderInteractor:
     def create_order_for_item_and_add_payment_method_wrapper(self, orderitem_dto:OrderItemDTO, payment_dto:PaymetDTO, \
                 user_presenter:UserPresenterInterface, item_presenter:ItemPresenterInterface, order_presenter:OrderPresenterInterface, \
                                                              payment_presenter:PaymentPresenterInterface):      
-
         """ELP
             check if paymentmethod exists
             check if user exists
@@ -198,7 +196,7 @@ class OrderInteractor:
         else:
             return payment_presenter.get_response_for_create_order_for_item_and_add_payment_method(payment_id=payment_id)
     
-    def create_order_for_item_and_add_payment_method(self, payment_dto:PaymentDTO):
+    def create_order_for_item_and_add_payment_method(self, orderitem_dto:OrderItemDTO, payment_dto:PaymentDTO):
 
         self._check_if_input_data_is_correct_for_create_for_item(orderitem_dto=orderitem_dto, payment_dto = payment_dto)
 
