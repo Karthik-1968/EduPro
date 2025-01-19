@@ -1,12 +1,6 @@
-from django.db import connection
+from type_form.import_data import status_csv_file_path
+import pandas as pd
 
-def user():
-   def table_exists(type_form_formresponse):
-      with connection.cursor() as cursor:
-         tables = connection.introspection.table_names(cursor)
-         print(tables)
-         return type_form_formresponse in tables
-   if table_exists("type_form_formresponse"):
-      print("Table exists!")
-   else:
-      print("Table does not exist.")
+def get_status_file():
+      df_status = pd.read_csv(status_csv_file_path)
+      print(df_status)

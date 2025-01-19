@@ -38,7 +38,7 @@ USER_ALREADY_PRESENT = (
     "USER_ALREADY_PRESENT"
 )
 
-MAX_INVITES_REACHED = (
+MAXIMUM_INVITES_REACHED = (
     "Maximum invites reached",
     "MAXIMUM_INVITES_REACHED"
 )
@@ -161,4 +161,14 @@ INVALID_TAB_ID = (
 LAYOUT_ALREADY_EXISTS = (
     "Layout already exists",
     "LAYOUT_ALREADY_EXISTS"
+)
+
+USER_ALREADY_INVITED = (
+    "User already invited",
+    "USER_ALREADY_INVITED"
+)
+
+MISSING_FIELD_ID = (
+    "Field id is missing",
+    "MISSING_FIELD_ID"
 )

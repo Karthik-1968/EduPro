@@ -8,7 +8,7 @@ from type_form.interactors.storage_interfaces.storage_interface import StorageIn
 from type_form.models import User, Workspace, Form, Field, FormResponse, FormField, FormFieldResponse, FormFieldSettings,\
     WorkspaceInvite
 from type_form.interactors.storage_interfaces.storage_interface import UserDTO, WorkspaceDTO, FormDTO, FieldDTO, FormFieldDTO, \
-    FormResponseDTO, FormFieldResponseDTO, WorkspaceInviteDTO, PhoneNumberFieldSettingsDTO, TabFieldDTO
+    FormResponseDTO, FormFieldResponseDTO, WorkspaceInviteDTO, PhoneNumberFieldSettingsDTO, SectionConfigDTO, TabDTO
 from datetime import datetime
 from json import loads, dumps
 
