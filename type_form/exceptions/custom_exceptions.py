@@ -23,7 +23,12 @@ class FormAlreadyExistsException(Exception):
     pass
 
 class InvalidFormException(Exception):
-    pass
+
+    def __init__(self, form_id:int):
+        self.form_id = form_id
+
+    def __str__(self):
+        return f"Form with ID {self.form_id} doesn't exist."
 
 class FieldAlreadyExistsException(Exception):
     pass
@@ -47,16 +52,36 @@ class InvitationExpiredException(Exception):
     pass
 
 class LayoutAlreadyExistsException(Exception):
-    pass
+    def __init__(self, form_id:int):
+        self.form_id=form_id
+    
+    def __str__(self):
+        return f"Layout already exists for form_id {self.form_id}"
 
 class InvalidLayoutException(Exception):
-    pass
+    def __init__(self, layout_id:int):
+        self.layout_id=layout_id
+    
+    def __str__(self):
+        return f"Layout with ID {self.layout_id} doesn't exist."
 
 class TabAlreadyExistsException(Exception):
-    pass
+    def __init__(self, layout_id:int):
+        self.layout_id=layout_id
+    
+    def __str__(self):
+        return f"Tab already exists for layout_id {self.layout_id}"
 
 class FieldDoesNotBelongToFormException(Exception):
     pass
 
 class InvalidTabException(Exception):
     pass
+
+class InvalidLayoutForFormException(Exception):
+    def __init__(self, form_id:int, layout_id:int):
+        self.form_id=form_id
+        self.layout_id=layout_id
+
+    def __str__(self):
+        return f"Layout ID {self.layout_id} is invalid for Form ID {self.form_id}"

@@ -65,6 +65,7 @@ class PhoneNumberFieldSettingsDTO:
 
 @dataclass
 class TabDTO:
+    tab_id: int
     user_id: str
     layout_id: int
     tab_name: str
@@ -269,11 +270,11 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def check_if_layout_already_exists_for_form(self, form_id:int):
+    def check_if_layout_is_valid_for_form(self, form_id:int, layout_id:int):
         pass
 
     @abstractmethod
-    def create_layout_for_form(self, user_id:str, form_id:int, layout_name:str)->int:
+    def create_or_update_layout_for_form(self, user_id:str, form_id:int, layout_name:str, layout_id:int)->int:
         pass
 
     @abstractmethod
@@ -289,7 +290,11 @@ class StorageInterface:
         pass
     
     @abstractmethod
-    def create_tab_for_layout_for_section_config(self, tab_dto:TabDTO, sectionconfig_dto:SectionConfigDTO)->int:
+    def add_section_to_tab(self, tab_id:int, section_config_dto:SectionConfigDTO):
+        pass
+
+    @abstractmethod
+    def create_or_update_tab_for_layout_for_section_config(self, tab_dto:TabDTO)->int:
         pass
 
     @abstractmethod
@@ -302,4 +307,12 @@ class StorageInterface:
 
     @abstractmethod
     def get_tab_details(self, tab_id:int)->TabDTO:
+        pass
+
+    @abstractmethod
+    def update_layout_for_form(self, layout_id:int, layout_name:str):
+        pass
+
+    @abstractmethod
+    def update_tab_for_section_config(self, tab_id:int, tab_name:str):
         pass

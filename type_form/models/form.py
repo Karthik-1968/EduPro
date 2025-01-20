@@ -6,7 +6,7 @@ class Form(models.Model):
     
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="forms")
     workspace = models.ForeignKey(Workspace,on_delete=models.CASCADE,related_name="forms")
-    name = models.CharField(max_length=100)
+    form_name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     submissions_count = models.IntegerField(default=0)

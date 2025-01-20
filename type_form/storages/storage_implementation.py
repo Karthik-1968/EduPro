@@ -3,10 +3,10 @@ from type_form.exceptions.custom_exceptions import UserAlreadyPresentException, 
         FormAlreadyExistsException, InvalidFormException, FieldAlreadyExistsException, InvalidFieldException,\
             MaximumInvitesLimitReachedException, SettingsAlreadyExistsException, InvalidFormFieldException,\
                 InvalidSettingsException, InvitationExpiredException, LayoutAlreadyExistsException, InvalidLayoutException,\
-                    TabAlreadyExistsException, InvalidTabException
+                    TabAlreadyExistsException, InvalidTabException, InvalidLayoutForFormException
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
 from type_form.models import User, Workspace, Form, Field, FormResponse, FormField, FormFieldResponse, FormFieldSettings,\
-    WorkspaceInvite
+    WorkspaceInvite, Layout, Tab
 from type_form.interactors.storage_interfaces.storage_interface import UserDTO, WorkspaceDTO, FormDTO, FieldDTO, FormFieldDTO, \
     FormResponseDTO, FormFieldResponseDTO, WorkspaceInviteDTO, PhoneNumberFieldSettingsDTO, SectionConfigDTO, TabDTO
 from datetime import datetime
@@ -175,13 +175,6 @@ class StorageImplementation(StorageInterface):
             formdtos.append(formdto)
         
         return formdtos
-    
-    def check_form(self, id:int):
-        
-        form_exists = Form.objects.filter(id = id).exists()
-        form_not_exists = not form_exists
-        if form_not_exists:
-            raise InvalidFormException
         
     def check_if_field_already_exists(self, field_type:str):
         
@@ -199,7 +192,7 @@ class StorageImplementation(StorageInterface):
         form_exists = Form.objects.filter(id = id).exists()
         form_not_exists = not form_exists
         if form_not_exists:
-            raise InvalidFormException
+            raise InvalidFormException(form_id=id)
         
     def check_field(self, id:int):
         
@@ -353,34 +346,56 @@ class StorageImplementation(StorageInterface):
         
         return form.completion_rate
 
-    def check_if_layout_already_exists_for_form(self, form_id:int):
+    def check_if_layout_is_valid_for_form(self, form_id:int, layout_id:int):
         
         if Layout.objects.filter(form_id = form_id).exists():
-            raise LayoutAlreadyExistsException
+            layout = Layout.objects.get(form_id = form_id)
 
-    def create_layout_for_form(self, user_id:str, form_id:int, layout_name:str):
+            if layout.id!=layout_id:
+                raise InvalidLayoutForFormException(form_id=form_id, layout_id=layout_id)
 
-        layout = Layout.objects.create(user_id = user_id, form_id = form_id, layout_name = layout_name)
 
-        return layout.id
+    def create_or_update_layout_for_form(self, user_id:str, form_id:int, layout_name:str, layout_id:int)->int:
+
+        if Layout.objects.filter(form_id = form_id).exists():
+            layout = Layout.objects.get(form_id = form_id)
+
+            layout.layout_name = layout_name
+            layout.save()
+
+            return layout.id
+        else:
+            layout = Layout.objects.create(id=layout_id, user_id = user_id, form_id = form_id, layout_name = layout_name)
+
+            return layout.id
 
     def check_layout(self, id:int):
         
         layout_exists = Layout.objects.filter(id = id).exists()
         layout_not_exists = not layout_exists
         if layout_not_exists:
-            raise InvalidLayoutException
+            raise InvalidLayoutException(layout_id=id)
 
-    def check_if_tab_already_exists_for_layout(self, layout_id:int, tab_type:str):
-        
-        if Tab.objects.filter(layout_id = layout_id, tab_type=tab_type).exists():
-            raise TabAlreadyExistsException
+    def create_or_update_tab_for_layout_for_section_config(self, tab_dto:TabDTO)->int:
 
-    def create_tab_for_layout_for_section_config(self, tab_dto:TabDTO)->int:
+        if Tab.objects.filter(layout_id = tab_dto.layout_id, id=tab_dto.tab_id).exists():
+            tab = Tab.objects.get(layout_id = tab_dto.layout_id, id=tab_dto.tab_id)
 
-        tab = Tab.objects.create(user_id = tab_dto.user_id, layout_id = tab_dto.layout_id, tab_type = tab_dto.tab_type, tab_name = tab_dto.tab_name)
+            tab.tab_name = tab_dto.tab_name
+            tab.save()
 
-        return tab.id
+            return tab.id
+        else:
+            config = {
+                "sections_config": []
+            }
+
+            config = dumps(config)
+
+            tab = Tab.objects.create(user_id = tab_dto.user_id, layout_id = tab_dto.layout_id, tab_type = tab_dto.tab_type, \
+                                    tab_name = tab_dto.tab_name, config = config)
+
+            return tab.id
 
     def check_if_form_fields_exists(self, form_fields:list[str]):
 
@@ -418,33 +433,39 @@ class StorageImplementation(StorageInterface):
             user_id = tab.user_id,
             layout_id = tab.layout_id,
             tab_type = tab.tab_type,
-            tab_name = tab.tab_name,
-            gofs = json.dumps(tab.gofs),
-            formfields = json.dumps(tab.formfields)
+            tab_name = tab.tab_name
         )
 
-    def add_sections_to_tab(self, tab_id:int, sectionconfig_dtos:list[SectionConfigDTO]):
+    def add_section_to_tab(self, tab_id:int, sectionconfig_dto:SectionConfigDTO):
 
         tab = Tab.objects.get(id = tab_id)
 
-        config = {
-            "sections_config": []
-        }
+        config = loads(tab.config)
 
-        for sectionconfig_dto in sectionconfig_dtos:
+        if sectionconfig_dto.section_type == "gof_name":
+            config["sections_config"].append({
+                "type": sectionconfig_dto.section_type,
+                "gof_name": sectionconfig_dto.gof
+            })
 
-            if sectionconfig_dto.type == "CUSTOM":
-                config["sections_config"].append({
-                    "section_name": sectionconfig_dto.section_name,
-                    "type": sectionconfig_dto.type,
-                    "field_ids": sectionconfig_dto.field_ids
-                })
+        elif sectionconfig_dto.section_type == "form_field ids":
+            config["sections_config"].append({
+                "section_name": sectionconfig_dto.section_name,
+                "type": sectionconfig_dto.section_type,
+                "formfield_ids": sectionconfig_dto.formfields
+            })
 
-            elif sectionconfig_dto.type == "DEFAULT":
-                config["sections_config"].append({
-                    "type": sectionconfig_dto.type,
-                    "gof_name": sectionconfig_dto.gof_name
-                })
+        tab.config = dumps(config)
+        tab.save()
 
-        tab.config = json.dumps(config)
+    def update_layout_for_form(self, layout_id:int, layout_name:str):
+
+        layout = Layout.objects.get(id = layout_id)
+        layout.layout_name = layout_name
+        layout.save()
+
+    def update_tab_for_section_config(self, tab_id:int, tab_name:str):
+        
+        tab = Tab.objects.get(id = tab_id)
+        tab.tab_name = tab_name
         tab.save()

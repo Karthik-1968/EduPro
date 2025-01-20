@@ -27,19 +27,20 @@ class FormLayoutInteractor:
         else:
             return presenter.get_response_for_create_layout_for_form(id=layout_id)
     
-    def create_layout_for_form(self, user_id:str, form_id:int, layout_name:str):
+    def create_or_update_layout_for_form(self, user_id:str, form_id:int, layout_name:str, layout_id:int):
 
-        self._check_if_input_data_is_correct(user_id=user_id, form_id=form_id)
+        self._check_if_input_data_is_correct_for_create_or_update_layout_for_form(user_id=user_id, form_id=form_id, layout_id=layout_id)
 
-        return self.storage.create_layout_for_form(user_id=user_id, form_id=form_id, layout_name=layout_name)
+        return self.storage.create_or_update_layout_for_form(user_id=user_id, form_id=form_id, layout_name=layout_name, layout_id=\
+                                                                                                                layout_id)
     
-    def _check_if_input_data_is_correct(self, user_id:str, form_id:int):
+    def _check_if_input_data_is_correct_for_create_or_update_layout_for_form(self, user_id:str, form_id:int, layout_id:int):
 
         self.storage.check_user(id=user_id)
 
         self.storage.check_form(id=form_id)
 
-        self.storage.check_if_layout_already_exists_for_form(form_id=form_id)
+        self.storage.check_if_layout_is_valid_for_form(form_id=form_id, layout_id=layout_id)
 
     
     def create_tab_for_layout_for_section_config_wrapper(self, tab_dto:TabDTO, presenter:PresenterInterface):
@@ -60,25 +61,24 @@ class FormLayoutInteractor:
         else:
             return presenter.get_response_for_create_tab_for_layout(id=tab_id)
     
-    def create_tab_for_layout_for_section_config(self, tab_dto:TabDTO):
+    def create_or_update_tab_for_layout_for_section_config(self, tab_dto:TabDTO):
         
-        self._check_if_input_data_is_correct_for_create_tab_for_layout_for_section_config(tab_dto=tab_dto)
+        self._check_if_input_data_is_correct_for_create_or_update_tab_for_layout_for_section_config(tab_dto=tab_dto)
 
-        return self.storage.create_tab_for_layout_for_section_config(tab_dto=tab_dto)
+        return self.storage.create_or_update_tab_for_layout_for_section_config(tab_dto=tab_dto)
 
-    def _check_if_input_data_is_correct_for_create_tab_for_layout_for_section_config(self, tab_dto:TabDTO):
+    def _check_if_input_data_is_correct_for_create_or_update_tab_for_layout_for_section_config(self, tab_dto:TabDTO):
 
         self.storage.check_user(id=tab_dto.user_id)
 
         self.storage.check_layout(id=tab_dto.layout_id)
 
-        self.storage.check_if_tab_already_exists_for_layout(layout_id=tab_dto.layout_id, tab_type=tab_dto.tab_type)
     
-    def add_section_to_tab(self, tab_id:int, sectionconfig_dtos:list[SectionConfigDTO]):
+    def add_section_to_tab(self, tab_id:int, sectionconfig_dto:SectionConfigDTO):
 
         self.storage.check_tab(id=tab_id)
 
-        return self.storage.add_sections_to_tab(tab_id=tab_id, sectionconfig_dtos=sectionconfig_dtos)
+        return self.storage.add_section_to_tab(tab_id=tab_id, sectionconfig_dto=sectionconfig_dto)
     
     def get_tab_details_wrapper(self, tab_id:int, presenter:PresenterInterface):
         """ELP
