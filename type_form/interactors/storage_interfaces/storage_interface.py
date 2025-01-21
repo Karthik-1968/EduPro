@@ -70,6 +70,7 @@ class TabDTO:
     layout_id: int
     tab_name: str
     tab_type: str
+    config: Optional[str]=None
 
 @dataclass
 class SectionConfigDTO:
@@ -336,4 +337,8 @@ class StorageInterface:
 
     @abstractmethod
     def add_form_field_ids_to_tab(self, tab_id:int, form_field_ids_config:FormFieldIdsConfigDTO):
+        pass
+
+    @abstractmethod
+    def get_layout_details(self, layout_id:int)->list[TabDTO]:
         pass

@@ -288,3 +288,20 @@ class PresenterImplementation(PresenterInterface):
             "gofs": tab_dto.gofs,
             "form_fields": tab_dto.form_fields,
         }
+
+    def raise_exception_for_invalid_layout(self):
+        raise NotFound(*INVALID_LAYOUT_ID)
+
+    def get_response_for_get_layout_details(self, tab_dtos:TabDTO)->list[dict]:
+        
+        tab_details = []
+        for tab_dto in tab_dtos:
+            tab_dict = {
+                "user_id": tab_dto.user_id,
+                "tab_type": tab_dto.tab_type,
+                "tab_name": tab_dto.tab_name,
+                "config": tab_dto.config
+            }
+            tab_details.append(tab_dict)
+        
+        return tab_details

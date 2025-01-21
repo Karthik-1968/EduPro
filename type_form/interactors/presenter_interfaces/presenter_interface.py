@@ -257,3 +257,7 @@ class PresenterInterface:
     @abstractmethod
     def get_response_for_get_tab_details(self,tabdto:TabDTO)->dict:
         pass
+
+    @abstractmethod
+    def get_response_for_get_layout_details(self, tab_dtos:list[TabDTO])->list[dict]:
+        pass

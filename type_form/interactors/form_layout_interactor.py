@@ -99,3 +99,14 @@ class FormLayoutInteractor:
         self.storage.check_tab(id=tab_id)
 
         return self.storage.add_form_field_ids_to_tab(tab_id=tab_id, form_field_ids_config_dto=form_field_ids_config_dto)
+    
+    def get_layout_details(self, layout_id:int):
+
+        try:
+            self.storage.check_layout(id=layout_id)
+        except custom_exceptions.InvalidLayoutException:
+            self.presenter.raise_exception_for_invalid_layout()
+
+        tab_dtos =  self.storage.get_layout_details(layout_id=layout_id)
+
+        return self.presenter.get_response_for_get_layout_details(tab_dtos=tab_dtos)

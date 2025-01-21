@@ -172,3 +172,8 @@ MISSING_FIELD_ID = (
     "Field id is missing",
     "MISSING_FIELD_ID"
 )
+
+INVALID_LAYOUT_ID = (
+    "Invalid layout id",
+    "INVALID_LAYOUT_ID"
+)

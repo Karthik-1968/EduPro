@@ -433,7 +433,8 @@ class StorageImplementation(StorageInterface):
             user_id = tab.user_id,
             layout_id = tab.layout_id,
             tab_type = tab.tab_type,
-            tab_name = tab.tab_name
+            tab_name = tab.tab_name,
+            config = tab.config
         )
 
     def add_section_to_tab(self, tab_id:int, sectionconfig_dto:SectionConfigDTO):
@@ -516,3 +517,22 @@ class StorageImplementation(StorageInterface):
 
         tab.config = dumps(config)
         tab.save()
+
+    def get_layout_details(self, layout_id:int)->list[TabDTO]:
+
+        tabs = Tab.objects.filter(layout_id = layout_id)
+
+        tab_dtos = []
+
+        for tab in tabs:
+            tab_dto = self.convert_tab_object_to_dto(tab)
+            tab_dtos.append(tab_dto)
+        
+        return tab_dtos
+
+    def check_layout(self, id:int):
+        
+        layout_exists = Layout.objects.filter(id = id).exists()
+        layout_not_exists = not layout_exists
+        if layout_not_exists:
+            raise InvalidLayoutException(layout_id=id)
