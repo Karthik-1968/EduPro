@@ -296,6 +296,7 @@ class PresenterImplementation(PresenterInterface):
         
         tab_details = []
         for tab_dto in tab_dtos:
+            if tab_dto.
             tab_dict = {
                 "user_id": tab_dto.user_id,
                 "tab_type": tab_dto.tab_type,
