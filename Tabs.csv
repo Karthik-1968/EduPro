@@ -1,3 +1,2 @@
-layout_id,user_id,layout_name,tab_id,tab_name,tab_type,section_type,section_name,gof_name,formfield_ids
-1,123e4567-e89b-12d3-a456-426614174000,layout 2,3,tab 3,sections_config,gof_name,,contact_information,
-1,123e4567-e89b-12d3-a456-426614174000,layout 2,3,tab 3,sections_config,form_field ids,basic details,,"1,2"
+name,dob,contact_information,work_experience,signature,date,tab_id,layout_id,tab_name,tab_type,user_id
+form field id 1,form field id 2,"[form field id 3, form field id 4, form field id 5, form field 6]","[form field id 7, form field id 8, form field id 9]",form field id 10,form field id 11,4,1,Tab 4,form_fields_config,123e4567-e89b-12d3-a456-426614174000
