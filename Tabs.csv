@@ -1,3 +1,3 @@
-layout_id,user_id,layout_name,tab_id,tab_name,tab_type,section_type,section_name,gof_name,formfield_ids
-1,123e4567-e89b-12d3-a456-426614174000,layout 2,3,tab 3,sections_config,gof_name,,contact_information,
-1,123e4567-e89b-12d3-a456-426614174000,layout 2,3,tab 3,sections_config,form_field ids,basic details,,"1,2"
+layout_id,user_id,tab_id,tab_name,tab_type,config
+1,123e4567-e89b-12d3-a456-426614174000,4,Tab 4,matrix_config,"[[1,2,3,4],[5,6,7,8],[9,10,11,12]]"
+,,,,,
