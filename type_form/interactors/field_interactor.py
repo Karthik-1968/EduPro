@@ -118,7 +118,4 @@ class FieldInteractor:
 
         formfielddtos=self.storage.get_fields_of_form(id = form_id)
         
-        return self.presenter.get_response_for_fields_of_form(formfielddtos = formfielddtos)
-
-
-    
+        return self.presenter.get_response_for_fields_of_form(formfielddtos = formfielddtos)    

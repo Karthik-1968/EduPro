@@ -85,3 +85,10 @@ class InvalidLayoutForFormException(Exception):
 
     def __str__(self):
         return f"Layout ID {self.layout_id} is invalid for Form ID {self.form_id}"
+
+class InvalidFormFieldException(Exception):
+    def __init__(self, form_field_id:int):
+        self.form_field_id=form_field_id
+
+    def __str__(self):
+        return f"Form Field ID {self.form_field_id} is invalid"

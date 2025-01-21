@@ -1,4 +1,4 @@
-from type_form.interactors.storage_interfaces.storage_interface import StorageInterface, TabDTO, SectionConfigDTO
+from type_form.interactors.storage_interfaces.storage_interface import StorageInterface, TabDTO, SectionConfigDTO, FormFieldIdsConfigDTO
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.exceptions import custom_exceptions
 
@@ -80,20 +80,22 @@ class FormLayoutInteractor:
 
         return self.storage.add_section_to_tab(tab_id=tab_id, sectionconfig_dto=sectionconfig_dto)
     
-    def get_tab_details_wrapper(self, tab_id:int, presenter:PresenterInterface):
-        """ELP
-            check if tab exists
-            get tab details
-        """
-        try:
-            tab_dto = self.get_tab_details(tab_id=tab_id)
-        except custom_exceptions.InvalidTabException:
-            presenter.raise_exception_for_invalid_tab()
-        else:
-            return presenter.get_response_for_tab_details(tab_dto=tab_dto)
+    def create_or_update_tab_for_form_field_ids_config(self, tab_dto:TabDTO):       
 
-    def get_tab_details(self, tab_id:int):
+        """ELP:
+                -check if user exists
+                -check if layout exists
+                -create tab for list of form fields
+        """
+        self.storage.check_user(id=tab_dto.user_id)
+        
+        self.storage.check_layout(id=tab_dto.layout_id)
+
+        return self.storage.create_or_update_tab_for_form_field_ids_config(tab_dto=tab_dto)
+
+    
+    def add_form_field_ids_to_tab(self, tab_id:int, form_field_ids_config_dto:FormFieldIdsConfigDTO):
 
         self.storage.check_tab(id=tab_id)
 
-        return self.storage.get_tab_details(tab_id=tab_id)
+        return self.storage.add_form_field_ids_to_tab(tab_id=tab_id, form_field_ids_config_dto=form_field_ids_config_dto)

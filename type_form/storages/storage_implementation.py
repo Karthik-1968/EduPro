@@ -8,7 +8,7 @@ from type_form.interactors.storage_interfaces.storage_interface import StorageIn
 from type_form.models import User, Workspace, Form, Field, FormResponse, FormField, FormFieldResponse, FormFieldSettings,\
     WorkspaceInvite, Layout, Tab
 from type_form.interactors.storage_interfaces.storage_interface import UserDTO, WorkspaceDTO, FormDTO, FieldDTO, FormFieldDTO, \
-    FormResponseDTO, FormFieldResponseDTO, WorkspaceInviteDTO, PhoneNumberFieldSettingsDTO, SectionConfigDTO, TabDTO
+    FormResponseDTO, FormFieldResponseDTO, WorkspaceInviteDTO, PhoneNumberFieldSettingsDTO, SectionConfigDTO, TabDTO, FormFieldIdsConfigDTO
 from datetime import datetime
 from json import loads, dumps
 
@@ -468,4 +468,51 @@ class StorageImplementation(StorageInterface):
         
         tab = Tab.objects.get(id = tab_id)
         tab.tab_name = tab_name
+        tab.save()
+
+    def check_if_form_field_ids_exists(form_field_ids:list[int]):
+        
+        for form_field_id in form_field_ids:
+            form_field_exists = FormField.objects.filter(id = form_field_id).exists()
+            form_field_not_exists = not form_field_exists
+            if form_field_not_exists:
+                raise InvalidFormFieldException
+    
+    def create_or_update_tab_for_form_field_ids_config(self, tab_dto:TabDTO)->int:
+        
+        if Tab.objects.filter(id = tab_dto.tab_id).exists():
+            tab = Tab.objects.get(id = tab_dto.tab_id)
+            tab.tab_name = tab_dto.tab_name
+            config = {
+                "form_field_ids_config": []
+            }
+            tab.config = dumps(config)
+            tab.save()
+        else:
+            tab = Tab.objects.create(user_id = tab_dto.user_id, layout_id = tab_dto.layout_id, tab_type = tab_dto.tab_type, \
+                                    tab_name = tab_dto.tab_name)
+            config = {
+                "form_field_ids_config": []
+            }
+            tab.config = dumps(config)
+            tab.save()
+
+        return tab.id
+
+    def add_form_field_ids_to_tab(self, tab_id:int, form_field_ids_config_dto:FormFieldIdsConfigDTO):
+
+        tab = Tab.objects.get(id = tab_id)
+
+        config = loads(tab.config)
+
+        config["form_field_ids_config"].append({
+            "name": form_field_ids_config_dto.name,
+            "dob": form_field_ids_config_dto.dob,
+            "contact_information": form_field_ids_config_dto.contact_information,
+            "work_experience": form_field_ids_config_dto.work_experience,
+            "signature": form_field_ids_config_dto.signature,
+            "date": form_field_ids_config_dto.date
+        })
+
+        tab.config = dumps(config)
         tab.save()

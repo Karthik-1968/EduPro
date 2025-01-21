@@ -92,6 +92,15 @@ class FormFieldSettingsDTO:
     vetical_alignment: bool = None
     alphabetical_order: bool = None
     placeholder: str = None
+
+@dataclass
+class FormFieldIdsConfigDTO:
+    name: int
+    dob: int 
+    contact_information: list[int]
+    work_experience: list[int]
+    signature: int
+    date: int
     
 
 class StorageInterface:
@@ -315,4 +324,16 @@ class StorageInterface:
 
     @abstractmethod
     def update_tab_for_section_config(self, tab_id:int, tab_name:str):
+        pass
+
+    @abstractmethod
+    def check_if_form_field_ids_exists(form_field_ids:list[int]):
+        pass
+
+    @abstractmethod
+    def create_or_update_tab_for_form_field_ids_config(self, tab_dto:TabDTO):
+        pass
+
+    @abstractmethod
+    def add_form_field_ids_to_tab(self, tab_id:int, form_field_ids_config:FormFieldIdsConfigDTO):
         pass
