@@ -15,7 +15,6 @@ class FormLayoutInteractor:
             check if layout already exists for form
             create layout for form
         """
-
         try:
             layout_id = self.create_or_update_layout_for_form(user_id=user_id, form_id=form_id, layout_name=layout_name)
         except custom_exceptions.InvalidUserException:
@@ -86,10 +85,10 @@ class FormLayoutInteractor:
         self.storage.check_tab(id=tab_id)
 
         if sectionconfig.section_type = "group_name":
-            self.storage.check_group_name_exists(group_name=sectionconfig_dto.group_name)
+            self.storage.check_group_name_exists_for_section_config(group_name=sectionconfig_dto.gof)
 
         if sectionconfig.section_type = "form_field_ids":
-            self.storage.check_form_field_ids_exists_for_section_config(section_name=sectionconfig_dto.form_field_ids)
+            self.storage.check_form_field_ids_exists_for_section_config(form_field_ids=sectionconfig_dto.formfields)
 
         return self.storage.add_section_to_tab(tab_id=tab_id, sectionconfig_dto=sectionconfig_dto)
     
@@ -115,13 +114,17 @@ class FormLayoutInteractor:
 
         return self.storage.add_form_field_ids_to_tab(tab_id=tab_id, form_field_ids_config_dto=form_field_ids_config_dto)
     
-    def get_layout_details(self, layout_id:int):
+    def get_layout_details_wrapper(self, layout_id:int):
 
         try:
-            self.storage.check_layout(id=layout_id)
+            layout_details_dto = self.get_layout_details(layout_id=layout_id)
         except custom_exceptions.InvalidLayoutException:
-            self.presenter.raise_exception_for_invalid_layout()
+            presenter.raise_exception_for_invalid_layout()
+        else:
+            return presenter.get_response_for_get_layout_details(layout_details_dto=layout_details_dto)
 
-        tab_dtos =  self.storage.get_layout_details(layout_id=layout_id)
+    def get_layout_details(self, layout_id:int):
 
-        return self.presenter.get_response_for_get_layout_details(tab_dtos=tab_dtos)
+        self.storage.check_layout(id=layout_id)
+
+        return self.storage.get_layout_details(layout_id=layout_id)

@@ -93,6 +93,12 @@ class FormFieldIdsConfigTabDTO:
     tab_name: str
     tab_type: str
     form_field_ids_config: FormFieldIdsConfigDTO
+
+@dataclass
+class LayoutDetailsDTO:
+    layout_name: str
+    section_config_tab: SectionConfigTabDTO
+    form_field_ids_config_tab: FormFieldIdsConfigTabDTO
      
 @dataclass
 class FormFieldSettingsDTO:
@@ -355,5 +361,17 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_layout_details(self, layout_id:int)->list[SectionConfigTabDTO, FormFieldIdsConfigTabDTO]:
+    def get_layout_details(self, layout_id:int)->LayoutDetailsDTO:
+        pass
+
+    @abstractmethod
+    def check_group_name_exists_for_section_config(self, group_name:str):
+        pass
+
+    @abstractmethod
+    def check_form_field_ids_exists_for_section_config(self, form_field_ids:list[int]):
+        pass
+
+    @abstractmethod
+    def check_form_field_ids_exists_for_form_field_ids_config(self, form_field_ids_config_dto:FormFieldIdsConfigDTO):
         pass

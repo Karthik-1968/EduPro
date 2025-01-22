@@ -9,9 +9,10 @@ from type_form.models import User, Workspace, Form, Field, FormResponse, FormFie
     WorkspaceInvite, Layout, Tab
 from type_form.interactors.storage_interfaces.storage_interface import UserDTO, WorkspaceDTO, FormDTO, FieldDTO, FormFieldDTO, \
     FormResponseDTO, FormFieldResponseDTO, WorkspaceInviteDTO, PhoneNumberFieldSettingsDTO, SectionConfigDTO, TabDTO, FormFieldIdsConfigDTO, \
-        FormFieldIdsConfigTabDTO, SectionConfigTabDTO
+        FormFieldIdsConfigTabDTO, SectionConfigTabDTO, LayoutDetailsDTO
 from datetime import datetime
 from json import loads, dumps
+from typing import Tuple
 
 class StorageImplementation(StorageInterface):
     
@@ -520,10 +521,11 @@ class StorageImplementation(StorageInterface):
         tab.config = dumps(config)
         tab.save()
 
-    def get_layout_details(self, layout_id:int)->list[SectionConfigTabDTO, FormFieldIdsConfigTabDTO]:
+    def get_layout_details(self, layout_id:int)->LayoutDetailsDTO:
 
+        layout_name = Layout.objects.get(id = layout_id).layout_name
         tabs = Tab.objects.filter(layout_id = layout_id)
-        tab_dtos = []
+        tab_dtos = {}
         for tab in tabs:
             if tab.tab_type == "section_config":
                 config = loads(tab.config)
@@ -537,7 +539,7 @@ class StorageImplementation(StorageInterface):
                                                                                                                 section["formfield_ids"])
                         section_dtos.append(section_dto)
                 tab_dto = self._convert_section_config_tab_to_dto(tab=tab, section_dtos=section_dtos)
-                tab_dtos.append(tab_dto)
+                tab_dtos["section_config"] = tab_dto
             elif tab_dtos.tab_type == "form_field_ids_config":
                 config = loads(tab.config)
                 for section in config["form_field_ids_config"]:
@@ -545,9 +547,11 @@ class StorageImplementation(StorageInterface):
                                                                                                         section["contact_information"], section["work_experience"], \
                                                                                                         section["signature"], section["date"])
                 tab_dto = self._convert_form_field_ids_config_tab_to_dto(tab=tab, section_dto=section_dto)
-                tab_dtos.append(tab_dto)
+                tab_dtos["form_field_ids_config"] = tab_dto
+        
+        layout_details_dto = self._convert_layout_details_to_dto(layout_name=layout_name, tab_dtos=tab_dtos)
                     
-        return tab_dtos
+        return layout_details_dto
 
     def check_layout(self, id:int):
         
@@ -605,4 +609,13 @@ class StorageImplementation(StorageInterface):
             tab_type = tab.tab_type,
             tab_name = tab.tab_name,
             form_field_ids_config = section_dto
+        )
+
+    @staticmethod
+    def _convert_layout_details_to_dto(layout_name, tab_dtos):
+
+        return LayoutDetailsDTO(
+            layout_name = layout_name,
+            section_config_tab = tab_dtos["section_config"],
+            form_field_ids_config_tab = tab_dtos["form_field_ids_config"]
         )

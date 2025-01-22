@@ -7,7 +7,8 @@ from type_form.constants.exception_messages import MISSING_EMAIL, MISSING_USERID
                 MISSING_SETTINGS_ID, MISSING_WORKSPACE_ID, MISSING_INVITE_ID, MISSING_FORM_ID, MISSING_FIELD_ID, LAYOUT_ALREADY_EXISTS,\
                     TAB_ALREADY_EXISTS, INVALID_LAYOUT_ID, INVALID_TAB_ID
 from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO, WorkspaceInviteDTO, FormDTO, FieldDTO, \
-    FormResponseDTO, FormFieldDTO, FormFieldResponseDTO, PhoneNumberFieldSettingsDTO, TabDTO, SectionConfigTabDTO, FormFieldIdsConfigTabDTO
+    FormResponseDTO, FormFieldDTO, FormFieldResponseDTO, PhoneNumberFieldSettingsDTO, TabDTO, SectionConfigTabDTO, FormFieldIdsConfigTabDTO,\
+        LayoutDetailsDTO
 
 class PresenterImplementation(PresenterInterface):
     
@@ -292,9 +293,11 @@ class PresenterImplementation(PresenterInterface):
     def raise_exception_for_invalid_layout(self):
         raise NotFound(*INVALID_LAYOUT_ID)
 
-    def get_response_for_get_layout_details(self, tab_dtos:list[SectionConfigTabDTO, FormFieldIdsConfigTabDTO])->list[dict]:
+    def get_response_for_get_layout_details(self, layout_details_dto:LayoutDetailsDTO)->dict:
         
-        tab_details = []
+        layout_details = {}
+        layout_details["layout_name"] = layout_details_dto.layout_name
+        tab_dtos = [layout_details_dto.section_config_tab, layout_details_dto.form_field_ids_config_tab]
         for tab_dto in tab_dtos:
             tab_dict = {
                     "tab_id": tab_dto.tab_id,
@@ -312,6 +315,7 @@ class PresenterImplementation(PresenterInterface):
                     elif section_config.section_type == 'form_field_ids':
                         tab_dict[f'form_field_ids_{formfield_ids_count}'] = section_config.formfields
                         formfield_ids_count += 1
+                layout_details["sections_config_tab"] = tab_dict
             elif tab_dto.tab_type == 'form_field_ids_config':
                 tab_dict['name'] = form_field_ids_config.name
                 tab_dict['dob'] = form_field_ids_config.dob
@@ -319,6 +323,6 @@ class PresenterImplementation(PresenterInterface):
                 tab_dict['work_experience'] = form_field_ids_config.work_experience
                 tab_dict['signature'] = form_field_ids_config.signature
                 tab_dict['date'] = form_field_ids_config.date
-            tab_details.append(tab_dict)
+                layout_details["form_field_ids_config_tab"] = tab_dict
                         
-        return tab_details
+        return layout_details
