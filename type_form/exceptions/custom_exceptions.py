@@ -76,7 +76,12 @@ class FieldDoesNotBelongToFormException(Exception):
     pass
 
 class InvalidTabException(Exception):
-    pass
+
+    def __init__(self, tab_id:int):
+        self.tab_id = tab_id
+
+    def __str__(self):
+        return f"Tab with ID {self.tab_id} doesn't exist."
 
 class InvalidLayoutForFormException(Exception):
     def __init__(self, form_id:int, layout_id:int):
@@ -92,4 +97,13 @@ class InvalidFormFieldException(Exception):
 
     def __str__(self):
         return f"Form Field ID {self.form_field_id} is invalid"
+
+
+class ChildTabIsParentException(Exception):
+
+    def __init__(self, tab_id:int):
+        self.tab_id = tab_id
+
+    def __str__(self):
+        return f"Tab with ID {self.tab_id} is already parent."
 

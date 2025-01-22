@@ -74,14 +74,12 @@ class FormLayoutInteractor:
 
     
     def add_section_to_tab(self, tab_id:int, sectionconfig_dto:SectionConfigDTO):
-
         """ELP:
                 -check if tab exists
                 -check if group name exists
                 -check if form field ids exists
                 -add section to tab
         """
-
         self.storage.check_tab(id=tab_id)
 
         if sectionconfig.section_type = "group_name":
@@ -107,7 +105,11 @@ class FormLayoutInteractor:
 
     
     def add_form_field_ids_to_tab(self, tab_id:int, form_field_ids_config_dto:FormFieldIdsConfigDTO):
-
+        """ELP:
+            -check if tab exists
+            -check if form field ids exists
+            -add form field ids to tab
+        """
         self.storage.check_tab(id=tab_id)
 
         self.storage.check_form_field_ids_exists_for_form_field_ids_config(form_field_ids_config_dto=form_field_ids_config_dto)
@@ -115,7 +117,10 @@ class FormLayoutInteractor:
         return self.storage.add_form_field_ids_to_tab(tab_id=tab_id, form_field_ids_config_dto=form_field_ids_config_dto)
     
     def get_layout_details_wrapper(self, layout_id:int):
-
+        """ELP:
+            -check if layout exists
+            -get layout details
+        """
         try:
             layout_details_dto = self.get_layout_details(layout_id=layout_id)
         except custom_exceptions.InvalidLayoutException:
@@ -128,3 +133,18 @@ class FormLayoutInteractor:
         self.storage.check_layout(id=layout_id)
 
         return self.storage.get_layout_details(layout_id=layout_id)
+
+    def add_child_tabs_to_parent_tab(self, parent_tab_id:int, child_tab_ids:list[int]):
+        """ELP:
+            -check if parent tab exists
+            -check if child tabs exists
+            -check if child tab is parent
+            -add child tabs to parent tab
+        """
+        self.storage.check_tab(id=parent_tab_id)
+
+        self.storage.check_tabs_exist(id = child_tab_ids)
+
+        self.storage.check_if_child_tab_is_parent(child_tab_ids=child_tab_ids)
+
+        return self.storage.add_child_tabs_to_parent_tab(parent_tab_id=parent_tab_id, child_tab_ids=child_tab_ids)

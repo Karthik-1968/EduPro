@@ -9,7 +9,7 @@ from type_form.models import User, Workspace, Form, Field, FormResponse, FormFie
     WorkspaceInvite, Layout, Tab
 from type_form.interactors.storage_interfaces.storage_interface import UserDTO, WorkspaceDTO, FormDTO, FieldDTO, FormFieldDTO, \
     FormResponseDTO, FormFieldResponseDTO, WorkspaceInviteDTO, PhoneNumberFieldSettingsDTO, SectionConfigDTO, TabDTO, FormFieldIdsConfigDTO, \
-        FormFieldIdsConfigTabDTO, SectionConfigTabDTO, LayoutDetailsDTO
+        FormFieldIdsConfigTabDTO, SectionConfigTabDTO, LayoutDetailsDTO, NestedTabDetailsDTO
 from datetime import datetime
 from json import loads, dumps
 from typing import Tuple
@@ -619,3 +619,25 @@ class StorageImplementation(StorageInterface):
             section_config_tab = tab_dtos["section_config"],
             form_field_ids_config_tab = tab_dtos["form_field_ids_config"]
         )
+
+    def check_tabs_exist(self, tab_ids:list[int]):
+
+        for tab_id in tab_ids:
+            tab_exists = Tab.objects.filter(id = tab_id).exists()
+            tab_not_exists = not tab_exists
+            if tab_not_exists:
+                raise InvalidTabException(tab_id=tab_id)
+
+    def check_if_child_tab_is_parent(self, child_tab_ids:list[int]):
+
+        for child_tab_id in child_tab_ids:
+            child_tab_is_parent = Tab.objects.filter(parent_id=child_tab_id).exists()
+            if child_tab_is_parent:
+                raise ChildTabIsParentException(tab_id=child_tab_id)
+
+    def add_child_tabs_to_parent_tab(self, parent_tab_id:int, child_tab_ids:list[int]):
+
+        for child_tab_id in child_tab_ids:
+            child_tab = Tab.objects.get(id = child_tab_id)
+            child_tab.parent_id = parent_tab_id
+            child_tab.save()

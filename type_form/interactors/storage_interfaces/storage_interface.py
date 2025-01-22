@@ -375,3 +375,11 @@ class StorageInterface:
     @abstractmethod
     def check_form_field_ids_exists_for_form_field_ids_config(self, form_field_ids_config_dto:FormFieldIdsConfigDTO):
         pass
+
+    @abstractmethod
+    def check_tabs_exists(self, tab_ids:list[int]):
+        pass
+
+    @abstractmethod
+    def add_child_tabs_to_parent_tab(self, parent_tab_id:int, child_tab_ids:list[int]):
+        pass
