@@ -296,13 +296,30 @@ class PresenterImplementation(PresenterInterface):
         
         tab_details = []
         for tab_dto in tab_dtos:
-            if tab_dto.
             tab_dict = {
-                "user_id": tab_dto.user_id,
-                "tab_type": tab_dto.tab_type,
-                "tab_name": tab_dto.tab_name,
-                "config": tab_dto.config
-            }
+                    "user_id": tab_dto.user_id,
+                    "layout_id": tab_dto.layout_id,
+                    "tab_type": tab_dto.tab_type,
+                    "tab_name": tab_dto.tab_name
+                }
+            config = tab_dto.config
+            if tab_dto.tab_type == "sections_config":
+                gof_name_count = 1
+                form_field_ids_count = 1
+                for section in config["sections_config"]:
+                    if section["type"]=="gof_name":
+                        tab_dict[f"gof_name_{gof_name_count}"] = section["gof_name"]
+                        gof_name_count+=1
+                    elif section["type"]=="form_field ids":
+                        tab_dict[f"form_field_ids_{form_field_ids_count}"] = section["formfield_ids"]
+                        form_field_ids_count+=1
+            elif tab_dto.tab_type == "form_field_ids_config":
+                for section in config["form_field_ids_config"]:
+                    tab_dict["name"] = section["name"]
+                    tab_dict["dob"] = section["dob"]
+                    tab_dict["contact_information"] = section["contact_information"]
+                    tab_dict["work_experience"] = section["work_experience"]
+                    tab_dict["signature"] = section["signature"]
+                    tab_dict["date"] = section["date"]
             tab_details.append(tab_dict)
-        
         return tab_details

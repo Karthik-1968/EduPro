@@ -434,7 +434,7 @@ class StorageImplementation(StorageInterface):
             layout_id = tab.layout_id,
             tab_type = tab.tab_type,
             tab_name = tab.tab_name,
-            config = tab.config
+            config = loads(tab.config)
         )
 
     def add_section_to_tab(self, tab_id:int, sectionconfig_dto:SectionConfigDTO):
