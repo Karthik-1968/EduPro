@@ -9,6 +9,7 @@ from amazon.interactors.presenter_interfaces.payment_presenter_interface import 
 from amazon.exceptions import order_custom_exceptions, item_custom_exceptions, user_custom_exceptions
 from amazon.interactors.storage_interfaces.dtos import OrderItemDTO, OrderCartItemsDTO, PaymentDTO
 from amazon.interactors.payment_interactor import PaymentInteractor
+from amazon.interactors.refund_interactor import RefundInteractor
 from typing import Optional
 
 class OrderInteractor:
@@ -227,4 +228,43 @@ class OrderInteractor:
         self.item_storage.check_if_item_properties_belong_to_item(item_properties=orderitem_dto.item_properties, item_id=orderitem_dto.item_id)
 
         self.item_storage.check_if_number_of_left_in_stock_is_greater_than_zero(item_id=orderitem_dto.item_id)
+
+    
+    def delete_particular_items_in_order_and_create_refund_request_wrapper(self, order_id:int, item_ids:list, order_presenter:OrderPresenterInterface, \
+                                                                          payment_presenter:PaymentPresenterInterface):
+        """ELP
+            check if order exists
+            check if items exists
+            check if items belong to order
+            delete_particular_items_in_order
+            create refund for items which are deleted
+        """
+
+        try:
+            refund_id = self.delete_particular_items_in_order_and_create_refund_request(order_id=order_id, item_ids=item_ids)
+        except order_custom_exceptions.OrderDoesNotExistException:
+            order_presenter.raise_exception_for_order_does_not_exist()
+        except item_custom_exceptions.ItemDoesNotExistException:
+            order_presenter.raise_exception_for_item_does_not_exist()
+        except order_custom_exceptions.ItemDoesNotBelongToOrderException:
+            order_presenter.raise_exception_for_item_does_not_belong_to_order()
+        else:
+            return payment_presenter.get_response_for_create_refund_request(refund_id=refund_id)
         
+    def delete_particular_items_in_order_and_create_refund_request(self, refund_dto:RefundDTO):
+
+        self.order_storage.check_if_order_exists(order_id=refund_dto.refund_dto.order_id)
+
+        self.item_storage.check_if_items_exists(item_ids=refund_dto.item_ids)
+
+        self.order_storage.check_if_items_belong_to_order(order_id=refund_dto.order_id, item_ids=refund_dto.item_ids)
+
+        amount = self.order_storage.delete_particular_items_in_order(order_id=refund_dto.order_id, item_ids=refund_dto.item_ids)
+
+        refund_dto.amount = amount
+
+        refund_interactor = RefundInteractor(payment_storage=self.payment_storage, user_storage=self.user_storage, order_storage=self.order_storage)
+
+        refund_id = refund_interactor.create_refund_status_for_items(refund_dto=refund_dto)
+
+        return refund_id

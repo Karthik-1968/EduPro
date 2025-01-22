@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO,WorkspaceInviteDTO,FormDTO,FormFieldDTO,\
-    FormResponseDTO, TabDTO
+    FormResponseDTO, TabDTO, SectionConfigTabDTO, FormFieldIdsConfigTabDTO
 import uuid
 
 
@@ -259,5 +259,5 @@ class PresenterInterface:
         pass
 
     @abstractmethod
-    def get_response_for_get_layout_details(self, tab_dtos:list[TabDTO])->list[dict]:
+    def get_response_for_get_layout_details(self, tab_dtos:list[SectionConfigTabDTO, FormFieldIdsConfigTabDTO])->list[dict]:
         pass

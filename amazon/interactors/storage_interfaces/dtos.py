@@ -133,10 +133,11 @@ class ItemIdDTO:
 class RefundDTO:
     user_id:str
     order_id:int
-    amount:float
+    amount:Optional[float]
     refund_status:str
     payment_date:int
     reason:str
+    item_ids:Optional[list[int]]=None
 
 @dataclass
 class PaymentDTO:

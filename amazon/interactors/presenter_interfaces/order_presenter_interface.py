@@ -70,3 +70,11 @@ class OrderPresenterInterface:
     @abstractmethod
     def raise_exception_for_delivery_service_already_exists(self):
         pass
+
+    @abstractmethod
+    def raise_exception_for_item_does_not_belong_to_order(self):
+        pass
+
+    @abstractmethod
+    def get_response_for_delete_particular_items_in_order(self):
+        pass

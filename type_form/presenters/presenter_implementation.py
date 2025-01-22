@@ -7,7 +7,7 @@ from type_form.constants.exception_messages import MISSING_EMAIL, MISSING_USERID
                 MISSING_SETTINGS_ID, MISSING_WORKSPACE_ID, MISSING_INVITE_ID, MISSING_FORM_ID, MISSING_FIELD_ID, LAYOUT_ALREADY_EXISTS,\
                     TAB_ALREADY_EXISTS, INVALID_LAYOUT_ID, INVALID_TAB_ID
 from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO, WorkspaceInviteDTO, FormDTO, FieldDTO, \
-    FormResponseDTO, FormFieldDTO, FormFieldResponseDTO, PhoneNumberFieldSettingsDTO, TabDTO
+    FormResponseDTO, FormFieldDTO, FormFieldResponseDTO, PhoneNumberFieldSettingsDTO, TabDTO, SectionConfigTabDTO, FormFieldIdsConfigTabDTO
 
 class PresenterImplementation(PresenterInterface):
     
@@ -292,34 +292,33 @@ class PresenterImplementation(PresenterInterface):
     def raise_exception_for_invalid_layout(self):
         raise NotFound(*INVALID_LAYOUT_ID)
 
-    def get_response_for_get_layout_details(self, tab_dtos:TabDTO)->list[dict]:
+    def get_response_for_get_layout_details(self, tab_dtos:list[SectionConfigTabDTO, FormFieldIdsConfigTabDTO])->list[dict]:
         
         tab_details = []
         for tab_dto in tab_dtos:
             tab_dict = {
+                    "tab_id": tab_dto.tab_id,
                     "user_id": tab_dto.user_id,
-                    "layout_id": tab_dto.layout_id,
                     "tab_type": tab_dto.tab_type,
                     "tab_name": tab_dto.tab_name
                 }
-            config = tab_dto.config
-            if tab_dto.tab_type == "sections_config":
+            if tab_dto.tab_type == 'sections_config':
                 gof_name_count = 1
-                form_field_ids_count = 1
-                for section in config["sections_config"]:
-                    if section["type"]=="gof_name":
-                        tab_dict[f"gof_name_{gof_name_count}"] = section["gof_name"]
-                        gof_name_count+=1
-                    elif section["type"]=="form_field ids":
-                        tab_dict[f"form_field_ids_{form_field_ids_count}"] = section["formfield_ids"]
-                        form_field_ids_count+=1
-            elif tab_dto.tab_type == "form_field_ids_config":
-                for section in config["form_field_ids_config"]:
-                    tab_dict["name"] = section["name"]
-                    tab_dict["dob"] = section["dob"]
-                    tab_dict["contact_information"] = section["contact_information"]
-                    tab_dict["work_experience"] = section["work_experience"]
-                    tab_dict["signature"] = section["signature"]
-                    tab_dict["date"] = section["date"]
+                formfield_ids_count = 1
+                for section_config in section_configs:
+                    if section_config.section_type == 'group_name':
+                        tab_dict[f'group_name_{gof_name_count}'] = section_config.gof
+                        gof_name_count += 1
+                    elif section_config.section_type == 'form_field_ids':
+                        tab_dict[f'form_field_ids_{formfield_ids_count}'] = section_config.formfields
+                        formfield_ids_count += 1
+            elif tab_dto.tab_type == 'form_field_ids_config':
+                tab_dict['name'] = form_field_ids_config.name
+                tab_dict['dob'] = form_field_ids_config.dob
+                tab_dict['contact_information'] = form_field_ids_config.contact_information
+                tab_dict['work_experience'] = form_field_ids_config.work_experience
+                tab_dict['signature'] = form_field_ids_config.signature
+                tab_dict['date'] = form_field_ids_config.date
             tab_details.append(tab_dict)
+                        
         return tab_details

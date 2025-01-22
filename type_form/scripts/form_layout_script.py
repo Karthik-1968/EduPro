@@ -38,7 +38,7 @@ for index, row in df_layout.iterrows():
         "user_id": row['user_id'],
         "form_id": row['form_id'],
         "layout_id": row['layout_id'],
-        "layout_name": row['layout_name'],
+        "layout_name": row['layout_name']
     }
 
     is_valid, validation_message = validate_layout_data(layout_data)
@@ -62,9 +62,10 @@ for index, row in df_layout.iterrows():
         status = "Failed"
         remarks = f"Validation failed: {validation_message}"
 
-    layout_status.append({"form_id": row['form_id'], "user_id": row['user_id'], 
-                          "layout_id": row['layout_id'], "layout_name": row['layout_name'], 
-                          "status": status, "remarks": remarks})
+    row["status"] = status
+    row["remarks"] = remarks
+
+    layout_status.append(row)
 
 df_layout_status = pd.DataFrame(layout_status)
 

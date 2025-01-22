@@ -24,3 +24,11 @@ class DeliveryServiceDoesNotExistException(Exception):
 
     def __str__(self):
         return f"{self.delivery_service_id} does not exist"
+
+class ItemDoesNotBelongToOrderException(Exception):
+    def __init__(self, item_id:int, order_id:int):
+        self.item_id = item_id
+        self.order_id = order_id
+
+    def __str__(self):
+        return f"{self.item_id} does not belong to {self.order_id}"

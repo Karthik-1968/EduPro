@@ -8,7 +8,8 @@ from type_form.interactors.storage_interfaces.storage_interface import StorageIn
 from type_form.models import User, Workspace, Form, Field, FormResponse, FormField, FormFieldResponse, FormFieldSettings,\
     WorkspaceInvite, Layout, Tab
 from type_form.interactors.storage_interfaces.storage_interface import UserDTO, WorkspaceDTO, FormDTO, FieldDTO, FormFieldDTO, \
-    FormResponseDTO, FormFieldResponseDTO, WorkspaceInviteDTO, PhoneNumberFieldSettingsDTO, SectionConfigDTO, TabDTO, FormFieldIdsConfigDTO
+    FormResponseDTO, FormFieldResponseDTO, WorkspaceInviteDTO, PhoneNumberFieldSettingsDTO, SectionConfigDTO, TabDTO, FormFieldIdsConfigDTO, \
+        FormFieldIdsConfigTabDTO, SectionConfigTabDTO
 from datetime import datetime
 from json import loads, dumps
 
@@ -264,7 +265,8 @@ class StorageImplementation(StorageInterface):
             formresponsedtos.append(formresponsedto)
         
         return formresponsedtos
-    
+
+    @staticmethod
     def convert_form_response_object_to_dto(form_response):
         
         return FormResponseDTO(
@@ -427,14 +429,14 @@ class StorageImplementation(StorageInterface):
 
         return tab_dto
 
+    @staticmethod
     def convert_tab_object_to_dto(tab):
         
         return TabDTO(
             user_id = tab.user_id,
             layout_id = tab.layout_id,
             tab_type = tab.tab_type,
-            tab_name = tab.tab_name,
-            config = loads(tab.config)
+            tab_name = tab.tab_name
         )
 
     def add_section_to_tab(self, tab_id:int, sectionconfig_dto:SectionConfigDTO):
@@ -518,16 +520,33 @@ class StorageImplementation(StorageInterface):
         tab.config = dumps(config)
         tab.save()
 
-    def get_layout_details(self, layout_id:int)->list[TabDTO]:
+    def get_layout_details(self, layout_id:int)->list[SectionConfigTabDTO, FormFieldIdsConfigTabDTO]:
 
         tabs = Tab.objects.filter(layout_id = layout_id)
-
         tab_dtos = []
-
         for tab in tabs:
-            tab_dto = self.convert_tab_object_to_dto(tab)
-            tab_dtos.append(tab_dto)
-        
+            if tab.tab_type == "section_config":
+                config = loads(tab.config)
+                section_dtos = []
+                for section in config["sections_config"]:
+                    if section["section_type"] == "gof_name":
+                        section_dto = self._convert_gof_section_in_section_config_to_dto(section["type"], section["gof"])
+                        section_dtos.append(section_dto)
+                    elif section["section_type"] == "form_field_ids":
+                        section_dto = self._convert_form_field_ids_section_in_section_config_to_dto(section["section_name"], section["section_type"], \
+                                                                                                                section["formfield_ids"])
+                        section_dtos.append(section_dto)
+                tab_dto = self._convert_section_config_tab_to_dto(tab=tab, section_dtos=section_dtos)
+                tab_dtos.append(tab_dto)
+            elif tab_dtos.tab_type == "form_field_ids_config":
+                config = loads(tab.config)
+                for section in config["form_field_ids_config"]:
+                    section_dto = self._convert_form_field_ids_section_in_form_field_ids_config_to_dto(section["name"], section["dob"], \
+                                                                                                        section["contact_information"], section["work_experience"], \
+                                                                                                        section["signature"], section["date"])
+                tab_dto = self._convert_form_field_ids_config_tab_to_dto(tab=tab, section_dto=section_dto)
+                tab_dtos.append(tab_dto)
+                    
         return tab_dtos
 
     def check_layout(self, id:int):
@@ -536,3 +555,54 @@ class StorageImplementation(StorageInterface):
         layout_not_exists = not layout_exists
         if layout_not_exists:
             raise InvalidLayoutException(layout_id=id)
+
+    @staticmethod
+    def _convert_gof_section_in_section_config_to_dto(section_type, gof):
+        
+        return SectionConfigDTO(
+            section_type = section_type,
+            gof = gof
+        )
+    
+    @staticmethod
+    def _convert_form_field_ids_section_in_section_config_to_dto(section_name, section_type, formfield_ids):
+
+        return SectionConfigDTO(
+            section_name = section_name,
+            section_type = section_type,
+            formfield_ids = formfield_ids
+        )
+
+    @staticmethod
+    def _convert_section_config_tab_to_dto(tab, section_dtos):
+
+        return SectionConfigTabDTO(
+            tab_id = tab.tab_id,
+            user_id = tab.user_id,
+            tab_type = tab.tab_type,
+            tab_name = tab.tab_name,
+            section_configs = section_dtos
+        )
+
+    @staticmethod
+    def _convert_form_field_ids_section_in_form_field_ids_config_to_dto(name, dob, contact_information, work_experience, signature, date):
+
+        return FormFieldIdsConfigDTO(
+            name = name,
+            dob = dob,
+            contact_information = contact_information,
+            work_experience = work_experience,
+            signature = signature,
+            date = date
+        )
+
+    @staticmethod
+    def _convert_form_field_ids_config_tab_to_dto(tab, section_dto):
+
+        return FormFieldIdsConfigTabDTO(
+            tab_id = tab.tab_id,
+            user_id = tab.user_id,
+            tab_type = tab.tab_type,
+            tab_name = tab.tab_name,
+            form_field_ids_config = section_dto
+        )

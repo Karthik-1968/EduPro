@@ -1,6 +1,6 @@
 from amazon.interactors.storage_interfaces.payment_storage_interface import PaymentStorageInterface
 from amazon.interactors.storage_interfaces.dtos import CardPaymentMethodDTO, NetBankingPaymentMethodDTO, OrderPaymentDTO, RefundDTO
-from amazon.models import PaymentMethod, Payment, Order, Refund
+from amazon.models import PaymentMethod, Payment, Order, Refund, OrderItem
 from amazon.exceptions import payment_custom_exceptions
 
 class PaymentStorageImplementation(PaymentStorageInterface):
@@ -124,3 +124,28 @@ class PaymentStorageImplementation(PaymentStorageInterface):
 
         refund.order.order_status = "Refunded"
         refund.order.save()
+
+    def create_refund_request_for_items(self, refund_dto:RefundDTO)->int:
+        cancelled_item_ids = []
+        amount = 0
+        existing_item_ids = OrderItem.objects.filter(order_id=refund_dto.order_id).values_list('item_id', flat=True)
+        existing_item_ids_set = set(existing_item_ids)
+        for item_id in refund_dto.item_ids:
+            if item_id not in existing_item_ids_set:
+                cancelled_item_ids.append(item_id)
+        payment_date = Order.objects.get(id=refund_dto.order_id).ordered_at
+
+        refund = Refund.objects.create(
+                    user_id=refund_dto.user_id,
+                    order_id=refund_dto.order_id,
+                    amount=refund_dto.amount,
+                    refund_status=refund_dto.refund_status,
+                    payment_date=refund_dto.payment_date,
+                    reason=refund_dto.reason, 
+                    refund_with_in_days=refund_dto.refund_with_in_days
+                )
+
+        for item in cancelled_item_ids:
+            refund.items.add(item)
+        
+        return refund.id

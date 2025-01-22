@@ -246,3 +246,5 @@ class ItemPresenterInterface:
     @abstractmethod
     def raise_exception_for_item_does_not_belong_to_cart(self):
         pass
+
+    

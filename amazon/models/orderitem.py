@@ -17,3 +17,5 @@ class OrderItem(models.Model):
     itemoffers = models.ManyToManyField(ItemOffer, related_name="orderitem", null=True, blank=True)
     itemwarranty = models.ForeignKey(ItemWarranty, on_delete=models.CASCADE, related_name="orderitem", null=True, blank=True)
     itemexchangeproperties = models.ManyToManyField(ItemExchangeProperty, related_name="orderitem", null=True, blank=True)
+    is_shipped = models.BooleanField(default=False, null=True, blank=True)
+    price = models.FloatField(null=True, blank=True)

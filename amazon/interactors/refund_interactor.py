@@ -64,3 +64,34 @@ class RefundInteractor:
 
         return self.payment_storage.update_refund_status_after_refunded(refund_id=refund_id)
 
+
+    def create_refund_request_for_items_wrapper(self, refund_dto: RefundDTO, user_presenter: UserPresenterInterface, \
+                            order_presenter: OrderPresenterInterface, payment_presenter: PaymentPresenterInterface):
+
+        try:
+            refund_id = self.create_refund_request_for_items(refund_dto=refund_dto)
+        except user_custom_exceptions.UserDoesNotExistException:
+            user_presenter.raise_exception_for_user_does_not_exist()
+        except order_custom_exceptions.OrderDoesNotExistException:
+            order_presenter.raise_exception_for_order_does_not_exist()
+        except payment_custom_exceptions.ItemDoesNotExistException:
+            payment_presenter.raise_exception_for_item_does_not_exist()
+        else:
+            return payment_presenter.get_response_for_create_refund_request(refund_id=refund_id)
+
+    def create_refund_status_for_items(refund_dto: RefundDTO):
+
+        """ELP
+            -check if user exists
+            -check if order exists
+            check if items exists
+            -create refund status for items
+        """
+
+        self.user_storage.check_if_user_exists(user_id=refund_dto.user_id)
+
+        self.order_storage.check_if_order_exists(order_id=refund_dto.order_id)
+
+        self.item_storage.check_if_items_exists(item_ids=refund_dto.item_ids)
+
+        return self.payment_storage.create_refund_request_for_items(refund_dto=refund_dto)

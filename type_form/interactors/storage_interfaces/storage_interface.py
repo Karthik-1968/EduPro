@@ -70,14 +70,29 @@ class TabDTO:
     layout_id: int
     tab_name: str
     tab_type: str
-    config: Optional[str]=None
 
 @dataclass
 class SectionConfigDTO:
     section_type: str
-    section_name: Optional[str]
-    gof: Optional[str]
-    formfields: Optional[list[int]]
+    section_name: Optional[str]=None
+    gof: Optional[str]=None
+    formfields: Optional[list[int]]=None
+
+@dataclass
+class SectionConfigTabDTO:
+    tab_id: int
+    user_id: str
+    tab_name: str
+    tab_type: str
+    section_configs: list[SectionConfigDTO]
+
+@dataclass
+class FormFieldIdsConfigTabDTO:
+    tab_id: int
+    user_id: str
+    tab_name: str
+    tab_type: str
+    form_field_ids_config: FormFieldIdsConfigDTO
      
 @dataclass
 class FormFieldSettingsDTO:
@@ -340,5 +355,5 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def get_layout_details(self, layout_id:int)->list[TabDTO]:
+    def get_layout_details(self, layout_id:int)->list[SectionConfigTabDTO, FormFieldIdsConfigTabDTO]:
         pass

@@ -45,3 +45,15 @@ class OrderStorageImplementation(OrderStorageInterface):
 
         if order_not_exists:
             raise order_custom_exceptions.OrderDoesNotExistException(order_id=order_id)
+
+    
+    def delete_particular_items_in_order(self, order_id:int, item_ids:list[int]):
+        
+        amount=0
+        for item_id in item_ids:
+            orderitem = OrderItem.objects.filter(order_id=order_id, item_id=item_id)
+            if orderitem.is_shipped == False:
+                amount+= orderitem.price
+                orderitem.delete()
+                
+        return amount

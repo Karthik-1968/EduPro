@@ -54,3 +54,7 @@ class PaymentStorageInterface:
     @abstractmethod
     def update_refund_status_after_refunded(self, refund_id:int):
         pass
+    
+    @abstractmethod
+    def create_refund_request_for_items(self, refund_dto:RefundDTO )->int:
+        pass

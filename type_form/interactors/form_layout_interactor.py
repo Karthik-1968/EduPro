@@ -8,7 +8,7 @@ class FormLayoutInteractor:
 
         self.storage = storage
 
-    def create_layout_for_form_wrapper(self, user_id:str, form_id:int, layout_name:str, presenter:PresenterInterface):
+    def create_or_update_layout_for_form_wrapper(self, user_id:str, form_id:int, layout_name:str, presenter:PresenterInterface):
         """ELP
             check if user exists
             check if form exists
@@ -17,7 +17,7 @@ class FormLayoutInteractor:
         """
 
         try:
-            layout_id = self.create_layout_for_form(user_id=user_id, form_id=form_id, layout_name=layout_name)
+            layout_id = self.create_or_update_layout_for_form(user_id=user_id, form_id=form_id, layout_name=layout_name)
         except custom_exceptions.InvalidUserException:
             presenter.raise_exception_for_invalid_user()
         except custom_exceptions.InvalidFormException:
@@ -51,7 +51,7 @@ class FormLayoutInteractor:
             create tab for layout
         """
         try:
-            tab_id = self.create_tab_for_layout(tab_dto=tab_dto)
+            tab_id = self.create_or_update_tab_for_layout_for_section_config(tab_dto=tab_dto)
         except custom_exceptions.InvalidUserException:
             presenter.raise_exception_for_invalid_user()
         except custom_exceptions.InvalidLayoutException:
@@ -76,7 +76,20 @@ class FormLayoutInteractor:
     
     def add_section_to_tab(self, tab_id:int, sectionconfig_dto:SectionConfigDTO):
 
+        """ELP:
+                -check if tab exists
+                -check if group name exists
+                -check if form field ids exists
+                -add section to tab
+        """
+
         self.storage.check_tab(id=tab_id)
+
+        if sectionconfig.section_type = "group_name":
+            self.storage.check_group_name_exists(group_name=sectionconfig_dto.group_name)
+
+        if sectionconfig.section_type = "form_field_ids":
+            self.storage.check_form_field_ids_exists_for_section_config(section_name=sectionconfig_dto.form_field_ids)
 
         return self.storage.add_section_to_tab(tab_id=tab_id, sectionconfig_dto=sectionconfig_dto)
     
@@ -97,6 +110,8 @@ class FormLayoutInteractor:
     def add_form_field_ids_to_tab(self, tab_id:int, form_field_ids_config_dto:FormFieldIdsConfigDTO):
 
         self.storage.check_tab(id=tab_id)
+
+        self.storage.check_form_field_ids_exists_for_form_field_ids_config(form_field_ids_config_dto=form_field_ids_config_dto)
 
         return self.storage.add_form_field_ids_to_tab(tab_id=tab_id, form_field_ids_config_dto=form_field_ids_config_dto)
     
