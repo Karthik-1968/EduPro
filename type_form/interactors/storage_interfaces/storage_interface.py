@@ -1,7 +1,7 @@
 from abc import abstractmethod
 import uuid
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List, Any, Dict
 
 @dataclass
 class UserDTO:
@@ -58,6 +58,7 @@ class FormFieldResponseDTO:
     form_field_id: int
     form_response_id: int
     field_value: str
+
 @dataclass
 class PhoneNumberFieldSettingsDTO:
     country: str
@@ -70,6 +71,7 @@ class TabDTO:
     layout_id: int
     tab_name: str
     tab_type: str
+    parent_id: Optional[int]=None
 
 @dataclass
 class SectionConfigDTO:
@@ -87,18 +89,9 @@ class SectionConfigTabDTO:
     section_configs: list[SectionConfigDTO]
 
 @dataclass
-class FormFieldIdsConfigTabDTO:
-    tab_id: int
-    user_id: str
-    tab_name: str
-    tab_type: str
-    form_field_ids_config: FormFieldIdsConfigDTO
-
-@dataclass
 class LayoutDetailsDTO:
     layout_name: str
     section_config_tab: SectionConfigTabDTO
-    form_field_ids_config_tab: FormFieldIdsConfigTabDTO
      
 @dataclass
 class FormFieldSettingsDTO:
@@ -116,14 +109,26 @@ class FormFieldSettingsDTO:
     placeholder: str = None
 
 @dataclass
-class FormFieldIdsConfigDTO:
-    name: int
-    dob: int 
-    contact_information: list[int]
-    work_experience: list[int]
-    signature: int
-    date: int
-    
+class CellDTO:
+    column_name: str
+    field_id: str
+
+@dataclass
+class RowDTO:
+    row_name: str
+    cells: list[CellDTO]
+
+@dataclass
+class ColumnDTO:
+    column_name: str
+    show_as_label: bool
+    user_should_fill_response: bool
+
+@dataclass
+class TableDTO:
+    rows: list[RowDTO]
+    columns: list[ColumnDTO]
+
 
 class StorageInterface:
 
@@ -353,11 +358,11 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def create_or_update_tab_for_form_field_ids_config(self, tab_dto:TabDTO):
+    def create_or_update_tab_for_table_config(self, tab_dto:TabDTO):
         pass
 
     @abstractmethod
-    def add_form_field_ids_to_tab(self, tab_id:int, form_field_ids_config:FormFieldIdsConfigDTO):
+    def add_table_config_to_tab(self, tab_id:int, table_dto:TableDTO, user_response:dict):
         pass
 
     @abstractmethod
@@ -373,13 +378,9 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def check_form_field_ids_exists_for_form_field_ids_config(self, form_field_ids_config_dto:FormFieldIdsConfigDTO):
-        pass
-
-    @abstractmethod
     def check_tabs_exists(self, tab_ids:list[int]):
         pass
 
     @abstractmethod
-    def add_child_tabs_to_parent_tab(self, parent_tab_id:int, child_tab_ids:list[int]):
+    def check_if_child_tab_is_parent(self, id:int):
         pass

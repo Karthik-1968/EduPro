@@ -66,11 +66,12 @@ class InvalidLayoutException(Exception):
         return f"Layout with ID {self.layout_id} doesn't exist."
 
 class TabAlreadyExistsException(Exception):
-    def __init__(self, layout_id:int):
+    def __init__(self, layout_id:int, tab_type:str):
         self.layout_id=layout_id
+        self.tab_type=tab_type
     
     def __str__(self):
-        return f"Tab already exists for layout_id {self.layout_id}"
+        return f"Tab of type {self.tab_type} already exists for layout_id {self.layout_id}"
 
 class FieldDoesNotBelongToFormException(Exception):
     pass

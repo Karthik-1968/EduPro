@@ -1,7 +1,6 @@
 import pytest
 from django_swagger_utils.drf_server.exceptions import NotFound
 from mock import create_autospec
-
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from type_form.interactors.form_response_interactor import FormResponseInteractor

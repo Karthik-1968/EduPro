@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO,WorkspaceInviteDTO,FormDTO,FormFieldDTO,\
-    FormResponseDTO, TabDTO, SectionConfigTabDTO, FormFieldIdsConfigTabDTO, LayoutDetailsDTO, NestedTabDetailsDTO
+    FormResponseDTO, TabDTO, SectionConfigTabDTO, LayoutDetailsDTO
 import uuid
 
 
@@ -260,4 +260,8 @@ class PresenterInterface:
 
     @abstractmethod
     def get_response_for_get_layout_details(self, layout_details_dto:LayoutDetailsDTO)->dict:
+        pass
+
+    @abstractmethod
+    def raise_exception_for_child_tab_is_parent(self):
         pass

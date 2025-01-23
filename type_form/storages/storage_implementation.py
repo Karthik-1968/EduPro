@@ -3,7 +3,7 @@ from type_form.exceptions.custom_exceptions import UserAlreadyPresentException, 
         FormAlreadyExistsException, InvalidFormException, FieldAlreadyExistsException, InvalidFieldException,\
             MaximumInvitesLimitReachedException, SettingsAlreadyExistsException, InvalidFormFieldException,\
                 InvalidSettingsException, InvitationExpiredException, LayoutAlreadyExistsException, InvalidLayoutException,\
-                    TabAlreadyExistsException, InvalidTabException, InvalidLayoutForFormException
+                    TabAlreadyExistsException, InvalidTabException, InvalidLayoutForFormException, ChildTabIsParentException
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
 from type_form.models import User, Workspace, Form, Field, FormResponse, FormField, FormFieldResponse, FormFieldSettings,\
     WorkspaceInvite, Layout, Tab
@@ -395,7 +395,7 @@ class StorageImplementation(StorageInterface):
 
             config = dumps(config)
 
-            tab = Tab.objects.create(user_id = tab_dto.user_id, layout_id = tab_dto.layout_id, tab_type = tab_dto.tab_type, \
+            tab = Tab.objects.create(id = tab_id, user_id = tab_dto.user_id, layout_id = tab_dto.layout_id, tab_type = tab_dto.tab_type, \
                                     tab_name = tab_dto.tab_name, config = config)
 
             return tab.id
@@ -462,6 +462,8 @@ class StorageImplementation(StorageInterface):
         tab.config = dumps(config)
         tab.save()
 
+        return tab_id
+
     def update_layout_for_form(self, layout_id:int, layout_name:str):
 
         layout = Layout.objects.get(id = layout_id)
@@ -482,13 +484,13 @@ class StorageImplementation(StorageInterface):
             if form_field_not_exists:
                 raise InvalidFormFieldException
     
-    def create_or_update_tab_for_form_field_ids_config(self, tab_dto:TabDTO)->int:
+    def create_or_update_tab_for_table_config(self, tab_dto:TabDTO)->int:
         
         if Tab.objects.filter(id = tab_dto.tab_id).exists():
             tab = Tab.objects.get(id = tab_dto.tab_id)
             tab.tab_name = tab_dto.tab_name
             config = {
-                "form_field_ids_config": []
+                "table_config": []
             }
             tab.config = dumps(config)
             tab.save()
@@ -496,28 +498,38 @@ class StorageImplementation(StorageInterface):
             tab = Tab.objects.create(user_id = tab_dto.user_id, layout_id = tab_dto.layout_id, tab_type = tab_dto.tab_type, \
                                     tab_name = tab_dto.tab_name)
             config = {
-                "form_field_ids_config": []
+                "table_config": []
             }
             tab.config = dumps(config)
             tab.save()
 
         return tab.id
 
-    def add_form_field_ids_to_tab(self, tab_id:int, form_field_ids_config_dto:FormFieldIdsConfigDTO):
+    def add_table_config_to_tab(self, tab_id:int, table_dto:TableDTO, user_responses:Optional[dict]=None)->dict:
 
         tab = Tab.objects.get(id = tab_id)
-
         config = loads(tab.config)
-
-        config["form_field_ids_config"].append({
-            "name": form_field_ids_config_dto.name,
-            "dob": form_field_ids_config_dto.dob,
-            "contact_information": form_field_ids_config_dto.contact_information,
-            "work_experience": form_field_ids_config_dto.work_experience,
-            "signature": form_field_ids_config_dto.signature,
-            "date": form_field_ids_config_dto.date
-        })
-
+        filtered_data = {}
+        if user_responses is None:
+            user_responses = {}
+        for row in table_dto.rows:
+            row_data = {}
+            for cell in row.cells:
+                column = None
+                for col in table_dto.columns:
+                    if col.column_name == cell.column_name:
+                        column = col
+                        break
+                user_response = user_responses.get(cell.field_id, None)
+                if column:
+                    row_data[cell.column_name] = {
+                        "field_id": cell.field_id,
+                        "show_as_label": column.show_as_label,
+                        "user_should_fill_response": column.user_should_fill_response,
+                        "user_response": user_response
+                    }
+            filtered_data[row.row_name] = row_data
+        config["table_config"] = filtered_data
         tab.config = dumps(config)
         tab.save()
 
@@ -628,16 +640,7 @@ class StorageImplementation(StorageInterface):
             if tab_not_exists:
                 raise InvalidTabException(tab_id=tab_id)
 
-    def check_if_child_tab_is_parent(self, child_tab_ids:list[int]):
-
-        for child_tab_id in child_tab_ids:
-            child_tab_is_parent = Tab.objects.filter(parent_id=child_tab_id).exists()
-            if child_tab_is_parent:
-                raise ChildTabIsParentException(tab_id=child_tab_id)
-
-    def add_child_tabs_to_parent_tab(self, parent_tab_id:int, child_tab_ids:list[int]):
-
-        for child_tab_id in child_tab_ids:
-            child_tab = Tab.objects.get(id = child_tab_id)
-            child_tab.parent_id = parent_tab_id
-            child_tab.save()
+    def check_if_child_tab_is_parent(self, id:int):
+        is_parent_tab = Tab.objects.filter(parent_id=id).exists()
+        if is_parent_tab:
+            raise ChildTabIsParentException(tab_id=id)
