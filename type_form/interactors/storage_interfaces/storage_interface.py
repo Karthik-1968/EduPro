@@ -1,7 +1,7 @@
 from abc import abstractmethod
 import uuid
 from dataclasses import dataclass
-from typing import Optional, List, Any, Dict
+from typing import Optional
 
 @dataclass
 class UserDTO:
@@ -362,7 +362,7 @@ class StorageInterface:
         pass
 
     @abstractmethod
-    def add_table_config_to_tab(self, tab_id:int, table_dto:TableDTO, user_response:dict):
+    def add_table_config_to_tab(self, tab_id:int, table_dto:TableDTO):
         pass
 
     @abstractmethod

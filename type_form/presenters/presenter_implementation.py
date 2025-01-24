@@ -1,25 +1,19 @@
 from type_form.interactors.presenter_interfaces.presenter_interface import PresenterInterface
 from django_swagger_utils.drf_server.exceptions import NotFound, Forbidden, BadRequest
-from type_form.constants.exception_messages import MISSING_EMAIL, MISSING_USERID, USER_ALREADY_PRESENT, MISSING_WORKSPACE_NAME,\
-    INVALID_USER_ID, INVALID_WORKSPACE_ID, WORKSPACE_ALREADY_EXISTS, USER_ALREADY_INVITED, MAXIMUM_INVITES_REACHED, INVALID_INVITE_ID,\
-        INVITATION_EXPIRED, MISSING_FORM_NAME, FORM_ALREADY_EXISTS, MISSING_FIELD_NAME, MISSING_FIELD_TYPE, FIELD_ALREADY_EXISTS,\
-            INVALID_FORM_ID, INVALID_FIELD_ID, MISSING_STATUS, MISSING_DEVICE, SETTINGS_ALREADY_EXISTS, MISSING_FORM_FIELD_ID,\
-                MISSING_SETTINGS_ID, MISSING_WORKSPACE_ID, MISSING_INVITE_ID, MISSING_FORM_ID, MISSING_FIELD_ID, LAYOUT_ALREADY_EXISTS,\
-                    TAB_ALREADY_EXISTS, INVALID_LAYOUT_ID, INVALID_TAB_ID
-from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO, WorkspaceInviteDTO, FormDTO, FieldDTO, \
-    FormResponseDTO, FormFieldDTO, FormFieldResponseDTO, PhoneNumberFieldSettingsDTO, TabDTO, SectionConfigTabDTO, FormFieldIdsConfigTabDTO,\
-        LayoutDetailsDTO
+from type_form.constants import exception_messages 
+from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO, WorkspaceInviteDTO, FormDTO, \
+    FormResponseDTO, FormFieldDTO, TabDTO, LayoutDetailsDTO
 
 class PresenterImplementation(PresenterInterface):
     
     def raise_exception_for_missing_email(self):
-        raise NotFound(*MISSING_EMAIL)
+        raise NotFound(*exception_messages.MISSING_EMAIL)
     
     def raise_exception_for_missing_userid(self):
-        raise NotFound(*MISSING_USERID)
+        raise NotFound(*exception_messages.MISSING_USERID)
     
     def raise_exception_for_user_already_present(self):
-        raise BadRequest(*USER_ALREADY_PRESENT)
+        raise BadRequest(*exception_messages.USER_ALREADY_PRESENT)
 
     def get_response_for_create_user(self, user_email:str):
         return {
@@ -27,16 +21,16 @@ class PresenterImplementation(PresenterInterface):
         }
         
     def raise_excpetion_from_missing_workspace_name(self):
-        raise NotFound(*MISSING_WORKSPACE_NAME)
+        raise NotFound(*exception_messages.MISSING_WORKSPACE_NAME)
     
     def raise_exception_for_invalid_user_id(self):
-        raise BadRequest(*INVALID_USER_ID)
+        raise BadRequest(*exception_messages.INVALID_USER_ID)
     
     def raise_exception_for_workspace_already_exists(self):
-        raise BadRequest(*WORKSPACE_ALREADY_EXISTS)
+        raise BadRequest(*exception_messages.WORKSPACE_ALREADY_EXISTS)
     
     def raise_exception_for_invalid_workspace_id(self):
-        raise NotFound(*INVALID_WORKSPACE_ID)
+        raise NotFound(*exception_messages.INVALID_WORKSPACE_ID)
     
     def get_response_for_create_workspace(self, workspace_id:int):
         return {
@@ -57,13 +51,13 @@ class PresenterImplementation(PresenterInterface):
         return workspaces
     
     def raise_exception_for_invalid_workspace(self):
-        raise NotFound(*INVALID_WORKSPACE_ID)
+        raise NotFound(*exception_messages.INVALID_WORKSPACE_ID)
     
     def raise_exception_for_user_already_invited(self):
-        raise BadRequest(*USER_ALREADY_INVITED)
+        raise BadRequest(*exception_messages.USER_ALREADY_INVITED)
     
     def raise_exception_for_maximum_invites_reached(self):
-        raise BadRequest(*MAXIMUM_INVITES_REACHED)
+        raise BadRequest(*exception_messages.MAXIMUM_INVITES_REACHED)
     
     def get_response_for_create_workspace_invite(self, id:int):
         return {
@@ -71,13 +65,13 @@ class PresenterImplementation(PresenterInterface):
         }
     
     def raise_exception_for_invalid_invite(self):
-        raise NotFound(*INVALID_INVITE_ID)
+        raise NotFound(*exception_messages.INVALID_INVITE_ID)
     
     def raise_exception_for_user_already_invited(self):
-        raise BadRequest(*USER_ALREADY_INVITED)
+        raise BadRequest(*exception_messages.USER_ALREADY_INVITED)
     
     def raise_exception_for_invitation_expired(self):
-        raise Forbidden(*INVITATION_EXPIRED)
+        raise Forbidden(*exception_messages.INVITATION_EXPIRED)
     
     def get_response_for_accept_invitation(self):
         return {"success":"invite accepted successfully"}
@@ -99,10 +93,10 @@ class PresenterImplementation(PresenterInterface):
         return workspace_invites
     
     def raise_exception_for_missing_form_name(self, name:str):
-        raise NotFound(*MISSING_FORM_NAME)
+        raise NotFound(*exception_messages.MISSING_FORM_NAME)
     
     def raise_exception_for_form_already_exists(self):
-        raise BadRequest(*FORM_ALREADY_EXISTS)
+        raise BadRequest(*exception_messages.FORM_ALREADY_EXISTS)
     
     def get_response_for_create_form(self, id:int):
         return {
@@ -130,13 +124,13 @@ class PresenterImplementation(PresenterInterface):
         return forms
     
     def raise_exception_for_missing_field_name(self):
-        raise NotFound(*MISSING_FIELD_NAME)
+        raise NotFound(*exception_messages.MISSING_FIELD_NAME)
     
     def raise_exception_for_missing_field_type(self):
-        raise NotFound(*MISSING_FIELD_TYPE)
+        raise NotFound(*exception_messages.MISSING_FIELD_TYPE)
     
     def raise_exception_for_field_already_exists(self):
-        raise BadRequest(*FIELD_ALREADY_EXISTS)
+        raise BadRequest(*exception_messages.FIELD_ALREADY_EXISTS)
     
     def get_response_for_create_field(self, id:int):
         return {
@@ -144,10 +138,10 @@ class PresenterImplementation(PresenterInterface):
         }
         
     def raise_exception_for_invalid_form(self):
-        raise NotFound(*INVALID_FORM_ID)
+        raise NotFound(*exception_messages.INVALID_FORM_ID)
     
     def raise_exception_for_invalid_field(self):
-        raise NotFound(*INVALID_FIELD_ID)
+        raise NotFound(*exception_messages.INVALID_FIELD_ID)
     
     def get_response_for_add_field_to_form(self, id:int):
         return {
@@ -168,10 +162,10 @@ class PresenterImplementation(PresenterInterface):
         return formfields
     
     def raise_exception_for_missing_status(self):
-        raise NotFound(*MISSING_STATUS)
+        raise NotFound(*exception_messages.MISSING_STATUS)
     
     def raise_exception_for_missing_device(self):
-        raise NotFound(*MISSING_DEVICE)
+        raise NotFound(*exception_messages.MISSING_DEVICE)
     
     def get_response_for_responses_of_form(self, formresponse_dtos:list[FormResponseDTO])->list[dict]:
         formresponses = []
@@ -200,7 +194,7 @@ class PresenterImplementation(PresenterInterface):
         return formresponses
     
     def raise_exception_for_settings_already_exists(self):
-        raise BadRequest(*SETTINGS_ALREADY_EXISTS)
+        raise BadRequest(*exception_messages.SETTINGS_ALREADY_EXISTS)
     
     def get_response_for_create_settings(self, id:int):
         return {
@@ -211,28 +205,28 @@ class PresenterImplementation(PresenterInterface):
         return {"success":"settings added to form field successfully"}
     
     def raise_exception_for_missing_workspaceid(self):
-        raise NotFound(*MISSING_WORKSPACE_ID)
+        raise NotFound(*exception_messages.SSING_WORKSPACE_ID)
     
     def raise_exception_for_missing_invite_id(self):
-        raise NotFound(*MISSING_INVITE_ID)
+        raise NotFound(*exception_messages.MISSING_INVITE_ID)
     
     def raise_exception_for_missing_formid(self):
-        raise NotFound(*MISSING_FORM_ID)
+        raise NotFound(*exception_messages.MISSING_FORM_ID)
     
     def raise_exception_for_missing_fieldid(self):
-        raise NotFound(*MISSING_FIELD_ID)
+        raise NotFound(*exception_messages.MISSING_FIELD_ID)
     
     def raise_exception_for_missing_form_field_id(self):
-        raise NotFound(*MISSING_FORM_FIELD_ID)
+        raise NotFound(*exception_messages.MISSING_FORM_FIELD_ID)
     
     def raise_exception_for_missing_settings_id(self):
-        raise NotFound(*MISSING_SETTINGS_ID)
+        raise NotFound(*exception_messages.MISSING_SETTINGS_ID)
     
     def raise_exception_for_invalid_form_field(self):
-        raise NotFound(*INVALID_FORM_FIELD_ID)
+        raise NotFound(*exception_messages.INVALID_FORM_FIELD_ID)
     
     def raise_exception_for_invalid_settings(self):
-        raise NotFound(*INVALID_SETTINGS_ID)
+        raise NotFound(*exception_messages.INVALID_SETTINGS_ID)
     
     def get_response_for_submissions_count_of_form(self, count_of_submissions:int):
         return {
@@ -250,16 +244,16 @@ class PresenterImplementation(PresenterInterface):
         }
 
     def raise_exception_for_layout_already_exists(self):
-        raise BadRequest(*LAYOUT_ALREADY_EXISTS)
+        raise BadRequest(*exception_messages.LAYOUT_ALREADY_EXISTS)
 
     def raise_exception_for_tab_already_exists(self):
-        raise BadRequest(*TAB_ALREADY_EXISTS)
+        raise BadRequest(*exception_messages.TAB_ALREADY_EXISTS)
 
     def raise_exception_for_invalid_layout(self):
-        raise NotFound(*INVALID_LAYOUT_ID)
+        raise NotFound(*exception_messages.INVALID_LAYOUT_ID)
 
     def raise_exception_for_invalid_tab(self):
-        raise NotFound(*INVALID_TAB_ID)
+        raise NotFound(*exception_messages.INVALID_TAB_ID)
 
     def get_response_for_create_layout_for_form(self, id:int)->dict:
 
@@ -291,38 +285,53 @@ class PresenterImplementation(PresenterInterface):
         }
 
     def raise_exception_for_invalid_layout(self):
-        raise NotFound(*INVALID_LAYOUT_ID)
+        raise NotFound(*exception_messages.INVALID_LAYOUT_ID)
 
-    def get_response_for_get_layout_details(self, layout_details_dto:LayoutDetailsDTO)->dict:
-        
-        layout_details = {}
-        layout_details["layout_name"] = layout_details_dto.layout_name
-        tab_dtos = [layout_details_dto.section_config_tab, layout_details_dto.form_field_ids_config_tab]
-        for tab_dto in tab_dtos:
-            tab_dict = {
-                    "tab_id": tab_dto.tab_id,
-                    "user_id": tab_dto.user_id,
-                    "tab_type": tab_dto.tab_type,
-                    "tab_name": tab_dto.tab_name
-                }
-            if tab_dto.tab_type == 'sections_config':
-                gof_name_count = 1
-                formfield_ids_count = 1
-                for section_config in section_configs:
-                    if section_config.section_type == 'group_name':
-                        tab_dict[f'group_name_{gof_name_count}'] = section_config.gof
-                        gof_name_count += 1
-                    elif section_config.section_type == 'form_field_ids':
-                        tab_dict[f'form_field_ids_{formfield_ids_count}'] = section_config.formfields
-                        formfield_ids_count += 1
-                layout_details["sections_config_tab"] = tab_dict
-            elif tab_dto.tab_type == 'form_field_ids_config':
-                tab_dict['name'] = form_field_ids_config.name
-                tab_dict['dob'] = form_field_ids_config.dob
-                tab_dict['contact_information'] = form_field_ids_config.contact_information
-                tab_dict['work_experience'] = form_field_ids_config.work_experience
-                tab_dict['signature'] = form_field_ids_config.signature
-                tab_dict['date'] = form_field_ids_config.date
-                layout_details["form_field_ids_config_tab"] = tab_dict
-                        
+    def get_response_for_get_layout_details(self, layout_details_dto: LayoutDetailsDTO) -> dict:
+        layout_details = {
+            "layout_name": layout_details_dto.layout_name,
+            "sections_config_tab": self._process_sections_config_tab(layout_details_dto.section_config_tab),
+            "form_field_ids_config_tab": self._process_form_field_ids_config_tab(layout_details_dto.form_field_ids_config_tab),
+        }
         return layout_details
+
+    def _process_sections_config_tab(self, section_config_tab) -> dict:
+        if not section_config_tab:
+            return {}
+        
+        tab_dict = self._create_tab_dict(section_config_tab)
+        gof_name_count = 1
+        formfield_ids_count = 1
+
+        for section_config in section_config_tab.section_configs:
+            if section_config.section_type == "group_name":
+                tab_dict[f"group_name_{gof_name_count}"] = section_config.gof
+                gof_name_count += 1
+            elif section_config.section_type == "form_field_ids":
+                tab_dict[f"form_field_ids_{formfield_ids_count}"] = section_config.formfields
+                formfield_ids_count += 1
+
+        return tab_dict
+
+    def _process_form_field_ids_config_tab(self, form_field_ids_config_tab) -> dict:
+        if not form_field_ids_config_tab:
+            return {}
+
+        tab_dict = self._create_tab_dict(form_field_ids_config_tab)
+        tab_dict.update({
+            "name": form_field_ids_config_tab.name,
+            "dob": form_field_ids_config_tab.dob,
+            "contact_information": form_field_ids_config_tab.contact_information,
+            "work_experience": form_field_ids_config_tab.work_experience,
+            "signature": form_field_ids_config_tab.signature,
+            "date": form_field_ids_config_tab.date,
+        })
+        return tab_dict
+
+    def _create_tab_dict(self, tab_dto) -> dict:
+        return {
+            "tab_id": tab_dto.tab_id,
+            "user_id": tab_dto.user_id,
+            "tab_type": tab_dto.tab_type,
+            "tab_name": tab_dto.tab_name,
+        }

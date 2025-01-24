@@ -54,7 +54,7 @@ class FormLayoutInteractor:
         self.storage.check_if_tab_already_exists_for_layout(layout_id=tab_dto.layout_id, tab_type=tab_dto.tab_type)
         if tab_dto.parent_id:
             self.storage.check_tab(id=tab_dto.parent_id)
-            self.storage.check_if_child_tab_is_parent(id = tab_id)
+            self.storage.check_if_child_tab_is_parent(id = tab_dto.tab_id)
 
     
     def add_section_to_tab(self, tab_id:int, sectionconfig_dto:SectionConfigDTO):
@@ -66,10 +66,10 @@ class FormLayoutInteractor:
         """
         self.storage.check_tab(id=tab_id)
 
-        if sectionconfig.section_type == "group_name":
+        if sectionconfig_dto.section_type == "group_name":
             self.storage.check_group_name_exists_for_section_config(group_name=sectionconfig_dto.gof)
 
-        if sectionconfig.section_type == "form_field_ids":
+        if sectionconfig_dto.section_type == "form_field_ids":
             self.storage.check_form_field_ids_exists_for_section_config(form_field_ids=sectionconfig_dto.formfields)
 
         return self.storage.add_section_to_tab(tab_id=tab_id, sectionconfig_dto=sectionconfig_dto)
@@ -88,16 +88,16 @@ class FormLayoutInteractor:
         return self.storage.create_or_update_tab_for_table_config(tab_dto=tab_dto)
 
     
-    def add_table_config_to_tab(self, tab_id:int, table_dto:TableDTO, user_response:dict):
+    def add_table_config_to_tab(self, tab_id:int, table_dto:TableDTO):
         """ELP:
             -check if tab exists
             -add matrix config to tab
         """
         self.storage.check_tab(id=tab_id)
 
-        return self.storage.add_table_config_to_tab(tab_id=tab_id, table_dto=table_dto, user_response=user_response)
+        return self.storage.add_table_config_to_tab(tab_id=tab_id, table_dto=table_dto)
     
-    def get_layout_details_wrapper(self, layout_id:int):
+    def get_layout_details_wrapper(self, layout_id:int, presenter:PresenterInterface):
         """ELP:
             -check if layout exists
             -get layout details

@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO,WorkspaceInviteDTO,FormDTO,FormFieldDTO,\
-    FormResponseDTO, TabDTO, SectionConfigTabDTO, LayoutDetailsDTO
+    FormResponseDTO, TabDTO, LayoutDetailsDTO
 import uuid
 
 

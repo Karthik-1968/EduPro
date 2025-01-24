@@ -1,25 +1,20 @@
-from type_form.exceptions.custom_exceptions import UserAlreadyPresentException, InvalidUserException, WorkspaceAlreadyExistsException,\
-    InvalidWorkspaceException, AlreadyInvitedException, InvalidInvitationException, AlreadyAcceptedException,\
-        FormAlreadyExistsException, InvalidFormException, FieldAlreadyExistsException, InvalidFieldException,\
-            MaximumInvitesLimitReachedException, SettingsAlreadyExistsException, InvalidFormFieldException,\
-                InvalidSettingsException, InvitationExpiredException, LayoutAlreadyExistsException, InvalidLayoutException,\
-                    TabAlreadyExistsException, InvalidTabException, InvalidLayoutForFormException, ChildTabIsParentException
+from type_form.exceptions import custom_exceptions
 from type_form.interactors.storage_interfaces.storage_interface import StorageInterface
 from type_form.models import User, Workspace, Form, Field, FormResponse, FormField, FormFieldResponse, FormFieldSettings,\
     WorkspaceInvite, Layout, Tab
-from type_form.interactors.storage_interfaces.storage_interface import UserDTO, WorkspaceDTO, FormDTO, FieldDTO, FormFieldDTO, \
-    FormResponseDTO, FormFieldResponseDTO, WorkspaceInviteDTO, PhoneNumberFieldSettingsDTO, SectionConfigDTO, TabDTO, FormFieldIdsConfigDTO, \
-        FormFieldIdsConfigTabDTO, SectionConfigTabDTO, LayoutDetailsDTO, NestedTabDetailsDTO
+from type_form.interactors.storage_interfaces.storage_interface import WorkspaceDTO, FormDTO, FormFieldDTO, FormResponseDTO,\
+    WorkspaceInviteDTO, PhoneNumberFieldSettingsDTO, SectionConfigDTO, TabDTO, SectionConfigTabDTO, LayoutDetailsDTO, TableDTO, \
+    RowDTO, ColumnDTO
 from datetime import datetime
 from json import loads, dumps
-from typing import Tuple
+from typing import Optional
 
 class StorageImplementation(StorageInterface):
     
     def check_if_user_already_present(self, email: str):
         
         if User.objects.filter(email = email).exists():
-            raise UserAlreadyPresentException
+            raise custom_exceptions.UserAlreadyPresentException
         
     def create_user(self, id: str, email: str)->str:
         User.object.create(id = id, email = email)
@@ -31,12 +26,12 @@ class StorageImplementation(StorageInterface):
         user_exists = User.objects.filter(id = id).exists()
         user_not_exists = not user_exists
         if user_not_exists:
-            raise InvalidUserException
+            raise custom_exceptions.InvalidUserException
         
     def check_if_workspace_already_exists(self, name: str):
         
         if Workspace.objects.filter(name = name).exists():
-            raise WorkspaceAlreadyExistsException
+            raise custom_exceptions.WorkspaceAlreadyExistsException
         
     def create_workspace(self, user_id: str, name: str, is_private: bool, max_invites: int)->int:
         
@@ -49,12 +44,13 @@ class StorageImplementation(StorageInterface):
         workspaces = Workspace.objects.filter(user_id = id)
         workspacedtos = []
         for workspace in workspaces:
-            workspacedto = self.convert_workspace_object_to_dto(workspace)
+            workspacedto = self._convert_workspace_object_to_dto(workspace)
             workspacedtos.append(workspacedto)
         
         return workspacedtos
     
-    def convert_workspace_objects_to_dtos(workspace):
+    @staticmethod
+    def _convert_workspace_object_to_dto(workspace):
         
         return WorkspaceDTO(
             user_id = workspace.user_id,
@@ -67,16 +63,16 @@ class StorageImplementation(StorageInterface):
         workspace_exists = Workspace.objects.filter(id = id).exists()
         workspace_not_exists = not workspace_exists
         if workspace_not_exists:
-            raise InvalidWorkspaceException
+            raise custom_exceptions.InvalidWorkspaceException
         
     def check_if_user_already_invited(self, user_id: str, workspace_id: int):
         if WorkspaceInvite.objects.filter(user_id = user_id, workspace_id = workspace_id).exists():
-            raise AlreadyInvitedException
+            raise custom_exceptions.AlreadyInvitedException
         
     def check_if_invites_limit_reached(self, id:int):
         workspace = Workspace.objects.get(id = id)
         if workspace.max_invities == workspace.invites_sent:
-            raise MaximumInvitesLimitReachedException
+            raise custom_exceptions.MaximumInvitesLimitReachedException
         
     def create_workspace_invite(self, name:str, user_id:str, workspace_id:int, role:int, is_accepted:bool, expiry_time:str):
         
@@ -93,19 +89,19 @@ class StorageImplementation(StorageInterface):
         workspace_invite_exists = WorkspaceInvite.objects.filter(id = id).exists()
         workspace_invite_not_exists = not workspace_invite_exists
         if workspace_invite_not_exists:
-            raise InvalidInvitationException
+            raise custom_exceptions.InvalidInvitationException
         
     def check_if_invitation_already_accepted(self, id:int):
         
         workspace_invite = WorkspaceInvite.objects.get(id = id)
         if workspace_invite.is_accepted:
-            raise AlreadyAcceptedException
+            raise custom_exceptions.AlreadyAcceptedException
         
     def check_if_invitation_expired(self, id):
         
         workspace_invite = WorkspaceInvite.objects.get(id = id)
         if workspace_invite.expiry_time < datetime.now():
-            raise InvitationExpiredException
+            raise custom_exceptions.InvitationExpiredException
         
     def accept_invitation(self, id:int):
         
@@ -123,12 +119,13 @@ class StorageImplementation(StorageInterface):
         workspace_invites = WorkspaceInvite.objects.filter(workspace_id = id)
         workspaceinvitedtos = []
         for workspace_invite in workspace_invites:
-            workspaceinvitedto = self.convert_workspace_invite_object_to_dto(workspace_invite)
+            workspaceinvitedto = self._convert_workspace_invite_object_to_dto(workspace_invite)
             workspaceinvitedtos.append(workspaceinvitedto)
         
         return workspaceinvitedtos
     
-    def convert_workspace_invite_object_to_dto(self, workspace_invite):
+    @staticmethod
+    def _convert_workspace_invite_object_to_dto(workspace_invite):
         
         return WorkspaceInviteDTO(
             name = workspace_invite.name,
@@ -142,7 +139,7 @@ class StorageImplementation(StorageInterface):
     def check_if_form_already_exists(self, name:str):
         
         if Form.objects.filter(name = name).exists():
-            raise FormAlreadyExistsException
+            raise custom_exceptions.FormAlreadyExistsException
         
     def create_form(self, user_id:str, workspace_id:int, name:str)->int:
         
@@ -155,12 +152,13 @@ class StorageImplementation(StorageInterface):
         forms = Form.objects.filter(workspace_id = id)
         formdtos = []
         for form in forms:
-            formdto = self.convert_form_object_to_dto(form)
+            formdto = self._convert_form_object_to_dto(form)
             formdtos.append(formdto)
         
         return formdtos
     
-    def convert_form_object_to_dto(form):
+    @staticmethod
+    def _convert_form_object_to_dto(form):
         
         return FormDTO(
             user_id = form.user_id,
@@ -181,7 +179,7 @@ class StorageImplementation(StorageInterface):
     def check_if_field_already_exists(self, field_type:str):
         
         if Field.objects.filter(field_type = field_type).exists():
-            raise FieldAlreadyExistsException
+            raise custom_exceptions.FieldAlreadyExistsException
         
     def create_field(self, field_name:str, field_type:str)->int:
         
@@ -194,14 +192,14 @@ class StorageImplementation(StorageInterface):
         form_exists = Form.objects.filter(id = id).exists()
         form_not_exists = not form_exists
         if form_not_exists:
-            raise InvalidFormException(form_id=id)
+            raise custom_exceptions.InvalidFormException(form_id=id)
         
     def check_field(self, id:int):
         
         field_exists = Field.objects.filter(id = id).exists()
         field_not_exists = not field_exists
         if field_not_exists:
-            raise InvalidFieldException
+            raise custom_exceptions.InvalidFieldException
     
     def add_field_to_form(self, form_id:int, user_id:str, field_id:int,setting_id:int, is_required:bool, label_text:str, \
         label_vedio:str, group_name:str)->int:
@@ -216,12 +214,13 @@ class StorageImplementation(StorageInterface):
         form_fields = FormField.objects.filter(form_id = id)
         formfielddtos = []
         for form_field in form_fields:
-            formfielddto = self.convert_form_field_object_to_dto(form_field)
+            formfielddto = self._convert_form_field_object_to_dto(form_field)
             formfielddtos.append(formfielddto)
         
         return formfielddtos
     
-    def convert_form_field_object_to_dto(form_field):
+    @staticmethod
+    def _convert_form_field_object_to_dto(form_field):
         
         return FormFieldDTO(
             form_id = form_field.form_id,
@@ -262,13 +261,13 @@ class StorageImplementation(StorageInterface):
         form_responses = FormResponse.objects.filter(form_id = id)
         formresponsedtos = []
         for form_response in form_responses:
-            formresponsedto = self.convert_form_response_object_to_dto(form_response)
+            formresponsedto = self._convert_form_response_object_to_dto(form_response)
             formresponsedtos.append(formresponsedto)
         
         return formresponsedtos
 
     @staticmethod
-    def convert_form_response_object_to_dto(form_response):
+    def _convert_form_response_object_to_dto(form_response):
         
         return FormResponseDTO(
             user_id = form_response.user_id,
@@ -298,7 +297,7 @@ class StorageImplementation(StorageInterface):
                     other_option = other_option, vetical_alignment = vetical_alignment, alphabetical_order = alphabetical_order,\
                         placeholder = placeholder).exists():
             
-            raise SettingsAlreadyExistsException
+            raise custom_exceptions.SettingsAlreadyExistsException
         
     def create_settings(self, multiple_selection:bool, multiple_selection_scope:list[str], choices:list[str],\
         phone_number_choices:list[PhoneNumberFieldSettingsDTO], max_number:int, min_number:int, max_length:int, min_length:int,\
@@ -316,14 +315,14 @@ class StorageImplementation(StorageInterface):
         form_field_exists = FormField.objects.filter(id = form_field_id).exists()
         form_field_not_exists = not form_field_exists
         if form_field_not_exists:
-            raise InvalidFormFieldException
+            raise custom_exceptions.InvalidFormFieldException
         
     def check_settings(self, settings_id:int):
         
         settings_exists = FormFieldSettings.objects.filter(id = settings_id).exists()
         settings_not_exists = not settings_exists
         if settings_not_exists:
-            raise InvalidSettingsException
+            raise custom_exceptions.InvalidSettingsException
     
     def add_settings_to_form_field(self, form_field_id:int, settings_id:int):
         
@@ -355,7 +354,7 @@ class StorageImplementation(StorageInterface):
             layout = Layout.objects.get(form_id = form_id)
 
             if layout.id!=layout_id:
-                raise InvalidLayoutForFormException(form_id=form_id, layout_id=layout_id)
+                raise custom_exceptions.InvalidLayoutForFormException(form_id=form_id, layout_id=layout_id)
 
 
     def create_or_update_layout_for_form(self, user_id:str, form_id:int, layout_name:str, layout_id:int)->int:
@@ -377,7 +376,7 @@ class StorageImplementation(StorageInterface):
         layout_exists = Layout.objects.filter(id = id).exists()
         layout_not_exists = not layout_exists
         if layout_not_exists:
-            raise InvalidLayoutException(layout_id=id)
+            raise custom_exceptions.InvalidLayoutException(layout_id=id)
 
     def create_or_update_tab_for_layout_for_section_config(self, tab_dto:TabDTO)->int:
 
@@ -395,7 +394,7 @@ class StorageImplementation(StorageInterface):
 
             config = dumps(config)
 
-            tab = Tab.objects.create(id = tab_id, user_id = tab_dto.user_id, layout_id = tab_dto.layout_id, tab_type = tab_dto.tab_type, \
+            tab = Tab.objects.create(id = tab_dto.tab_id, user_id = tab_dto.user_id, layout_id = tab_dto.layout_id, tab_type = tab_dto.tab_type, \
                                     tab_name = tab_dto.tab_name, config = config)
 
             return tab.id
@@ -406,7 +405,7 @@ class StorageImplementation(StorageInterface):
             form_field_exists = FormField.objects.filter(id = form_field_id).exists()
             form_field_not_exists = not form_field_exists
             if form_field_not_exists:
-                raise InvalidFormFieldException
+                raise custom_exceptions.InvalidFormFieldException
 
     def check_if_form_fields_belong_to_form(self, form_fields:list[str], layout_id:int):
 
@@ -414,24 +413,24 @@ class StorageImplementation(StorageInterface):
         for form_field_id in form_fields:
             form_field = FormField.objects.get(id = form_field_id)
             if form_field.form_id != form_id:
-                raise FieldDoesNotBelongToFormException
+                raise custom_exceptions.FieldDoesNotBelongToFormException
 
     def check_tab(self, id:int):
         
         tab_exists = Tab.objects.filter(id = id).exists()
         tab_not_exists = not tab_exists
         if tab_not_exists:
-            raise InvalidTabException
+            raise custom_exceptions.InvalidTabException
 
     def get_tab_details(self, tab_id:int)->TabDTO:
 
         tab = Tab.objects.get(id = tab_id)
-        tab_dto = self.convert_tab_object_to_dto(tab)
+        tab_dto = self._convert_tab_object_to_dto(tab)
 
         return tab_dto
 
     @staticmethod
-    def convert_tab_object_to_dto(tab):
+    def _convert_tab_object_to_dto(tab):
         
         return TabDTO(
             user_id = tab.user_id,
@@ -482,7 +481,7 @@ class StorageImplementation(StorageInterface):
             form_field_exists = FormField.objects.filter(id = form_field_id).exists()
             form_field_not_exists = not form_field_exists
             if form_field_not_exists:
-                raise InvalidFormFieldException
+                raise custom_exceptions.InvalidFormFieldException
     
     def create_or_update_tab_for_table_config(self, tab_dto:TabDTO)->int:
         
@@ -505,72 +504,74 @@ class StorageImplementation(StorageInterface):
 
         return tab.id
 
-    def add_table_config_to_tab(self, tab_id:int, table_dto:TableDTO, user_responses:Optional[dict]=None)->dict:
-
-        tab = Tab.objects.get(id = tab_id)
+    def add_table_config_to_tab(self, tab_id: int, table_dto: TableDTO) -> dict:
+        tab = Tab.objects.get(id=tab_id)
         config = loads(tab.config)
-        filtered_data = {}
-        if user_responses is None:
-            user_responses = {}
-        for row in table_dto.rows:
-            row_data = {}
-            for cell in row.cells:
-                column = None
-                for col in table_dto.columns:
-                    if col.column_name == cell.column_name:
-                        column = col
-                        break
-                user_response = user_responses.get(cell.field_id, None)
-                if column:
-                    row_data[cell.column_name] = {
-                        "field_id": cell.field_id,
-                        "show_as_label": column.show_as_label,
-                        "user_should_fill_response": column.user_should_fill_response,
-                        "user_response": user_response
-                    }
-            filtered_data[row.row_name] = row_data
-        config["table_config"] = filtered_data
+        
+        config["table_config"].append(self._generate_filtered_data(table_dto))
+        
         tab.config = dumps(config)
         tab.save()
 
-    def get_layout_details(self, layout_id:int)->LayoutDetailsDTO:
+    def _generate_filtered_data(self, table_dto: TableDTO) -> dict:
+        filtered_data = {}
+        for row in table_dto.rows:
+            filtered_data[row.row_name] = self._process_row(row, table_dto.columns)
+        return filtered_data
 
-        layout_name = Layout.objects.get(id = layout_id).layout_name
-        tabs = Tab.objects.filter(layout_id = layout_id)
+    def _process_row(self, row:RowDTO, columns:list[ColumnDTO]) -> dict:
+        row_data = []
+        for cell in row.cells:
+            column = self._find_column_by_name(columns, cell.column_name)
+            if column:
+                row_data.append({cell.column_name:self._generate_cell_data(cell, column)})
+        return row_data
+
+    def _find_column_by_name(self, columns:list[ColumnDTO], column_name: str):
+        for column in columns:
+            if column.column_name == column_name:
+                return column
+        return None
+
+    def _generate_cell_data(self, cell, column) -> dict:
+        return {
+            "field_id": cell.field_id,
+            "show_as_label": column.show_as_label,
+            "user_should_fill_response": column.user_should_fill_response
+        }
+
+    def get_layout_details(self, layout_id: int) -> LayoutDetailsDTO:
+        layout_name = Layout.objects.get(id=layout_id).layout_name
+        tabs = Tab.objects.filter(layout_id=layout_id)
         tab_dtos = {}
+
         for tab in tabs:
             if tab.tab_type == "section_config":
-                config = loads(tab.config)
-                section_dtos = []
-                for section in config["sections_config"]:
-                    if section["section_type"] == "gof_name":
-                        section_dto = self._convert_gof_section_in_section_config_to_dto(section["type"], section["gof"])
-                        section_dtos.append(section_dto)
-                    elif section["section_type"] == "form_field_ids":
-                        section_dto = self._convert_form_field_ids_section_in_section_config_to_dto(section["section_name"], section["section_type"], \
-                                                                                                                section["formfield_ids"])
-                        section_dtos.append(section_dto)
-                tab_dto = self._convert_section_config_tab_to_dto(tab=tab, section_dtos=section_dtos)
-                tab_dtos["section_config"] = tab_dto
-            elif tab_dtos.tab_type == "form_field_ids_config":
-                config = loads(tab.config)
-                for section in config["form_field_ids_config"]:
-                    section_dto = self._convert_form_field_ids_section_in_form_field_ids_config_to_dto(section["name"], section["dob"], \
-                                                                                                        section["contact_information"], section["work_experience"], \
-                                                                                                        section["signature"], section["date"])
-                tab_dto = self._convert_form_field_ids_config_tab_to_dto(tab=tab, section_dto=section_dto)
-                tab_dtos["form_field_ids_config"] = tab_dto
-        
-        layout_details_dto = self._convert_layout_details_to_dto(layout_name=layout_name, tab_dtos=tab_dtos)
-                    
-        return layout_details_dto
+                tab_dtos["section_config"] = self._process_section_config_tab(tab)
+
+        return self._convert_layout_details_to_dto(layout_name=layout_name, tab_dtos=tab_dtos)
+
+    def _process_section_config_tab(self, tab) -> dict:
+        config = loads(tab.config)
+        section_dtos = [
+            self._convert_section_to_dto(section) for section in config["sections_config"]
+        ]
+        return self._convert_section_config_tab_to_dto(tab=tab, section_dtos=section_dtos)
+
+    def _convert_section_to_dto(self, section: dict):
+        if section["section_type"] == "gof_name":
+            return self._convert_gof_section_in_section_config_to_dto(section["type"], section["gof"])
+        elif section["section_type"] == "form_field_ids":
+            return self._convert_form_field_ids_section_in_section_config_to_dto(
+                section["section_name"], section["section_type"], section["formfield_ids"]
+            )
 
     def check_layout(self, id:int):
         
         layout_exists = Layout.objects.filter(id = id).exists()
         layout_not_exists = not layout_exists
         if layout_not_exists:
-            raise InvalidLayoutException(layout_id=id)
+            raise custom_exceptions.InvalidLayoutException(layout_id=id)
 
     @staticmethod
     def _convert_gof_section_in_section_config_to_dto(section_type, gof):
@@ -586,7 +587,7 @@ class StorageImplementation(StorageInterface):
         return SectionConfigDTO(
             section_name = section_name,
             section_type = section_type,
-            formfield_ids = formfield_ids
+            formfields = formfield_ids
         )
 
     @staticmethod
@@ -598,29 +599,6 @@ class StorageImplementation(StorageInterface):
             tab_type = tab.tab_type,
             tab_name = tab.tab_name,
             section_configs = section_dtos
-        )
-
-    @staticmethod
-    def _convert_form_field_ids_section_in_form_field_ids_config_to_dto(name, dob, contact_information, work_experience, signature, date):
-
-        return FormFieldIdsConfigDTO(
-            name = name,
-            dob = dob,
-            contact_information = contact_information,
-            work_experience = work_experience,
-            signature = signature,
-            date = date
-        )
-
-    @staticmethod
-    def _convert_form_field_ids_config_tab_to_dto(tab, section_dto):
-
-        return FormFieldIdsConfigTabDTO(
-            tab_id = tab.tab_id,
-            user_id = tab.user_id,
-            tab_type = tab.tab_type,
-            tab_name = tab.tab_name,
-            form_field_ids_config = section_dto
         )
 
     @staticmethod
@@ -638,9 +616,9 @@ class StorageImplementation(StorageInterface):
             tab_exists = Tab.objects.filter(id = tab_id).exists()
             tab_not_exists = not tab_exists
             if tab_not_exists:
-                raise InvalidTabException(tab_id=tab_id)
+                raise custom_exceptions.InvalidTabException(tab_id=tab_id)
 
     def check_if_child_tab_is_parent(self, id:int):
         is_parent_tab = Tab.objects.filter(parent_id=id).exists()
         if is_parent_tab:
-            raise ChildTabIsParentException(tab_id=id)
+            raise custom_exceptions.ChildTabIsParentException(tab_id=id)

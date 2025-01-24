@@ -37,7 +37,7 @@ tab_formfield_ids_schema = Schema(
         "tab_name": And(str, len),
         "section_type": And(str, len),
         "section_name": And(str, len),
-        "formfield_ids": And(list, lambda l: all(isinstance(i, int) for i in l, all(i > 0 for i in l)))
+        "formfield_ids": And(list, lambda l: all(isinstance(i, int) for i in l), lambda l: all(i > 0 for i in l))
     })
 
 def validate_tab_data_for_gof_section(tab_data_for_gof_section):
