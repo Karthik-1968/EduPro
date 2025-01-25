@@ -6,7 +6,7 @@ from type_form.exceptions import custom_exceptions
 
 tab_for_column_table_csv_file_path = 'https://raw.githubusercontent.com/dayanakarthik-2011/EduPro/refs/heads/dev1/ColTable.csv'
 tab_for_table_config_csv_file_path = 'https://raw.githubusercontent.com/dayanakarthik-2011/EduPro/refs/heads/dev1/TableTab.csv'
-df_tab_for_table_config = pd.read_csv(tab_for_column_table_csv_file_path)
+df_tab_for_column_table = pd.read_csv(tab_for_column_table_csv_file_path)
 df_tab_for_table_config = pd.read_csv(tab_for_table_config_csv_file_path)
 tab_id = 2
 
@@ -14,7 +14,7 @@ storage = StorageImplementation()
 form_layout_interactor = FormLayoutInteractor(storage=storage)
 
 columns = []
-for index, row in df_tab_for_table_config.iterrows():
+for index, row in df_tab_for_column_table .iterrows():
     columns.append(ColumnDTO(column_name=row['column_name'], show_as_label=row['show_as_label'], user_should_fill_response=\
                              row['user_should_fill_response']))
 
