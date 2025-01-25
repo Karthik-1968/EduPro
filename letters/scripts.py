@@ -25,7 +25,7 @@ story = []
 table_data, cols, rows = getAttrs(_paraAttrMap)
 t = Table(table_data, colWidths=cols)
 t.setStyle(TableStyle([
-    ('FONT', (0, 0), (-1, 0), 'Times-Bold', 10),
+    ('FONT', (0, 0), (1, -1), 'Times-Bold', 10),
     ('FONT', (0, 1), (-1, -1), 'Courier', 8),
     ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
     ('INNERGRID', (0, 0), (-1, -1), 0.25, black),
