@@ -4,10 +4,9 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.units import inch
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.graphics.shapes import Drawing, Line
-from reportlab.lib.sequencer import Sequencer
 
 doc = SimpleDocTemplate("tables.pdf", pagesize=letter, rightMargin=inch, leftMargin=inch, topMargin=inch, bottomMargin=inch,)
-def get_paragraph_style(font_size=None, text_color=None, font_name=None):
+def get_paragraph_style(font_size=None, text_color=None, font_name=None, line_spacing=None):
     style = ParagraphStyle(name='Custom')
     if font_size:
         style.fontSize = font_size
@@ -15,7 +14,16 @@ def get_paragraph_style(font_size=None, text_color=None, font_name=None):
         style.textColor = text_color
     if font_name:
         style.fontName = font_name
+    if line_spacing:
+        style.leading = line_spacing
     return style
+
+default_styles = [('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+          ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+          ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+          ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+          ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+          ('GRID', (0, 0), (-1, -1), 1, colors.black),]
 
 monthly_revenue_data = [
     ['Month', 'Revenue ($)', 'Expenses ($)', 'Profit ($)', 'Margin (%)'],
@@ -37,12 +45,14 @@ customer_segmentation_data = [
 ]
 
 regional_performance_data = [
-    ['Region', 'Sales ($)', 'Growth (%)', 'Market Share (%)'],
+    ['Region', 'Performance Metrics', '', ''],
+    ['', 'Sales ($)', 'Growth (%)', 'Market Share (%)'],
     ['North', '1,200,000', '15.5', '35'],
     ['South', '950,000', '12.3', '']
 ]
 
-elements = [Paragraph("""Sample Table Layouts for Data Analysis Report""", get_paragraph_style(font_size=20, text_color='darkblue', font_name='Helvetica-Bold'))]
+elements = [Paragraph("""Sample Table Layouts for Data Analysis Report""", get_paragraph_style(font_size=25, text_color='darkblue', \
+                                font_name='Helvetica-Bold', line_spacing=30))]
 elements.append(Spacer(0, 0.2 * inch))
 
 line = Drawing(500, 1)
@@ -54,61 +64,44 @@ elements.append(Spacer(0, 0.2 * inch))
 
 elements.append(Paragraph('1. Monthly Revenue Analysis', get_paragraph_style(font_size=15, text_color='blue', font_name='Helvetica')))
 t = Table(monthly_revenue_data, spaceBefore=20, spaceAfter=20, colWidths=[1.2*inch]*5)
-style = t.setStyle(TableStyle([
-    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-    ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-    ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+additional_styles_for_table = [('BACKGROUND', (0, 1), (-1, -1), colors.beige), ('BACKGROUND', (0, 0), (-1, 0), colors.grey)]
+styles_for_table = default_styles + additional_styles_for_table
+t.setStyle(TableStyle(styles_for_table))
 elements.append(t)
 
 elements.append(Paragraph('2. Product Performance Matrix', get_paragraph_style(font_size=15, text_color='blue', font_name='Helvetica')))
 t = Table(product_performance_data, spaceBefore=20, spaceAfter=20, colWidths=[inch]*6)
-
-style = t.setStyle(TableStyle([
+additional_styles_for_table = [
     ('BACKGROUND', (0, 0), (-1, 1), colors.grey),
-    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
     ('BACKGROUND', (0, 2), (-1, -1), colors.beige),
-    ('GRID', (0, 0), (-1, -1), 1, colors.black),
     ('SPAN', (0, 0), (1, 1)),
     ('SPAN', (2, 0), (3, 0)),
     ('SPAN', (4, 0), (5, 0)),
     ('SPAN', (0, 2), (1, 2)),
     ('SPAN', (0, 3), (1, 3)),
-]))
+]
+styles_for_table = default_styles + additional_styles_for_table
+t.setStyle(TableStyle(styles_for_table))
 elements.append(t)
 
 elements.append(Paragraph('3. Customer Segmentation Analysis', get_paragraph_style(font_size=15, text_color='blue', font_name='Helvetica')))
 t = Table(customer_segmentation_data, spaceBefore=20, spaceAfter=20, colWidths=[1.5*inch]*4)
-style = t.setStyle(TableStyle([
-    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-    ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-    ('GRID', (0, 0), (-1, -1), 1, colors.black),
-]))
+additional_styles_for_table = [('BACKGROUND', (0, 0), (-1, 0), colors.grey), ('BACKGROUND', (0, 1), (-1, -1), colors.beige)]
+styles_for_table = default_styles + additional_styles_for_table
+t.setStyle(TableStyle(styles_for_table))
 elements.append(t)
 
 elements.append(Paragraph('4. Regional Performance Summary', get_paragraph_style(font_size=15, text_color='blue', font_name='Helvetica')))
 t = Table(regional_performance_data, spaceBefore=20, spaceAfter=20, colWidths=[1.5*inch]*4)
-style = t.setStyle(TableStyle([
-    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-    ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-    ('GRID', (0, 0), (-1, -1), 1, colors.black),
-    ('SPAN', (0, 0), (3, 0)),
-]))
+additional_styles_for_table = [
+    ('BACKGROUND', (0, 0), (-1, 1), colors.grey),
+    ('BACKGROUND', (0, 2), (-1, -1), colors.beige),
+    ('SPAN', (1, 0), (3, 0)),
+    ('SPAN', (0, 0), (0, 1)),
+]
+styles_for_table = default_styles + additional_styles_for_table
+t.setStyle(TableStyle(styles_for_table))
+elements.append(t)
 
 doc.build(elements)
 
