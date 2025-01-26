@@ -5,7 +5,7 @@ from reportlab.lib.units import inch
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.graphics.shapes import Drawing, Line
 
-doc = SimpleDocTemplate("tables.pdf", pagesize=letter, rightMargin=inch, leftMargin=inch, topMargin=inch, bottomMargin=inch,)
+doc = SimpleDocTemplate("tables.pdf", pagesize=letter, rightMargin=inch, leftMargin=inch, topMargin=inch, bottomMargin=inch)
 def get_paragraph_style(font_size=None, text_color=None, font_name=None, line_spacing=None):
     style = ParagraphStyle(name='Custom')
     if font_size:
@@ -48,11 +48,13 @@ regional_performance_data = [
     ['Region', 'Performance Metrics', '', ''],
     ['', 'Sales ($)', 'Growth (%)', 'Market Share (%)'],
     ['North', '1,200,000', '15.5', '35'],
-    ['South', '950,000', '12.3', '']
+    ['South', '950,000', '12.3', '28']
 ]
 
-elements = [Paragraph("""Sample Table Layouts for Data Analysis Report""", get_paragraph_style(font_size=25, text_color='darkblue', \
-                                font_name='Helvetica-Bold', line_spacing=30))]
+elements = []
+
+elements.append(Paragraph("""Sample Table Layouts for Data Analysis Report""", get_paragraph_style(font_size=25, text_color='darkblue', \
+                                font_name='Helvetica-Bold', line_spacing=30)))
 elements.append(Spacer(0, 0.2 * inch))
 
 line = Drawing(500, 1)
@@ -102,7 +104,5 @@ additional_styles_for_table = [
 styles_for_table = default_styles + additional_styles_for_table
 t.setStyle(TableStyle(styles_for_table))
 elements.append(t)
-
-doc.build(elements)
 
 print("PDF created successfully!")
