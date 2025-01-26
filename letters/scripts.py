@@ -33,7 +33,6 @@ t.setStyle(TableStyle([
 ]))
 story.append(t)
 
-# Generate PDF
 filename = "output.pdf"
 doc = SimpleDocTemplate(filename)
 doc.build(story)
