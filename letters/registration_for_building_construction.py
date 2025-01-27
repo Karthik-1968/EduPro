@@ -12,24 +12,25 @@ image_path = "https://crm-backend-media-static.s3.ap-south-1.amazonaws.com/alpha
 title = "OFFICE OF THE GREATER HYDERABAD MUNICIPAL CORPORATION"
 small_text = "TG-bPASS"
 
-image_flowable = Image(image_path, width=1.5 * inch, height=1.5 * inch)
-image_flowable.hAlign = 'LEFT'
+image_flowable = Image(image_path, width=1 * inch, height=1* inch)
 
-title_flowable = Paragraph(title, ParagraphStyle(name='TitleStyle', fontSize=10, fontName='Helvetica-Bold'))
-title_flowable.hAlign = 'CENTER'
+title_flowable = Paragraph("""OFFICE OF THE GREATER HYDERABAD MUNICIPAL <br/>
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+                           CORPORATION""", ParagraphStyle(name='TitleStyle', fontSize=10, fontName='Helvetica-Bold'))
 
 small_text_flowable = Paragraph(small_text, ParagraphStyle(name='SmallTextStyle', fontSize=10, fontName='Helvetica-Bold', textColor=colors.green))
-small_text_flowable.hAlign = 'RIGHT'
 
 header_data = [
     [image_flowable, title_flowable, small_text_flowable]
 ]
-header_table = Table(header_data, colWidths=[1.5 * inch, 3 * inch, 2 * inch])
-header_table.setStyle(TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                                    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-                                    ('BOTTOMPADDING', (0, 0), (-1, -1), 12)]))
+header_table = Table(header_data, colWidths=[100, 340, 70])
+header_table.setStyle(TableStyle([('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                                  ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                                  ('BOTTOMPADDING', (0, 0), (-1, -1), 12)]))
 story.append(header_table)
 
+story.append(Paragraph("CERTIFICATE OF REGISTRATION FOR BUILDING CONSTRUCTION", ParagraphStyle(name='TitleStyle', fontSize=10, fontName='Helvetica-Bold', alignment=1)))
+story.append(Paragraph("To,", ParagraphStyle(name='TitleStyle', fontSize=10, fontName='Helvetica-Bold')))
 story.append(Spacer(1, 12))
 text_style = ParagraphStyle(
     name='Normal',
@@ -71,7 +72,7 @@ combined_content.setStyle(TableStyle([
 story.append(combined_content)
 story.append(Spacer(1, 12))
 
-story.append(Paragraph("Sir/Madam", ParagraphStyle(name='Title', fontSize=12)))
+story.append(Paragraph("Sir/Madam,", ParagraphStyle(name='Title', fontSize=12)))
 story.append(Spacer(1, 12))
 story.append(Paragraph("""Sub: Greater Hyderabad Municipal Corporation - Construction of Individual<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Residential Building consisting of Ground Floor to an extent of 58.53<br/>
@@ -115,10 +116,10 @@ data = [
     ['3', 'Construction to be Completed', 'Before 13-11-2027'],
 ]
 
-table = Table(data, colWidths=[50, 200, 200])
+table = Table(data, colWidths=[70, 220, 220])
 
 style = TableStyle([
-    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
     ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
     ('FONTNAME', (0, 4), (-1, 4), 'Helvetica-Bold'),
     ('FONTNAME', (0, 15), (-1, 15), 'Helvetica-Bold'),
